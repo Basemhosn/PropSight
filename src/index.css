@@ -1,0 +1,57 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: "Inter", system-ui, sans-serif;
+  background: #F4F6FA;
+  color: #0A1628;
+  -webkit-font-smoothing: antialiased;
+}
+
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 3px; }
+::-webkit-scrollbar-thumb { background: #c5cad6; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #9aa0ae; }
+
+.recharts-tooltip-wrapper { outline: none; }
+
+/* ── Mobile responsive layout ──────────────────────────── */
+@media (max-width: 768px) {
+  /* Stack all 2-column grids to single column */
+  [style*="gridTemplateColumns: \"repeat(4"] ,
+  [style*='gridTemplateColumns: "repeat(4'] {
+    grid-template-columns: repeat(2, minmax(0,1fr)) !important;
+  }
+}
+
+.grid-2col {
+  display: grid;
+  grid-template-columns: minmax(0, 1.65fr) minmax(0, 1fr);
+  gap: 10px;
+  margin-bottom: 1.25rem;
+}
+.grid-2col-equal {
+  display: grid;
+  grid-template-columns: minmax(0,1fr) minmax(0,1fr);
+  gap: 10px;
+  margin-bottom: 1.25rem;
+}
+.grid-kpi {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0,1fr));
+  gap: 10px;
+  margin-bottom: 1.25rem;
+}
+.grid-map {
+  display: grid;
+  grid-template-columns: minmax(0,1.4fr) minmax(0,1fr);
+  gap: 10px;
+  margin-bottom: 1.25rem;
+}
+
+@media (max-width: 900px) {
+  .grid-2col, .grid-map { grid-template-columns: 1fr !important; }
+}
+@media (max-width: 640px) {
+  .grid-2col-equal { grid-template-columns: 1fr !important; }
+  .grid-kpi { grid-template-columns: repeat(2, minmax(0,1fr)) !important; }
+}
