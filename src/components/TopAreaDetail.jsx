@@ -8,8 +8,9 @@ const TYPE_COLORS = {
 export default function TopAreaDetail({ area, onClose }) {
   if (!area) return null;
 
-  const typeEntries = Object.entries(area.types).sort((a, b) => b[1] - a[1]);
-  const total = Object.values(area.types).reduce((s, v) => s + v, 0);
+  const typesObj = area.types || { Sale: area.count || 0 };
+  const typeEntries = Object.entries(typesObj).sort((a, b) => b[1] - a[1]);
+  const total = Object.values(typesObj).reduce((s, v) => s + v, 0);
 
   return (
     <div style={{
