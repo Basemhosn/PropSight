@@ -12,7 +12,7 @@ async function captureElement(id) {
       scale: 1.5,
       useCORS: true,
       logging: false,
-      backgroundColor: "#ffffff",
+      backgroundColor: "#0D1929",
     });
     return canvas.toDataURL("image/png");
   } catch {
@@ -227,8 +227,8 @@ export default function ExportPDF({ kpis, areas, filters, fileName, isDemo }) {
       disabled={loading}
       style={{
         display: "flex", alignItems: "center", gap: 6,
-        background: loading ? "#F4F6FA" : "#0A1628",
-        color: loading ? "#9AA0AE" : "#fff",
+        background: loading ? "#060E1A" : "#F1F5F9",
+        color: loading ? "#9AA0AE" : "#0D1929",
         border: "none", borderRadius: 8, padding: "8px 16px",
         fontSize: 13, fontWeight: 600, cursor: loading ? "not-allowed" : "pointer",
       }}

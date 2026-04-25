@@ -2,7 +2,7 @@ export const datasetMeta = {
   "lastUpdated": "2026-04-10",
   "totalRows": 1115999,
   "dateRange": {
-    "from": "1992-03-26",
+    "from": "2008-01-01",
     "to": "2026-04-09"
   },
   "types": {

@@ -6,20 +6,20 @@ import {
 import { fmtAED, fmtNum } from "../utils/format";
 
 const COLORS = [
-  "#185FA5","#1D9E75","#D85A30","#BA7517","#993556","#534AB7",
+  "#38BDF8","#22C55E","#D85A30","#BA7517","#993556","#534AB7",
   "#3b6d11","#0f6e56","#d4537e","#639922","#185f80","#855a30",
-  "#185FA5","#1D9E75","#D85A30","#BA7517","#993556","#534AB7","#3b6d11","#0f6e56",
+  "#38BDF8","#22C55E","#D85A30","#BA7517","#993556","#534AB7","#3b6d11","#0f6e56",
 ];
 
 const CustomTooltip = ({ active, payload, label }) => {
   if (!active || !payload?.length) return null;
   const d = payload[0].payload;
   return (
-    <div style={{ background: "#0A1628", color: "#fff", borderRadius: 8, padding: "10px 14px", fontSize: 12, minWidth: 180 }}>
+    <div style={{ background: "#F1F5F9", color: "#0D1929", borderRadius: 8, padding: "10px 14px", fontSize: 12, minWidth: 180 }}>
       <div style={{ fontWeight: 600, marginBottom: 6 }}>{label}</div>
-      <div style={{ color: "#8AAAC8", marginBottom: 3 }}>Avg price/sqm: <span style={{ color: "#fff", fontWeight: 600 }}>{fmtAED(d.ppsqm, true)}</span></div>
-      <div style={{ color: "#8AAAC8", marginBottom: 3 }}>Transactions: <span style={{ color: "#fff" }}>{fmtNum(d.count)}</span></div>
-      <div style={{ color: "#8AAAC8" }}>Avg deal size: <span style={{ color: "#fff" }}>{fmtNum(Math.round(d.avgSize))} m²</span></div>
+      <div style={{ color: "#8AAAC8", marginBottom: 3 }}>Avg price/sqm: <span style={{ color: "#0D1929", fontWeight: 600 }}>{fmtAED(d.ppsqm, true)}</span></div>
+      <div style={{ color: "#8AAAC8", marginBottom: 3 }}>Transactions: <span style={{ color: "#0D1929" }}>{fmtNum(d.count)}</span></div>
+      <div style={{ color: "#8AAAC8" }}>Avg deal size: <span style={{ color: "#0D1929" }}>{fmtNum(Math.round(d.avgSize))} m²</span></div>
     </div>
   );
 };
@@ -47,8 +47,8 @@ export default function PricePerSqm({ areas }) {
 
   if (!data.length) {
     return (
-      <div style={{ background: "#fff", border: "1px solid #E8ECF2", borderRadius: 12, padding: "1.25rem" }}>
-        <div style={{ fontSize: 13, fontWeight: 600, color: "#0A1628", marginBottom: "0.5rem" }}>Price per sq.m by area</div>
+      <div style={{ background: "#0D1929", border: "1px solid #E8ECF2", borderRadius: 12, padding: "1.25rem" }}>
+        <div style={{ fontSize: 13, fontWeight: 600, color: "#F1F5F9", marginBottom: "0.5rem" }}>Price per sq.m by area</div>
         <div style={{ fontSize: 13, color: "#9AA0AE", padding: "2rem", textAlign: "center" }}>
           No size data available — requires PROCEDURE_AREA column in your CSV
         </div>
@@ -57,12 +57,12 @@ export default function PricePerSqm({ areas }) {
   }
 
   return (
-    <div style={{ background: "#fff", border: "1px solid #E8ECF2", borderRadius: 12, padding: "1.25rem" }}>
+    <div style={{ background: "#0D1929", border: "1px solid #E8ECF2", borderRadius: 12, padding: "1.25rem" }}>
       <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: "1rem", flexWrap: "wrap", gap: 8 }}>
         <div>
-          <div style={{ fontSize: 13, fontWeight: 600, color: "#0A1628" }}>Price per sq.m by area</div>
+          <div style={{ fontSize: 13, fontWeight: 600, color: "#F1F5F9" }}>Price per sq.m by area</div>
           <div style={{ fontSize: 11, color: "#9AA0AE", marginTop: 2 }}>
-            Market avg: <span style={{ color: "#185FA5", fontWeight: 600 }}>{fmtAED(avgPpsqm, true)}/m²</span>
+            Market avg: <span style={{ color: "#38BDF8", fontWeight: 600 }}>{fmtAED(avgPpsqm, true)}/m²</span>
             {" · "}based on {fmtNum(data.reduce((s, d) => s + d.count, 0))} transactions with size data
           </div>
         </div>
@@ -71,8 +71,8 @@ export default function PricePerSqm({ areas }) {
             <button key={n} onClick={() => setShowTop(n)} style={{
               fontSize: 11, padding: "4px 10px", borderRadius: 6, cursor: "pointer", fontWeight: 500,
               border: showTop === n ? "1px solid #185FA5" : "1px solid #E8ECF2",
-              background: showTop === n ? "#EDF4FC" : "#fff",
-              color: showTop === n ? "#185FA5" : "#7A8499",
+              background: showTop === n ? "rgba(59,130,246,0.1)" : "#0D1929",
+              color: showTop === n ? "#38BDF8" : "#7A8499",
             }}>Top {n}</button>
           ))}
         </div>
@@ -84,8 +84,8 @@ export default function PricePerSqm({ areas }) {
             tickFormatter={v => fmtAED(v, true)} axisLine={false} tickLine={false} />
           <YAxis type="category" dataKey="name" width={148}
             tick={{ fontSize: 11, fill: "#4A5568" }} axisLine={false} tickLine={false} />
-          <Tooltip content={<CustomTooltip />} cursor={{ fill: "#F8FAFC" }} />
-          <ReferenceLine x={avgPpsqm} stroke="#E8ECF2" strokeDasharray="4 3" label={{
+          <Tooltip content={<CustomTooltip />} cursor={{ fill: "#0D1929" }} />
+          <ReferenceLine x={avgPpsqm} stroke="rgba(59,130,246,0.12)" strokeDasharray="4 3" label={{
             value: "Avg", position: "top", fontSize: 10, fill: "#9AA0AE"
           }} />
           <Bar dataKey="ppsqm" radius={[0, 4, 4, 0]} maxBarSize={16}
@@ -93,7 +93,7 @@ export default function PricePerSqm({ areas }) {
               formatter: v => fmtAED(v, true) }}>
             {data.map((entry, i) => (
               <Cell key={i}
-                fill={entry.ppsqm > avgPpsqm ? "#185FA5" : "#C5CAD6"} />
+                fill={entry.ppsqm > avgPpsqm ? "#38BDF8" : "#C5CAD6"} />
             ))}
           </Bar>
         </BarChart>
@@ -102,7 +102,7 @@ export default function PricePerSqm({ areas }) {
       {/* Legend */}
       <div style={{ display: "flex", gap: 16, marginTop: "0.75rem", fontSize: 11, color: "#9AA0AE" }}>
         <span style={{ display: "flex", alignItems: "center", gap: 5 }}>
-          <span style={{ width: 10, height: 10, borderRadius: 2, background: "#185FA5", display: "inline-block" }} />
+          <span style={{ width: 10, height: 10, borderRadius: 2, background: "#38BDF8", display: "inline-block" }} />
           Above market average
         </span>
         <span style={{ display: "flex", alignItems: "center", gap: 5 }}>

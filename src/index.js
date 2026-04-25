@@ -1,16 +1,31 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { ClerkProvider } from "@clerk/clerk-react";
+import { AuthProvider } from "./context/AuthContext";
 import "./index.css";
 import App from "./App";
 
-const PUBLISHABLE_KEY = process.env.REACT_APP_CLERK_PUBLISHABLE_KEY;
+class ErrorBoundary extends React.Component {
+  constructor(props) { super(props); this.state = { error: null }; }
+  static getDerivedStateFromError(error) { return { error }; }
+  render() {
+    if (this.state.error) {
+      return (
+        <div style={{padding:40,fontFamily:"monospace",color:"#A32D2D",background:"#fff",minHeight:"100vh"}}>
+          <h2>App crashed</h2>
+          <pre style={{whiteSpace:"pre-wrap",fontSize:13}}>{this.state.error.toString()}</pre>
+          <pre style={{whiteSpace:"pre-wrap",fontSize:11,color:"#666"}}>{this.state.error.stack}</pre>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <React.StrictMode>
-    <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
+  <ErrorBoundary>
+    <AuthProvider>
       <App />
-    </ClerkProvider>
-  </React.StrictMode>
+    </AuthProvider>
+  </ErrorBoundary>
 );

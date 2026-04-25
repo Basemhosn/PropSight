@@ -104,7 +104,7 @@ function normalise(name) {
 
 // Colour scale: light blue → deep blue
 function getColor(value, max, metric) {
-  if (!value || !max) return "#EDF4FC";
+  if (!value || !max) return "rgba(59,130,246,0.1)";
   const intensity = Math.pow(value / max, 0.4); // power scale so small values still show
   const r = Math.round(237 - intensity * (237 - 10));
   const g = Math.round(244 - intensity * (244 - 50));
@@ -154,12 +154,12 @@ export default function DubaiMap({ areas }) {
   const fmtVal = (v) => metric === "count" ? fmtNum(v) + " deals" : fmtAED(v, true);
 
   return (
-    <div style={{ background: "#fff", border: "1px solid #E8ECF2", borderRadius: 12, padding: "1.25rem" }}>
+    <div style={{ background: "#0D1929", border: "1px solid #E8ECF2", borderRadius: 12, padding: "1.25rem" }}>
       {/* Header */}
       <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between",
         marginBottom: "1rem", flexWrap: "wrap", gap: 8 }}>
         <div>
-          <div style={{ fontSize: 13, fontWeight: 600, color: "#0A1628" }}>Dubai transaction heatmap</div>
+          <div style={{ fontSize: 13, fontWeight: 600, color: "#F1F5F9" }}>Dubai transaction heatmap</div>
           <div style={{ fontSize: 11, color: "#9AA0AE", marginTop: 2 }}>
             Bubble size + colour = activity level · hover for details
           </div>
@@ -173,8 +173,8 @@ export default function DubaiMap({ areas }) {
             <button key={t.k} onClick={() => setMetric(t.k)} style={{
               fontSize: 11, padding: "4px 10px", borderRadius: 6, cursor: "pointer", fontWeight: 500,
               border: metric === t.k ? "1px solid #185FA5" : "1px solid #E8ECF2",
-              background: metric === t.k ? "#EDF4FC" : "#fff",
-              color: metric === t.k ? "#185FA5" : "#7A8499",
+              background: metric === t.k ? "rgba(59,130,246,0.1)" : "#0D1929",
+              color: metric === t.k ? "#38BDF8" : "#7A8499",
             }}>{t.l}</button>
           ))}
         </div>
@@ -194,11 +194,11 @@ export default function DubaiMap({ areas }) {
           {/* Grid lines */}
           {[1,2,3,4].map(i => (
             <line key={`h${i}`} x1="0" y1={i * H/5} x2={W} y2={i * H/5}
-              stroke="#E8ECF2" strokeWidth="0.5" />
+              stroke="rgba(59,130,246,0.12)" strokeWidth="0.5" />
           ))}
           {[1,2,3,4,5,6].map(i => (
             <line key={`v${i}`} x1={i * W/7} y1="0" x2={i * W/7} y2={H}
-              stroke="#E8ECF2" strokeWidth="0.5" />
+              stroke="rgba(59,130,246,0.12)" strokeWidth="0.5" />
           ))}
 
           {/* Sheikh Zayed Road - main artery */}
@@ -222,15 +222,15 @@ export default function DubaiMap({ areas }) {
               style={{ cursor: p.data ? "pointer" : "default" }}>
               <circle
                 cx={p.x} cy={p.y} r={p.r}
-                fill={p.data ? p.color : "#E8ECF2"}
-                stroke={hovered?.name === p.name ? "#185FA5" : p.data ? "#C5D8EE" : "#E0E4EC"}
+                fill={p.data ? p.color : "rgba(59,130,246,0.12)"}
+                stroke={hovered?.name === p.name ? "#38BDF8" : p.data ? "#C5D8EE" : "#E0E4EC"}
                 strokeWidth={hovered?.name === p.name ? 2 : 1}
                 opacity={p.data ? 0.92 : 0.4}
               />
               {p.r > 14 && (
                 <text x={p.x} y={p.y + 1} textAnchor="middle" dominantBaseline="middle"
                   fontSize={Math.max(7, Math.min(10, p.r * 0.5))}
-                  fill={p.val / maxVal > 0.5 ? "#0A2A50" : "#185FA5"}
+                  fill={p.val / maxVal > 0.5 ? "#0A2A50" : "#38BDF8"}
                   fontWeight="500" style={{ pointerEvents: "none" }}>
                   {p.name.split(" ")[0].slice(0, 8)}
                 </text>
@@ -240,9 +240,9 @@ export default function DubaiMap({ areas }) {
 
           {/* Compass */}
           <g transform="translate(860, 40)">
-            <circle cx="0" cy="0" r="18" fill="#fff" stroke="#E8ECF2" strokeWidth="1" />
-            <text x="0" y="-6" textAnchor="middle" fontSize="10" fontWeight="700" fill="#185FA5">N</text>
-            <polygon points="0,-14 -4,-2 0,2 4,-2" fill="#185FA5" />
+            <circle cx="0" cy="0" r="18" fill="#0D1929" stroke="rgba(59,130,246,0.12)" strokeWidth="1" />
+            <text x="0" y="-6" textAnchor="middle" fontSize="10" fontWeight="700" fill="#38BDF8">N</text>
+            <polygon points="0,-14 -4,-2 0,2 4,-2" fill="#38BDF8" />
             <polygon points="0,14 -4,2 0,-2 4,2" fill="#C5CAD6" />
           </g>
         </svg>
@@ -253,7 +253,7 @@ export default function DubaiMap({ areas }) {
             position: "absolute",
             left: Math.min(tooltip.x + 12, W * 0.6),
             top: Math.max(tooltip.y - 80, 8),
-            background: "#0A1628", color: "#fff",
+            background: "#F1F5F9", color: "#0D1929",
             borderRadius: 8, padding: "10px 14px",
             fontSize: 12, pointerEvents: "none",
             zIndex: 10, minWidth: 180,
@@ -261,13 +261,13 @@ export default function DubaiMap({ areas }) {
           }}>
             <div style={{ fontWeight: 600, marginBottom: 6, fontSize: 13 }}>{hovered.name}</div>
             <div style={{ color: "#8AAAC8", marginBottom: 3 }}>
-              Transactions: <span style={{ color: "#fff", fontWeight: 600 }}>{fmtNum(hovered.data.count)}</span>
+              Transactions: <span style={{ color: "#0D1929", fontWeight: 600 }}>{fmtNum(hovered.data.count)}</span>
             </div>
             <div style={{ color: "#8AAAC8", marginBottom: 3 }}>
-              Total value: <span style={{ color: "#fff", fontWeight: 600 }}>{fmtAED(hovered.data.total, true)}</span>
+              Total value: <span style={{ color: "#0D1929", fontWeight: 600 }}>{fmtAED(hovered.data.total, true)}</span>
             </div>
             <div style={{ color: "#8AAAC8", marginBottom: 3 }}>
-              Avg price: <span style={{ color: "#fff", fontWeight: 600 }}>{fmtAED(hovered.data.avg, true)}</span>
+              Avg price: <span style={{ color: "#0D1929", fontWeight: 600 }}>{fmtAED(hovered.data.avg, true)}</span>
             </div>
             {hovered.data.avgSize > 0 && (
               <div style={{ color: "#8AAAC8" }}>

@@ -24,7 +24,7 @@ export default function UploadZone({ onFile, onDemo }) {
         }}>
           <span style={{ fontSize: 28 }}>🏙️</span>
         </div>
-        <h1 style={{ fontSize: 26, fontWeight: 700, color: "#0A1628", marginBottom: 8 }}>
+        <h1 style={{ fontSize: 26, fontWeight: 700, color: "#F1F5F9", marginBottom: 8 }}>
           Dubai Real Estate Dashboard
         </h1>
         <p style={{ fontSize: 14, color: "#7A8499", lineHeight: 1.6 }}>
@@ -39,18 +39,18 @@ export default function UploadZone({ onFile, onDemo }) {
         onDragLeave={() => setDragging(false)}
         onDrop={handleDrop}
         style={{
-          border: `2px dashed ${dragging ? "#185FA5" : "#C5CAD6"}`,
+          border: `2px dashed ${dragging ? "#38BDF8" : "#C5CAD6"}`,
           borderRadius: 16,
           padding: "2.5rem 2rem",
           textAlign: "center",
           cursor: "pointer",
-          background: dragging ? "#EDF4FC" : "#FAFBFC",
+          background: dragging ? "rgba(59,130,246,0.1)" : "rgba(59,130,246,0.06)",
           transition: "all 0.2s",
           marginBottom: "1.25rem",
         }}
       >
-        <Upload size={32} color={dragging ? "#185FA5" : "#C5CAD6"} style={{ margin: "0 auto 1rem" }} />
-        <div style={{ fontSize: 15, fontWeight: 600, color: "#0A1628", marginBottom: 6 }}>
+        <Upload size={32} color={dragging ? "#38BDF8" : "#C5CAD6"} style={{ margin: "0 auto 1rem" }} />
+        <div style={{ fontSize: 15, fontWeight: 600, color: "#F1F5F9", marginBottom: 6 }}>
           Drop your DLD transactions CSV here
         </div>
         <div style={{ fontSize: 13, color: "#7A8499", marginBottom: 16 }}>
@@ -61,7 +61,7 @@ export default function UploadZone({ onFile, onDemo }) {
           fontSize: 11, color: "#9AA0AE"
         }}>
           {["Transaction Date","Transaction Type","Area","Amount","Property Type","Usage","Registration type"].map(c => (
-            <span key={c} style={{ background: "#F0F2F6", borderRadius: 4, padding: "2px 7px" }}>{c}</span>
+            <span key={c} style={{ background: "rgba(59,130,246,0.08)", borderRadius: 4, padding: "2px 7px" }}>{c}</span>
           ))}
         </div>
         <input ref={inputRef} type="file" accept=".csv" style={{ display: "none" }}
@@ -71,7 +71,7 @@ export default function UploadZone({ onFile, onDemo }) {
       {/* Demo mode */}
       <div style={{ textAlign: "center", marginBottom: "2rem" }}>
         <button onClick={onDemo} style={{
-          background: "#0A1628", color: "#fff", border: "none", borderRadius: 8,
+          background: "#F1F5F9", color: "#0D1929", border: "none", borderRadius: 8,
           padding: "10px 24px", fontSize: 13, fontWeight: 600, cursor: "pointer",
         }}>
           Preview with sample data
@@ -83,21 +83,21 @@ export default function UploadZone({ onFile, onDemo }) {
 
       {/* How to get data */}
       <div style={{
-        background: "#fff", border: "1px solid #E8ECF2", borderRadius: 12, padding: "1.25rem",
+        background: "#0D1929", border: "1px solid #E8ECF2", borderRadius: 12, padding: "1.25rem",
       }}>
-        <div style={{ fontSize: 12, fontWeight: 600, color: "#0A1628", marginBottom: "1rem", display: "flex", alignItems: "center", gap: 6 }}>
+        <div style={{ fontSize: 12, fontWeight: 600, color: "#F1F5F9", marginBottom: "1rem", display: "flex", alignItems: "center", gap: 6 }}>
           <FileText size={14} /> How to get free DLD data
         </div>
         {[
-          { n: 1, text: <>Go to <a href="https://dubailand.gov.ae/en/open-data/real-estate-data/" target="_blank" rel="noreferrer" style={{ color: "#185FA5" }}>dubailand.gov.ae/en/open-data/real-estate-data <ExternalLink size={10} /></a></> },
+          { n: 1, text: <>Go to <a href="https://dubailand.gov.ae/en/open-data/real-estate-data/" target="_blank" rel="noreferrer" style={{ color: "#38BDF8" }}>dubailand.gov.ae/en/open-data/real-estate-data <ExternalLink size={10} /></a></> },
           { n: 2, text: "Under Transactions, set your date range (e.g. 01-01-2025 to today), pick transaction type, click Search" },
           { n: 3, text: 'Click "Download as CSV" — completely free, no login required' },
           { n: 4, text: "Drop the downloaded file into the upload box above" },
         ].map(({ n, text }) => (
           <div key={n} style={{ display: "flex", gap: 10, marginBottom: 10, alignItems: "flex-start" }}>
             <div style={{
-              width: 22, height: 22, borderRadius: "50%", background: "#185FA5",
-              color: "#fff", fontSize: 11, fontWeight: 600, flexShrink: 0,
+              width: 22, height: 22, borderRadius: "50%", background: "#38BDF8",
+              color: "#0D1929", fontSize: 11, fontWeight: 600, flexShrink: 0,
               display: "flex", alignItems: "center", justifyContent: "center",
             }}>{n}</div>
             <div style={{ fontSize: 13, color: "#4A5568", lineHeight: 1.55, paddingTop: 2 }}>{text}</div>

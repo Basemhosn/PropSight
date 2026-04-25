@@ -3,14 +3,14 @@ import { fmtAED, fmtNum } from "../utils/format";
 import { Trophy, Search } from "lucide-react";
 
 const MEDAL = ["🥇","🥈","🥉"];
-const TAB_COLOR = { count: "#185FA5", value: "#1D9E75", avg: "#BA7517" };
+const TAB_COLOR = { count: "#38BDF8", value: "#22C55E", avg: "#BA7517" };
 
 // Change 1: Distinct colours for each transaction type
 const TYPE_COLOR = {
-  Sale:     { bg: "#EDF4FC", color: "#185FA5", bar: "#185FA5" },
-  Mortgage: { bg: "#E1F5EE", color: "#0F6E56", bar: "#1D9E75" },
+  Sale:     { bg: "rgba(59,130,246,0.1)", color: "#38BDF8", bar: "#38BDF8" },
+  Mortgage: { bg: "rgba(34,197,94,0.1)", color: "#22C55E", bar: "#22C55E" },
   Gift:     { bg: "#FAEEDA", color: "#854F0B", bar: "#D85A30" },
-  Other:    { bg: "#F1EFE8", color: "#5F5E5A", bar: "#888780" },
+  Other:    { bg: "rgba(100,116,139,0.15)", color: "#94A3B8", bar: "#64748B" },
 };
 
 export default function ProjectLeaderboard({ rows, allAreas }) {
@@ -57,14 +57,14 @@ export default function ProjectLeaderboard({ rows, allAreas }) {
     : [...new Set(rows.map(r => r.area))].filter(Boolean).sort();
 
   return (
-    <div style={{ background: "#fff", border: "1px solid #E8ECF2", borderRadius: 12, padding: "1.25rem" }}>
+    <div style={{ background: "#0D1929", border: "1px solid #E8ECF2", borderRadius: 12, padding: "1.25rem" }}>
       {/* Header */}
       <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between",
         marginBottom: "1rem", flexWrap: "wrap", gap: 8 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
           <Trophy size={16} color="#BA7517" />
           <div>
-            <div style={{ fontSize: 13, fontWeight: 600, color: "#0A1628" }}>
+            <div style={{ fontSize: 13, fontWeight: 600, color: "#F1F5F9" }}>
               {view === "project" ? "Top projects" : "Top areas"} leaderboard
             </div>
             <div style={{ fontSize: 11, color: "#9AA0AE", marginTop: 2 }}>
@@ -83,8 +83,8 @@ export default function ProjectLeaderboard({ rows, allAreas }) {
               <button key={t.k} onClick={() => { setView(t.k); setAreaSearch(""); }} style={{
                 fontSize: 11, padding: "4px 10px", borderRadius: 6, cursor: "pointer", fontWeight: 500,
                 border: view === t.k ? "1px solid #0A1628" : "1px solid #E8ECF2",
-                background: view === t.k ? "#0A1628" : "#fff",
-                color: view === t.k ? "#fff" : "#7A8499",
+                background: view === t.k ? "#F1F5F9" : "#0D1929",
+                color: view === t.k ? "#0D1929" : "#7A8499",
               }}>{t.l}</button>
             ))}
           </div>
@@ -95,7 +95,7 @@ export default function ProjectLeaderboard({ rows, allAreas }) {
               <button key={t.k} onClick={() => setMetric(t.k)} style={{
                 fontSize: 11, padding: "4px 10px", borderRadius: 6, cursor: "pointer", fontWeight: 500,
                 border: metric === t.k ? `1px solid ${TAB_COLOR[t.k]}` : "1px solid #E8ECF2",
-                background: metric === t.k ? TAB_COLOR[t.k] + "18" : "#fff",
+                background: metric === t.k ? TAB_COLOR[t.k] + "18" : "#0D1929",
                 color: metric === t.k ? TAB_COLOR[t.k] : "#7A8499",
               }}>{t.l}</button>
             ))}
@@ -108,14 +108,14 @@ export default function ProjectLeaderboard({ rows, allAreas }) {
         <div style={{ marginBottom: "1rem", position: "relative" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 6,
             border: "1px solid #E8ECF2", borderRadius: 8, padding: "6px 10px",
-            background: areaSearch ? "#EDF4FC" : "#fff" }}>
-            <Search size={13} color={areaSearch ? "#185FA5" : "#9AA0AE"} />
+            background: areaSearch ? "rgba(59,130,246,0.1)" : "#0D1929" }}>
+            <Search size={13} color={areaSearch ? "#38BDF8" : "#9AA0AE"} />
             <select
               value={areaSearch}
               onChange={e => setAreaSearch(e.target.value)}
               style={{
                 border: "none", outline: "none", fontSize: 13,
-                color: areaSearch ? "#185FA5" : "#9AA0AE",
+                color: areaSearch ? "#38BDF8" : "#9AA0AE",
                 background: "transparent", width: "100%", cursor: "pointer",
               }}>
               <option value="">Filter by area (all areas)</option>
@@ -140,7 +140,7 @@ export default function ProjectLeaderboard({ rows, allAreas }) {
             <div key={item.name} style={{
               display: "flex", alignItems: "center", gap: 10,
               padding: "7px 10px", borderRadius: 8,
-              background: i < 3 ? "#FAFBFC" : "transparent",
+              background: i < 3 ? "rgba(59,130,246,0.06)" : "transparent",
               border: i < 3 ? "1px solid #F0F2F6" : "1px solid transparent",
             }}>
               {/* Rank */}
@@ -154,7 +154,7 @@ export default function ProjectLeaderboard({ rows, allAreas }) {
                 <div style={{ display: "flex", justifyContent: "space-between",
                   alignItems: "baseline", marginBottom: 4, gap: 8 }}>
                   <div style={{
-                    fontSize: 12, fontWeight: i < 3 ? 600 : 500, color: "#0A1628",
+                    fontSize: 12, fontWeight: i < 3 ? 600 : 500, color: "#F1F5F9",
                     whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", maxWidth: "65%"
                   }} title={item.name}>
                     {item.name}
@@ -163,7 +163,7 @@ export default function ProjectLeaderboard({ rows, allAreas }) {
                     {val}
                   </div>
                 </div>
-                <div style={{ height: 4, background: "#F0F2F6", borderRadius: 2, overflow: "hidden" }}>
+                <div style={{ height: 4, background: "rgba(59,130,246,0.08)", borderRadius: 2, overflow: "hidden" }}>
                   <div style={{
                     height: "100%", width: `${pct}%`,
                     background: i < 3 ? tc.bar : tc.bar + "70",
@@ -185,7 +185,7 @@ export default function ProjectLeaderboard({ rows, allAreas }) {
 
       <button onClick={() => setShowAll(s => !s)} style={{
         width: "100%", marginTop: "0.875rem", padding: "7px",
-        background: "#F4F6FA", border: "none", borderRadius: 8,
+        background: "#060E1A", border: "none", borderRadius: 8,
         fontSize: 12, color: "#7A8499", cursor: "pointer", fontWeight: 500,
       }}>
         {showAll ? "Show less ↑" : "Show more — top 50 ↓"}
