@@ -45,7 +45,7 @@ export default function LandingPage({ onLogin, onInvestorLogin, onBrokerLogin })
   const scrollTo = id => { document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' }); setMobileNavOpen(false); };
 
   const S = {
-    section: { maxWidth: 1100, margin: '0 auto', width: '100%' },
+    section: { maxWidth: 1040, margin: '0 auto', width: '100%' },
     label: { fontSize: 11, fontWeight: 700, color: '#38BDF8', textTransform: 'uppercase', letterSpacing: '0.16em', marginBottom: 14, display: 'block' },
     h2: { fontFamily: "'Syne',sans-serif", fontSize: 'clamp(28px,4vw,46px)', fontWeight: 800, letterSpacing: '-0.025em', color: '#F1F5F9', marginBottom: 16, lineHeight: 1.1 },
     p: { fontSize: 16, color: '#94A3B8', lineHeight: 1.7, maxWidth: 520 },
@@ -89,6 +89,8 @@ export default function LandingPage({ onLogin, onInvestorLogin, onBrokerLogin })
         .grid-bg { background-image: linear-gradient(rgba(59,130,246,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(59,130,246,0.04) 1px, transparent 1px); background-size: 60px 60px; }
         .lp-hero-card { transition: transform 0.2s ease, border-color 0.2s ease; }
         .lp-hero-card:hover { transform: translateY(-2px); }
+        .lp-nav-inner { max-width: 1200px; margin: 0 auto; width: 100%; display: flex; align-items: center; justify-content: space-between; }
+        .lp-section-pad { padding-left: clamp(20px, 5vw, 80px); padding-right: clamp(20px, 5vw, 80px); }
         @media (max-width: 768px) {
           .lp-nav-links { display: none !important; }
           .lp-agents-grid { grid-template-columns: 1fr !important; gap: 36px !important; }
@@ -104,12 +106,13 @@ export default function LandingPage({ onLogin, onInvestorLogin, onBrokerLogin })
       {/* NAV */}
       <nav style={{
         position: 'fixed', top: 0, left: 0, right: 0, zIndex: 200, height: 64,
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 5%',
+        display: 'flex', alignItems: 'center', padding: '0 clamp(20px, 5vw, 80px)',
         background: scrolled ? 'rgba(6,14,26,0.92)' : 'transparent',
         backdropFilter: scrolled ? 'blur(20px)' : 'none',
         borderBottom: scrolled ? '1px solid rgba(255,255,255,0.06)' : '1px solid transparent',
         transition: 'all 0.3s',
       }}>
+        <div className="lp-nav-inner">
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }} onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
           <div style={{ width: 32, height: 32, borderRadius: 8, background: 'linear-gradient(135deg,#1D4ED8,#38BDF8)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16 }}>🏙️</div>
           <span style={{ fontFamily: "'Syne',sans-serif", fontSize: 20, fontWeight: 800, color: '#F1F5F9' }}>Prop<span style={{ color: '#38BDF8' }}>Sight</span></span>
@@ -123,10 +126,11 @@ export default function LandingPage({ onLogin, onInvestorLogin, onBrokerLogin })
           <button onClick={onLogin} className="lp-nav-link lp-nav-links" style={{ background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'inherit', padding: '8px 14px' }}>Sign in</button>
           <button onClick={onLogin} className="lp-btn" style={{ padding: '9px 20px', borderRadius: 10, border: 'none', cursor: 'pointer', background: 'linear-gradient(135deg,#1D4ED8,#38BDF8)', color: '#fff', fontSize: 14, fontWeight: 600, fontFamily: 'inherit' }}>Get started →</button>
         </div>
+        </div>
       </nav>
 
       {/* HERO */}
-      <section id="home" className="grid-bg" style={{ padding: '130px 5% 80px', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
+      <section id="home" className="grid-bg" style={{ padding: '130px clamp(20px, 5vw, 80px) 80px', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', top: '8%', left: '5%', width: 420, height: 420, borderRadius: '50%', background: 'rgba(29,78,216,0.10)', filter: 'blur(110px)', pointerEvents: 'none' }} />
         <div style={{ position: 'absolute', bottom: '8%', right: '5%', width: 320, height: 320, borderRadius: '50%', background: 'rgba(56,189,248,0.07)', filter: 'blur(90px)', pointerEvents: 'none' }} />
 
@@ -169,7 +173,7 @@ export default function LandingPage({ onLogin, onInvestorLogin, onBrokerLogin })
       </section>
 
       {/* FEATURES */}
-      <section id="features" style={{ padding: '80px 5%' }}>
+      <section id="features" style={{ padding: '80px clamp(20px, 5vw, 80px)' }}>
         <div style={S.section}>
           <div style={{ textAlign: 'center', marginBottom: 48 }}>
             <span style={S.label}>FEATURES</span>
@@ -189,7 +193,7 @@ export default function LandingPage({ onLogin, onInvestorLogin, onBrokerLogin })
       </section>
 
       {/* FOR BROKERS */}
-      <section id="agents" style={{ padding: '80px 5%', background: 'rgba(13,25,41,0.4)' }}>
+      <section id="agents" style={{ padding: '80px clamp(20px, 5vw, 80px)', background: 'rgba(13,25,41,0.4)' }}>
         <div className="lp-agents-grid" style={{ ...S.section, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 56, alignItems: 'center' }}>
           <div>
             <span style={{ ...S.label, color: '#F59E0B' }}>FOR BROKERS</span>
@@ -212,7 +216,7 @@ export default function LandingPage({ onLogin, onInvestorLogin, onBrokerLogin })
       </section>
 
       {/* PRICING — split by audience */}
-      <section id="pricing" style={{ padding: '80px 5%' }}>
+      <section id="pricing" style={{ padding: '80px clamp(20px, 5vw, 80px)' }}>
         <div style={S.section}>
           <div style={{ textAlign: 'center', marginBottom: 48 }}>
             <span style={S.label}>PRICING</span>
@@ -253,7 +257,7 @@ export default function LandingPage({ onLogin, onInvestorLogin, onBrokerLogin })
       </section>
 
       {/* FINAL CTA */}
-      <section style={{ padding: '90px 5%', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
+      <section style={{ padding: '90px clamp(20px, 5vw, 80px)', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 680, height: 420, borderRadius: '50%', background: 'rgba(29,78,216,0.07)', filter: 'blur(110px)', pointerEvents: 'none' }} />
         <div style={{ position: 'relative', maxWidth: 640, margin: '0 auto' }}>
           <h2 style={{ fontFamily: "'Syne',sans-serif", fontSize: 'clamp(30px,5vw,52px)', fontWeight: 800, marginBottom: 16, letterSpacing: '-0.03em', lineHeight: 1.1 }}>
@@ -267,7 +271,7 @@ export default function LandingPage({ onLogin, onInvestorLogin, onBrokerLogin })
       </section>
 
       {/* COMING SOON STRIP */}
-      <section style={{ padding: '24px 5%', borderTop: '1px solid rgba(255,255,255,0.04)', borderBottom: '1px solid rgba(255,255,255,0.04)', background: 'rgba(13,25,41,0.4)' }}>
+      <section style={{ padding: '24px clamp(20px, 5vw, 80px)', borderTop: '1px solid rgba(255,255,255,0.04)', borderBottom: '1px solid rgba(255,255,255,0.04)', background: 'rgba(13,25,41,0.4)' }}>
         <div style={{ ...S.section, textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
           <div style={{ fontSize: 13, fontWeight: 600, color: '#94A3B8', letterSpacing: '0.01em' }}>
             🇦🇪 Live in Dubai. <span style={{ color: '#475569' }}>Coming soon to Abu Dhabi, Riyadh, and Doha.</span>
@@ -276,7 +280,7 @@ export default function LandingPage({ onLogin, onInvestorLogin, onBrokerLogin })
       </section>
 
       {/* FOOTER */}
-      <footer style={{ padding: '32px 5%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16 }}>
+      <footer style={{ padding: '32px clamp(20px, 5vw, 80px)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16, maxWidth: 1200, margin: '0 auto' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <div style={{ width: 26, height: 26, borderRadius: 6, background: 'linear-gradient(135deg,#1D4ED8,#38BDF8)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12 }}>🏙️</div>
           <span style={{ fontFamily: "'Syne',sans-serif", fontSize: 15, fontWeight: 700, color: '#F1F5F9' }}>Prop<span style={{ color: '#38BDF8' }}>Sight</span></span>
