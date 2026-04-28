@@ -139,7 +139,7 @@ export default function LandingPage({ onLogin, onInvestorLogin, onBrokerLogin })
           Live DLD data · 354,343 transactions
         </div>
 
-        <h1 style={{ fontFamily: "'Syne',sans-serif", fontSize: 'clamp(42px,6vw,76px)', fontWeight: 800, lineHeight: 1.04, marginBottom: 20, letterSpacing: '-0.035em', maxWidth: 880 }}>
+        <h1 style={{ fontFamily: "'Syne',sans-serif", fontSize: 'clamp(36px, 5vw, 56px)', fontWeight: 800, lineHeight: 1.08, marginBottom: 20, letterSpacing: '-0.025em', maxWidth: 720 }}>
           Clarity in <span className="g-text">every move.</span>
         </h1>
 
@@ -260,7 +260,7 @@ export default function LandingPage({ onLogin, onInvestorLogin, onBrokerLogin })
       <section style={{ padding: '90px clamp(20px, 5vw, 80px)', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 680, height: 420, borderRadius: '50%', background: 'rgba(29,78,216,0.07)', filter: 'blur(110px)', pointerEvents: 'none' }} />
         <div style={{ position: 'relative', maxWidth: 640, margin: '0 auto' }}>
-          <h2 style={{ fontFamily: "'Syne',sans-serif", fontSize: 'clamp(30px,5vw,52px)', fontWeight: 800, marginBottom: 16, letterSpacing: '-0.03em', lineHeight: 1.1 }}>
+          <h2 style={{ fontFamily: "'Syne',sans-serif", fontSize: 'clamp(28px, 4vw, 44px)', fontWeight: 800, marginBottom: 16, letterSpacing: '-0.025em', lineHeight: 1.1 }}>
             Make smarter property<br /><span className="g-text">decisions today.</span>
           </h2>
           <p style={{ fontSize: 16, color: '#94A3B8', marginBottom: 32 }}>Free to start. No credit card required.</p>
