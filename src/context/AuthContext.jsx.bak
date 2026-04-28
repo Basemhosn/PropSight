@@ -5,39 +5,7 @@ import { createClient } from '@supabase/supabase-js';
 const SUPABASE_URL = process.env.REACT_APP_SUPABASE_URL;
 const SUPABASE_ANON_KEY = process.env.REACT_APP_SUPABASE_ANON_KEY;
 
-export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { flowType: 'pkce', detectSessionInUrl: true, persistSession: true, autoRefreshToken: true } });
-
-
-const THEMES = {
-  dark: {
-    bg: '#060E1A',
-    bgAlt: '#070E1B',
-    surface: '#0D1929',
-    surfaceElevated: '#0F1F35',
-    border: 'rgba(255,255,255,0.08)',
-    borderStrong: 'rgba(59,130,246,0.2)',
-    textPrimary: '#F1F5F9',
-    textSecondary: '#94A3B8',
-    textMuted: '#64748B',
-    textFaint: '#1E3A5F',
-    accent: '#38BDF8',
-    accentDeep: '#1D4ED8',
-  },
-  light: {
-    bg: '#F8FAFC',
-    bgAlt: '#FFFFFF',
-    surface: '#FFFFFF',
-    surfaceElevated: '#F1F5F9',
-    border: 'rgba(15,23,42,0.08)',
-    borderStrong: 'rgba(29,78,216,0.25)',
-    textPrimary: '#0F172A',
-    textSecondary: '#475569',
-    textMuted: '#94A3B8',
-    textFaint: '#CBD5E1',
-    accent: '#0284C7',
-    accentDeep: '#1D4ED8',
-  },
-};
+export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 const AuthContext = createContext({});
 
@@ -129,7 +97,6 @@ export function AuthProvider({ children }) {
     setProfile(null);
   }
 
-  const colors = THEMES[theme] || THEMES.dark;
   const isPro = profile?.subscription_status === 'pro' || profile?.subscription_status === 'agent' || profile?.email === 'basem.aboulhosn@gmail.com';
   const isLite = profile?.subscription_status === 'lite' || isPro;
   const isAgent = profile?.subscription_status === 'agent';
@@ -165,7 +132,7 @@ export function AuthProvider({ children }) {
       user, profile, loading,
       isPro, isLite, isAgent, canSearch, recordSearch,
       signInWithGoogle, signInWithEmail, signUpWithEmail, signOut,
-      theme, toggleTheme, colors, lang, toggleLang,
+      theme, toggleTheme, lang, toggleLang,
     }}>
       {children}
     </AuthContext.Provider>
