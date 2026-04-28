@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { fmtAED, fmtNum } from '../utils/format';
@@ -16,26 +16,28 @@ function makeAreaEl(p, onExplore) {
   const el = document.createElement('div');
   el.style.fontFamily = '-apple-system,sans-serif';
   el.innerHTML = `
-    <div style="font-size:14px;font-weight:700;color:#0A1628;margin-bottom:8px">${p.area}</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:10px">
-      <div style="background:#f4f6fa;padding:6px 8px;border-radius:6px">
-        <div style="font-size:9px;color:#9AA0AE">Transactions</div>
-        <div style="font-size:13px;font-weight:700">${fmtNum(p.count)}</div>
+    <div style="background:#0D1929;border-radius:8px;min-width:220px">
+      <div style="font-size:14px;font-weight:700;color:#F1F5F9;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid rgba(59,130,246,0.15)">${p.area}</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px">
+        <div style="background:rgba(59,130,246,0.12);padding:8px;border-radius:8px">
+          <div style="font-size:9px;color:#64748B;margin-bottom:3px">TRANSACTIONS</div>
+          <div style="font-size:15px;font-weight:700;color:#F1F5F9">${fmtNum(p.count)}</div>
+        </div>
+        <div style="background:rgba(59,130,246,0.12);padding:8px;border-radius:8px">
+          <div style="font-size:9px;color:#64748B;margin-bottom:3px">TOTAL VALUE</div>
+          <div style="font-size:13px;font-weight:700;color:#38BDF8">${fmtAED(p.total,true)}</div>
+        </div>
+        <div style="background:rgba(59,130,246,0.12);padding:8px;border-radius:8px">
+          <div style="font-size:9px;color:#64748B;margin-bottom:3px">AVG DEAL</div>
+          <div style="font-size:13px;font-weight:700;color:#F1F5F9">${fmtAED(p.avg,true)}</div>
+        </div>
+        <div style="background:rgba(59,130,246,0.12);padding:8px;border-radius:8px">
+          <div style="font-size:9px;color:#64748B;margin-bottom:3px">PRICE/M²</div>
+          <div style="font-size:13px;font-weight:700;color:#22C55E">${p.ppsqm>0?fmtAED(p.ppsqm,true):"—"}</div>
+        </div>
       </div>
-      <div style="background:#f4f6fa;padding:6px 8px;border-radius:6px">
-        <div style="font-size:9px;color:#9AA0AE">Total value</div>
-        <div style="font-size:13px;font-weight:700;color:#185FA5">${fmtAED(p.total,true)}</div>
-      </div>
-      <div style="background:#f4f6fa;padding:6px 8px;border-radius:6px">
-        <div style="font-size:9px;color:#9AA0AE">Avg deal</div>
-        <div style="font-size:13px;font-weight:700">${fmtAED(p.avg,true)}</div>
-      </div>
-      <div style="background:#f4f6fa;padding:6px 8px;border-radius:6px">
-        <div style="font-size:9px;color:#9AA0AE">Price/m²</div>
-        <div style="font-size:13px;font-weight:700;color:#1D9E75">${p.ppsqm>0?fmtAED(p.ppsqm,true):'—'}</div>
-      </div>
+      <button id="explore-btn" style="width:100%;padding:9px;background:linear-gradient(135deg,#1D4ED8,#38BDF8);color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer">Explore Area Analysis →</button>
     </div>
-    <button id="explore-btn" style="width:100%;padding:8px;background:#185FA5;color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer">Explore area →</button>
   `;
   el.querySelector('#explore-btn').addEventListener('click', onExplore);
   return el;
@@ -47,15 +49,29 @@ function makeProjectEl(p, projectsData, onView) {
   const img = p.image ? `<img src="${p.image}" style="width:100%;height:90px;object-fit:cover;border-radius:6px;margin-bottom:8px"/>` : '';
   el.innerHTML = `
     ${img}
-    <div style="font-size:12px;font-weight:700;color:#0A1628;margin-bottom:4px;line-height:1.3">${p.name}</div>
-    <div style="font-size:11px;color:#666;margin-bottom:8px">${fmtNum(p.count)} deals · avg ${fmtAED(p.avg,true)}</div>
-    <button id="view-btn" style="width:100%;padding:7px;background:#D85A30;color:#fff;border:none;border-radius:8px;font-size:11px;font-weight:600;cursor:pointer">View project details →</button>
+    <div style="font-size:12px;font-weight:700;color:#F1F5F9;margin-bottom:4px;line-height:1.3">${p.name}</div>
+    <div style="font-size:11px;color:#94A3B8;margin-bottom:8px">${fmtNum(p.count)} deals · avg ${fmtAED(p.avg,true)}</div>
+    <button id="view-btn" style="width:100%;padding:7px;background:linear-gradient(135deg,#D85A30,#F97316);color:#fff;border:none;border-radius:8px;font-size:11px;font-weight:600;cursor:pointer">View Project Details →</button>
   `;
   el.querySelector('#view-btn').addEventListener('click', onView);
   return el;
 }
 
 export default function MapView({ onAreaClick, onProjectClick, projectsData }) {
+  useEffect(() => {
+    const s = document.createElement('style');
+    s.id = 'mapbox-dark-popup';
+    if (!document.getElementById('mapbox-dark-popup')) {
+      s.textContent = '.mapboxgl-popup-content{background:#0D1929!important;padding:14px!important;border:1px solid rgba(59,130,246,0.25)!important;border-radius:14px!important;box-shadow:0 8px 40px rgba(0,0,0,0.6)!important}.mapboxgl-popup-tip{display:none!important}.mapboxgl-popup-close-button{color:#475569!important;font-size:20px!important;right:8px!important;top:6px!important;background:none!important;border:none!important}';
+      document.head.appendChild(s);
+    }
+  }, []);
+  useEffect(() => {
+    const s = document.createElement('style');
+    s.textContent = '.mapboxgl-popup-content{background:#0D1929!important;border:1px solid rgba(59,130,246,0.2)!important;border-radius:12px!important;padding:12px!important;box-shadow:0 8px 32px rgba(0,0,0,0.5)!important}.mapboxgl-popup-tip{border-top-color:#0D1929!important;border-bottom-color:#0D1929!important}.mapboxgl-popup-close-button{color:#64748B!important;font-size:16px!important}';
+    document.head.appendChild(s);
+    return () => document.head.removeChild(s);
+  }, []);
   const mapContainer = useRef(null);
   const map          = useRef(null);
   const popup        = useRef(null);
@@ -177,8 +193,8 @@ export default function MapView({ onAreaClick, onProjectClick, projectsData }) {
 
     m.addSource('projects', { type:'geojson', data:{ type:'FeatureCollection', features } });
 
-    m.addLayer({ id:'project-markers', type:'circle', source:'projects', minzoom:11,
-      paint:{'circle-radius':6,'circle-color':'#D85A30','circle-stroke-width':2,'circle-stroke-color':'#fff','circle-opacity':0.9}
+    m.addLayer({ id:'project-markers', type:'circle', source:'projects',
+      paint:{'circle-radius':8,'circle-color':'#EF4444','circle-stroke-width':2,'circle-stroke-color':'#fff','circle-opacity':0.9}
     });
 
     m.addLayer({ id:'project-labels', type:'symbol', source:'projects', minzoom:13.5,
@@ -188,7 +204,8 @@ export default function MapView({ onAreaClick, onProjectClick, projectsData }) {
 
     m.off('click', 'project-markers');
     m.on('click', 'project-markers', (e) => {
-      e.stopPropagation();
+      if (e.features.length === 0) return;
+      e.preventDefault();
       const p = e.features[0].properties;
       if (popup.current) popup.current.remove();
       const el = makeProjectEl(p, cbRefs.current.projectsData, () => {

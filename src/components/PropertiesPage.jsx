@@ -1,226 +1,270 @@
 import { useState, useMemo } from 'react';
-import { AreaChart, Area, BarChart, Bar, XAxis, YAxis, Tooltip,
-         ResponsiveContainer, CartesianGrid, PieChart, Pie, Cell } from 'recharts';
 import { fmtAED, fmtNum } from '../utils/format';
+import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 
-const AREA_SHORT = {
-  'Al Barsha South Fourth': 'JVC', 'Burj Khalifa': 'Downtown',
-  'Marsa Dubai': 'Marina', 'Hadaeq Sheikh Mohammed Bin Rashid': 'Dubai Hills',
-  'Al Thanyah Fifth': 'JLT', 'Al Merkadh': 'MBR City',
-  'Business Bay': 'Business Bay', 'Al Khairan First': 'Creek Harbour',
-};
-const short = a => AREA_SHORT[a] || a.split(' ').slice(0,2).join(' ');
+const AN = {'Al Barsha South Fourth':'JVC','Burj Khalifa':'Downtown Dubai','Marsa Dubai':'Dubai Marina','Hadaeq Sheikh Mohammed Bin Rashid':'Dubai Hills','Al Thanyah Fifth':'JLT','Business Bay':'Business Bay','Palm Jumeirah':'Palm Jumeirah','Al Merkadh':'MBR City','Al Khairan First':'Creek Harbour','Al Hebiah Fourth':'Damac Hills'};
+const na = a => AN[a] || a;
 
-function StatCard({ label, value, sub, subColor='#38BDF8', accent }) {
+function OffPlanReadyTab({ recentRaw }) {
+  const [regFilter, setRegFilter] = useState('all');
+  const [areaFilter, setAreaFilter] = useState('');
+  const [visibleCount, setVisibleCount] = useState(50);
+
+  const areas = useMemo(()=>[...new Set((recentRaw||[]).map(r=>r.a||'').filter(Boolean))].sort(),[recentRaw]);
+
+  const rows = useMemo(()=>{
+    if(!recentRaw?.length) return [];
+    let r = [...recentRaw].sort((a,b)=>(b.d||'').localeCompare(a.d||''));
+    if(regFilter==='offplan') r=r.filter(x=>x.r==='Off');
+    if(regFilter==='ready') r=r.filter(x=>x.r!=='Off');
+    if(areaFilter) r=r.filter(x=>(x.a||'')===areaFilter);
+    return r;
+  },[recentRaw,regFilter,areaFilter]);
+
+  const stats = useMemo(()=>{
+    if(!rows.length) return null;
+    const offPlan = rows.filter(r=>r.r==='Off');
+    const ready = rows.filter(r=>r.r!=='Off');
+    const avgVal = rows.length ? rows.slice(0,200).reduce((s,r)=>s+(r.v||0),0)/Math.min(rows.length,200) : 0;
+    return { total:rows.length, offPlan:offPlan.length, ready:ready.length, avgVal };
+  },[rows]);
+
+  const inp={background:'#070E1B',border:'1px solid rgba(59,130,246,0.15)',borderRadius:8,color:'#F1F5F9',fontSize:12,padding:'7px 10px',outline:'none',fontFamily:'system-ui'};
+
   return (
-    <div style={{
-      background: '#0D1929', border: `1px solid ${accent || 'rgba(255,255,255,0.06)'}`,
-      borderRadius: 12, padding: '18px 20px', flex: 1, minWidth: 0,
-    }}>
-      <div style={{ fontSize: 11, color: '#64748B', fontWeight: 500, marginBottom: 8, textTransform: 'uppercase', letterSpacing: '0.06em' }}>{label}</div>
-      <div style={{ fontSize: 24, fontWeight: 700, color: '#F1F5F9', letterSpacing: '-0.5px', marginBottom: 6 }}>{value}</div>
-      {sub && <div style={{ fontSize: 12, color: subColor, fontWeight: 500 }}>{sub}</div>}
+    <div>
+      {stats && (
+        <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:12,marginBottom:16}}>
+          {[['Total',fmtNum(stats.total),'#F1F5F9'],['Off-Plan',fmtNum(stats.offPlan),'#38BDF8'],['Ready',fmtNum(stats.ready),'#22C55E'],['Avg Deal',fmtAED(stats.avgVal,true),'#F59E0B']].map(([l,v,c],i)=>(
+            <div key={i} style={{background:'#0D1929',border:'1px solid rgba(255,255,255,0.06)',borderRadius:10,padding:'12px 16px'}}>
+              <div style={{fontSize:10,color:'#64748B',marginBottom:4,textTransform:'uppercase',letterSpacing:'0.05em'}}>{l}</div>
+              <div style={{fontSize:16,fontWeight:700,color:c}}>{v}</div>
+            </div>
+          ))}
+        </div>
+      )}
+      <div style={{display:'flex',gap:8,marginBottom:14,alignItems:'center',flexWrap:'wrap'}}>
+        <div style={{display:'flex',gap:6}}>
+          {[['all','All'],['offplan','Off-Plan'],['ready','Ready']].map(([f,l])=>(
+            <button key={f} onClick={()=>setRegFilter(f)} style={{padding:'6px 14px',borderRadius:20,border:'none',cursor:'pointer',fontSize:11,fontWeight:regFilter===f?600:400,fontFamily:'system-ui',background:regFilter===f?'linear-gradient(135deg,#1D4ED8,#38BDF8)':'rgba(59,130,246,0.06)',color:regFilter===f?'#fff':'#64748B'}}>{l}</button>
+          ))}
+        </div>
+        <select value={areaFilter} onChange={e=>setAreaFilter(e.target.value)} style={{...inp,cursor:'pointer'}}>
+          <option value="">All areas</option>
+          {areas.map(a=><option key={a} value={a}>{na(a)}</option>)}
+        </select>
+        {(areaFilter||regFilter!=='all') && <button onClick={()=>{setRegFilter('all');setAreaFilter('');}} style={{background:'none',border:'none',cursor:'pointer',color:'#F87171',fontSize:12,fontFamily:'system-ui'}}>× Clear</button>}
+      </div>
+      <div style={{background:'#0D1929',border:'1px solid rgba(255,255,255,0.06)',borderRadius:14,overflow:'hidden'}}>
+        <div style={{display:'grid',gridTemplateColumns:'90px 70px 70px 1fr 1fr 90px 75px',padding:'10px 20px',borderBottom:'1px solid rgba(59,130,246,0.06)',background:'rgba(59,130,246,0.02)'}}>
+          {['Date','Reg','BR','Area','Project','Value','AED/sqft'].map((h,i)=><div key={i} style={{fontSize:10,color:'#475569',fontWeight:600,textTransform:'uppercase',letterSpacing:'0.05em'}}>{h}</div>)}
+        </div>
+        {rows.slice(0,visibleCount).map((r,i)=>{
+          const ppsqft=r.s&&r.v?Math.round(r.v/r.s/10.764):0;
+          return (
+            <div key={r.n||i} style={{display:'grid',gridTemplateColumns:'90px 70px 70px 1fr 1fr 90px 75px',padding:'11px 20px',borderBottom:i<Math.min(rows.length,visibleCount)-1?'1px solid rgba(255,255,255,0.03)':'none'}}
+              onMouseEnter={e=>e.currentTarget.style.background='rgba(59,130,246,0.05)'}
+              onMouseLeave={e=>e.currentTarget.style.background='transparent'}>
+              <div style={{fontSize:11,color:'#64748B'}}>{r.d||'—'}</div>
+              <div><span style={{fontSize:9,fontWeight:600,padding:'2px 5px',borderRadius:20,background:r.r==='Off'?'rgba(59,130,246,0.1)':'rgba(34,197,94,0.1)',color:r.r==='Off'?'#38BDF8':'#22C55E'}}>{r.r==='Off'?'Off-Plan':'Ready'}</span></div>
+              <div style={{fontSize:11,color:'#94A3B8'}}>{r.b||'—'}</div>
+              <div style={{fontSize:11,color:'#94A3B8',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{na(r.a||'')}</div>
+              <div style={{fontSize:11,color:'#64748B',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{r.j||'—'}</div>
+              <div style={{fontSize:12,fontWeight:600,color:'#F1F5F9'}}>{r.v?fmtAED(r.v,true):'—'}</div>
+              <div style={{fontSize:11,color:'#38BDF8'}}>{ppsqft?'AED '+fmtNum(ppsqft):'—'}</div>
+            </div>
+          );
+        })}
+        {visibleCount<rows.length && (
+          <div style={{textAlign:'center',padding:14}}>
+            <button onClick={()=>setVisibleCount(c=>c+50)} style={{padding:'8px 20px',borderRadius:10,border:'1px solid rgba(59,130,246,0.2)',background:'rgba(59,130,246,0.06)',color:'#64748B',cursor:'pointer',fontSize:12,fontFamily:'system-ui'}}>Load more ({fmtNum(rows.length-visibleCount)} remaining)</button>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
 
-const COLORS = ['#38BDF8','#22C55E','#F59E0B','#A78BFA','#F87171','#34D399'];
+function PropertyLookupTab({ recentRaw }) {
+  const [query, setQuery] = useState('');
+  const [selected, setSelected] = useState(null);
+  const [showSugg, setShowSugg] = useState(false);
 
-export default function PropertiesPage({ core, areaData, recentRaw }) {
-  const [tab, setTab] = useState('all'); // all | offplan | ready
-
-  const areas = areaData ? Object.keys(areaData) : [];
-  const allSlice = core?.slices?.all || {};
-  const monthly = (core?.slices?.all?.monthly || []).slice(-12);
-  const priceTrend = core?.priceTrend || [];
-
-  // Compute stats
-  const stats = useMemo(() => {
-    if (!areaData) return { offPlan: 0, ready: 0, total: 0, pct: 0 };
-    let offPlan = 0, ready = 0;
-    Object.values(areaData).forEach(d => {
-      offPlan += d.kpis.offPlan || 0;
-      ready += d.kpis.ready || 0;
+  const projectIndex = useMemo(()=>{
+    if(!recentRaw?.length) return {};
+    const idx={};
+    recentRaw.forEach(r=>{
+      const proj=r.j||''; if(!proj.trim()) return;
+      if(!idx[proj]) idx[proj]={name:proj,area:r.a||'',transactions:[],areas:new Set()};
+      idx[proj].transactions.push(r); idx[proj].areas.add(r.a||'');
     });
-    const total = offPlan + ready;
-    return { offPlan, ready, total, pct: total ? Math.round(offPlan / total * 100) : 0 };
-  }, [areaData]);
+    return idx;
+  },[recentRaw]);
 
-  // Area breakdown
-  const areaBreakdown = useMemo(() => {
-    if (!areaData) return [];
-    return Object.entries(areaData)
-      .map(([key, d]) => ({
-        name: short(key),
-        offPlan: d.kpis.offPlan || 0,
-        ready: d.kpis.ready || 0,
-        total: (d.kpis.offPlan || 0) + (d.kpis.ready || 0),
-        ppsqft: Math.round((d.kpis.ppsqm || 0) / 10.764),
-      }))
-      .sort((a, b) => b.total - a.total)
-      .slice(0, 8);
-  }, [areaData]);
+  const suggestions = useMemo(()=>{
+    if(!query||query.length<2) return [];
+    const q=query.toLowerCase();
+    return Object.keys(projectIndex).filter(p=>p.toLowerCase().includes(q)).slice(0,8).map(p=>({name:p,...projectIndex[p]}));
+  },[query,projectIndex]);
 
-  // Pie data
-  const pieData = useMemo(() => {
-    const shown = tab === 'all'
-      ? [{ name: 'Off-Plan', value: stats.offPlan, color: '#38BDF8' },
-         { name: 'Ready', value: stats.ready, color: '#22C55E' }]
-      : tab === 'offplan'
-        ? [{ name: 'Off-Plan', value: stats.offPlan, color: '#38BDF8' },
-           { name: 'Ready', value: stats.ready, color: 'rgba(59,130,246,0.1)' }]
-        : [{ name: 'Off-Plan', value: stats.offPlan, color: 'rgba(59,130,246,0.1)' },
-           { name: 'Ready', value: stats.ready, color: '#22C55E' }];
-    return shown;
-  }, [tab, stats]);
+  const selectProject=(proj)=>{
+    const data=projectIndex[proj.name]; if(!data) return;
+    const txns=data.transactions;
+    const values=txns.map(t=>t.v||0).filter(v=>v>0);
+    const sizes=txns.map(t=>t.s||0).filter(s=>s>0);
+    const dates=txns.map(t=>t.d||'').filter(Boolean).sort();
+    const monthly={};
+    txns.forEach(t=>{const m=(t.d||'').slice(0,7);if(!m)return;if(!monthly[m])monthly[m]={month:m,count:0};monthly[m].count++;});
+    const rooms={}; txns.forEach(t=>{const b=t.b||'?';rooms[b]=(rooms[b]||0)+1;});
+    const regs={}; txns.forEach(t=>{const r=t.r==='Off'?'Off-Plan':'Ready';regs[r]=(regs[r]||0)+1;});
+    setSelected({
+      name:proj.name,area:na([...data.areas][0]||''),count:txns.length,
+      avgValue:values.length?Math.round(values.reduce((s,v)=>s+v,0)/values.length):0,
+      minValue:values.length?Math.min(...values):0,maxValue:values.length?Math.max(...values):0,
+      avgSize:sizes.length?Math.round(sizes.reduce((s,v)=>s+v,0)/sizes.length*10.764):0,
+      avgPpsqft:sizes.length&&values.length?Math.round(values.reduce((s,v)=>s+v,0)/values.length/(sizes.reduce((s,v)=>s+v,0)/sizes.length)/10.764):0,
+      firstDate:dates[0]||'',lastDate:dates[dates.length-1]||'',
+      monthly:Object.values(monthly).sort((a,b)=>a.month.localeCompare(b.month)),
+      rooms:Object.entries(rooms).sort((a,b)=>b[1]-a[1]),
+      regs:Object.entries(regs),
+      recentTxns:txns.sort((a,b)=>(b.d||'').localeCompare(a.d||'')).slice(0,10),
+    });
+    setShowSugg(false); setQuery(proj.name);
+  };
 
-  const filteredMonthly = monthly;
-  const shownAreas = areaBreakdown;
-
-  const tabStyle = (t) => ({
-    padding: '8px 20px', borderRadius: 8, border: 'none', cursor: 'pointer',
-    fontSize: 13, fontWeight: tab === t ? 600 : 400, fontFamily: 'system-ui',
-    background: tab === t ? 'linear-gradient(135deg,#1D4ED8,#38BDF8)' : 'rgba(59,130,246,0.06)',
-    color: tab === t ? '#fff' : '#64748B',
-  });
+  const tt={contentStyle:{background:'#0A1628',border:'1px solid rgba(59,130,246,0.2)',borderRadius:8,color:'#F1F5F9',fontSize:11}};
 
   return (
-    <div style={{ flex: 1, overflowY: 'auto', background: '#060E1A', fontFamily: 'system-ui', padding: '24px 28px' }}>
-
-      {/* Header */}
-      <div style={{ marginBottom: 20 }}>
-        <h1 style={{ margin: 0, fontSize: 22, fontWeight: 700, color: '#F1F5F9', marginBottom: 4 }}>
-          Properties
-        </h1>
-        <div style={{ fontSize: 13, color: '#475569' }}>
-          Off-plan and ready property transactions — Dubai DLD data
+    <div>
+      <div style={{position:'relative',maxWidth:560,marginBottom:24}}>
+        <div style={{display:'flex',alignItems:'center',gap:10,background:'#0D1929',border:'1px solid rgba(59,130,246,0.2)',borderRadius:12,padding:'12px 18px'}}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#38BDF8" strokeWidth="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <input value={query} onChange={e=>{setQuery(e.target.value);setShowSugg(true);setSelected(null);}} onFocus={()=>setShowSugg(true)} placeholder="Search building or project..." style={{background:'none',border:'none',outline:'none',color:'#F1F5F9',fontSize:14,flex:1,fontFamily:'system-ui'}}/>
+          {query&&<button onClick={()=>{setQuery('');setSelected(null);}} style={{background:'none',border:'none',cursor:'pointer',color:'#475569',fontSize:18}}>×</button>}
         </div>
-      </div>
-
-      {/* Tab selector */}
-      <div style={{ display: 'flex', gap: 8, marginBottom: 24, background: '#0D1929', borderRadius: 10, padding: 4, width: 'fit-content' }}>
-        <button style={tabStyle('all')} onClick={() => setTab('all')}>All Properties</button>
-        <button style={tabStyle('offplan')} onClick={() => setTab('offplan')}>Off-Plan</button>
-        <button style={tabStyle('ready')} onClick={() => setTab('ready')}>Ready</button>
-      </div>
-
-      {/* KPI cards */}
-      <div style={{ display: 'flex', gap: 12, marginBottom: 24, flexWrap: 'wrap' }}>
-        <StatCard label="Total Transactions" value={fmtNum(allSlice.count || 0)} sub="All time" subColor="#64748B"/>
-        <StatCard label="Off-Plan" value={fmtNum(stats.offPlan)}
-          sub={`${stats.pct}% of total`} subColor="#38BDF8" accent="rgba(59,130,246,0.15)"/>
-        <StatCard label="Ready" value={fmtNum(stats.ready)}
-          sub={`${100 - stats.pct}% of total`} subColor="#22C55E" accent="rgba(34,197,94,0.15)"/>
-        <StatCard label="Total Value" value={fmtAED(allSlice.total || 0, true)} sub="AED" subColor="#64748B"/>
-        <StatCard label="Avg Deal" value={fmtAED(allSlice.avg || 0, true)} sub="per transaction" subColor="#64748B"/>
-      </div>
-
-      {/* Charts row */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 300px', gap: 14, marginBottom: 24 }}>
-
-        {/* Monthly trend */}
-        <div style={{ background: '#0D1929', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 14, padding: 20 }}>
-          <div style={{ fontSize: 13, fontWeight: 600, color: '#F1F5F9', marginBottom: 4 }}>Monthly Volume</div>
-          <div style={{ fontSize: 11, color: '#475569', marginBottom: 16 }}>Transaction count over time</div>
-          <ResponsiveContainer width="100%" height={180}>
-            <AreaChart data={filteredMonthly} margin={{ top: 4, right: 4, left: 0, bottom: 0 }}>
-              <defs>
-                <linearGradient id="propGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#38BDF8" stopOpacity={0.15}/>
-                  <stop offset="95%" stopColor="#38BDF8" stopOpacity={0}/>
-                </linearGradient>
-              </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)"/>
-              <XAxis dataKey="month" tick={{ fontSize: 9, fill: '#475569' }} axisLine={false} tickLine={false}/>
-              <YAxis hide/>
-              <Tooltip contentStyle={{ background: '#0A1628', border: '1px solid rgba(59,130,246,0.2)', borderRadius: 8, color: '#F1F5F9', fontSize: 11 }}
-                formatter={v => [fmtNum(v), 'Transactions']}/>
-              <Area type="monotone" dataKey="count" stroke="#38BDF8" strokeWidth={2.5} fill="url(#propGrad)"/>
-            </AreaChart>
-          </ResponsiveContainer>
-        </div>
-
-        {/* Area bar chart */}
-        <div style={{ background: '#0D1929', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 14, padding: 20 }}>
-          <div style={{ fontSize: 13, fontWeight: 600, color: '#F1F5F9', marginBottom: 4 }}>Top Areas</div>
-          <div style={{ fontSize: 11, color: '#475569', marginBottom: 16 }}>
-            {tab === 'all' ? 'Off-plan vs Ready' : tab === 'offplan' ? 'Off-plan deals' : 'Ready deals'}
-          </div>
-          <ResponsiveContainer width="100%" height={180}>
-            <BarChart data={shownAreas} margin={{ top: 4, right: 4, left: 0, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)"/>
-              <XAxis dataKey="name" tick={{ fontSize: 9, fill: '#475569' }} axisLine={false} tickLine={false}/>
-              <YAxis hide/>
-              <Tooltip contentStyle={{ background: '#0A1628', border: '1px solid rgba(59,130,246,0.2)', borderRadius: 8, color: '#F1F5F9', fontSize: 11 }}/>
-              {(tab === 'all' || tab === 'offplan') && (
-                <Bar dataKey="offPlan" name="Off-Plan" fill="#38BDF8" radius={[3,3,0,0]} stackId="a"/>
-              )}
-              {(tab === 'all' || tab === 'ready') && (
-                <Bar dataKey="ready" name="Ready" fill="#22C55E" radius={[3,3,0,0]} stackId="a"/>
-              )}
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-
-        {/* Donut */}
-        <div style={{ background: '#0D1929', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 14, padding: 20 }}>
-          <div style={{ fontSize: 13, fontWeight: 600, color: '#F1F5F9', marginBottom: 4 }}>Split</div>
-          <div style={{ fontSize: 11, color: '#475569', marginBottom: 8 }}>Off-plan vs Ready</div>
-          <ResponsiveContainer width="100%" height={140}>
-            <PieChart>
-              <Pie data={pieData} cx="50%" cy="50%" innerRadius={40} outerRadius={60}
-                dataKey="value" strokeWidth={0}>
-                {pieData.map((e, i) => <Cell key={i} fill={e.color}/>)}
-              </Pie>
-              <Tooltip contentStyle={{ background: '#0A1628', border: '1px solid rgba(59,130,246,0.2)', borderRadius: 8, color: '#F1F5F9', fontSize: 11 }}
-                formatter={v => [fmtNum(v), '']}/>
-            </PieChart>
-          </ResponsiveContainer>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-            {[
-              { label: 'Off-Plan', value: stats.offPlan, pct: stats.pct, color: '#38BDF8' },
-              { label: 'Ready', value: stats.ready, pct: 100 - stats.pct, color: '#22C55E' },
-            ].map((item, i) => (
-              <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                  <div style={{ width: 8, height: 8, borderRadius: '50%', background: item.color }}/>
-                  <span style={{ fontSize: 12, color: '#94A3B8' }}>{item.label}</span>
+        {showSugg&&suggestions.length>0&&(
+          <div style={{position:'absolute',top:'100%',left:0,right:0,background:'#0D1929',border:'1px solid rgba(59,130,246,0.2)',borderRadius:12,marginTop:4,overflow:'hidden',zIndex:100,boxShadow:'0 8px 32px rgba(0,0,0,0.5)'}}>
+            {suggestions.map((s,i)=>(
+              <button key={i} onClick={()=>selectProject(s)} style={{display:'flex',justifyContent:'space-between',alignItems:'center',width:'100%',padding:'11px 16px',background:'none',border:'none',cursor:'pointer',textAlign:'left',borderBottom:i<suggestions.length-1?'1px solid rgba(255,255,255,0.04)':'none',fontFamily:'system-ui'}}
+                onMouseEnter={e=>e.currentTarget.style.background='rgba(59,130,246,0.08)'}
+                onMouseLeave={e=>e.currentTarget.style.background='none'}>
+                <div>
+                  <div style={{fontSize:12,fontWeight:600,color:'#F1F5F9',marginBottom:2}}>{s.name.length>50?s.name.slice(0,50)+'…':s.name}</div>
+                  <div style={{fontSize:10,color:'#475569'}}>{na([...s.areas][0]||'')} · {s.transactions.length} txns</div>
                 </div>
-                <span style={{ fontSize: 12, fontWeight: 600, color: item.color }}>{item.pct}%</span>
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {!selected&&!query&&(
+        <div style={{textAlign:'center',padding:'40px 0'}}>
+          <div style={{fontSize:44,marginBottom:12}}>🏢</div>
+          <div style={{fontSize:16,fontWeight:600,color:'#F1F5F9',marginBottom:6}}>Search 1,145+ Dubai projects</div>
+          <div style={{fontSize:13,color:'#475569',marginBottom:24}}>Full DLD transaction history for any building</div>
+          <div style={{display:'flex',justifyContent:'center',gap:8,flexWrap:'wrap'}}>
+            {['Creek Bay','Terra Woods','Serenz by Danube','Creek Haven'].map(p=>(
+              <button key={p} onClick={()=>{setQuery(p);selectProject({name:p,...(projectIndex[p]||{transactions:[],areas:new Set()})});}} style={{padding:'7px 14px',borderRadius:20,border:'1px solid rgba(59,130,246,0.2)',background:'rgba(59,130,246,0.06)',color:'#64748B',cursor:'pointer',fontSize:12,fontFamily:'system-ui'}}>{p}</button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {selected&&(
+        <>
+          <div style={{background:'linear-gradient(135deg,rgba(59,130,246,0.1),rgba(6,14,26,0.5))',border:'1px solid rgba(59,130,246,0.2)',borderRadius:14,padding:20,marginBottom:16}}>
+            <div style={{display:'flex',justifyContent:'space-between',alignItems:'center'}}>
+              <div>
+                <div style={{fontSize:18,fontWeight:800,color:'#F1F5F9',marginBottom:2}}>{selected.name}</div>
+                <div style={{fontSize:12,color:'#64748B'}}>📍 {selected.area} · {selected.firstDate} → {selected.lastDate}</div>
               </div>
+              <div style={{textAlign:'right'}}>
+                <div style={{fontSize:26,fontWeight:800,color:'#F1F5F9'}}>{fmtNum(selected.count)}</div>
+                <div style={{fontSize:11,color:'#64748B'}}>transactions</div>
+              </div>
+            </div>
+          </div>
+          <div style={{display:'grid',gridTemplateColumns:'repeat(5,1fr)',gap:10,marginBottom:16}}>
+            {[['Avg Deal',fmtAED(selected.avgValue,true),'#F1F5F9'],['Min',fmtAED(selected.minValue,true),'#22C55E'],['Max',fmtAED(selected.maxValue,true),'#F87171'],['Avg Size',selected.avgSize?fmtNum(selected.avgSize)+' sqft':'N/A','#64748B'],['AED/sqft',selected.avgPpsqft?'AED '+fmtNum(selected.avgPpsqft):'N/A','#38BDF8']].map(([l,v,c],i)=>(
+              <div key={i} style={{background:'#0D1929',border:'1px solid rgba(255,255,255,0.06)',borderRadius:10,padding:'12px 14px'}}>
+                <div style={{fontSize:10,color:'#64748B',marginBottom:4,textTransform:'uppercase',letterSpacing:'0.05em'}}>{l}</div>
+                <div style={{fontSize:14,fontWeight:700,color:c}}>{v}</div>
+              </div>
+            ))}
+          </div>
+          <div style={{display:'grid',gridTemplateColumns:'2fr 1fr',gap:14,marginBottom:16}}>
+            <div style={{background:'#0D1929',border:'1px solid rgba(255,255,255,0.06)',borderRadius:12,padding:16}}>
+              <div style={{fontSize:12,fontWeight:600,color:'#F1F5F9',marginBottom:10}}>Volume Over Time</div>
+              <ResponsiveContainer width="100%" height={140}>
+                <AreaChart data={selected.monthly} margin={{top:4,right:4,left:0,bottom:0}}>
+                  <defs><linearGradient id="plg2" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor="#38BDF8" stopOpacity={0.15}/><stop offset="95%" stopColor="#38BDF8" stopOpacity={0}/></linearGradient></defs>
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)"/>
+                  <XAxis dataKey="month" tick={{fontSize:8,fill:'#475569'}} axisLine={false} tickLine={false}/>
+                  <YAxis hide/>
+                  <Tooltip contentStyle={{background:'#0A1628',border:'1px solid rgba(59,130,246,0.2)',borderRadius:8,color:'#F1F5F9',fontSize:10}} formatter={v=>[v,'Txns']}/>
+                  <Area type="monotone" dataKey="count" stroke="#38BDF8" strokeWidth={2} fill="url(#plg2)"/>
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+            <div style={{background:'#0D1929',border:'1px solid rgba(255,255,255,0.06)',borderRadius:12,padding:16}}>
+              <div style={{fontSize:12,fontWeight:600,color:'#F1F5F9',marginBottom:10}}>Breakdown</div>
+              <div style={{marginBottom:10}}>
+                <div style={{fontSize:10,color:'#64748B',marginBottom:5}}>REGISTRATION</div>
+                {selected.regs.map(([k,v],i)=><div key={i} style={{display:'flex',justifyContent:'space-between',marginBottom:4}}><span style={{fontSize:11,color:'#94A3B8'}}>{k}</span><span style={{fontSize:11,fontWeight:600,color:k==='Off-Plan'?'#38BDF8':'#22C55E'}}>{v} ({Math.round(v/selected.count*100)}%)</span></div>)}
+              </div>
+              <div style={{borderTop:'1px solid rgba(255,255,255,0.04)',paddingTop:10}}>
+                <div style={{fontSize:10,color:'#64748B',marginBottom:5}}>BEDROOMS</div>
+                {selected.rooms.slice(0,4).map(([k,v],i)=><div key={i} style={{display:'flex',justifyContent:'space-between',marginBottom:4}}><span style={{fontSize:11,color:'#94A3B8'}}>{k||'?'}</span><span style={{fontSize:11,fontWeight:600,color:'#F1F5F9'}}>{v}</span></div>)}
+              </div>
+            </div>
+          </div>
+          <div style={{background:'#0D1929',border:'1px solid rgba(255,255,255,0.06)',borderRadius:12,overflow:'hidden'}}>
+            <div style={{padding:'12px 16px',borderBottom:'1px solid rgba(255,255,255,0.06)',fontSize:12,fontWeight:600,color:'#F1F5F9'}}>Recent Transactions</div>
+            <div style={{display:'grid',gridTemplateColumns:'90px 90px 60px 60px 80px 70px',padding:'8px 16px',borderBottom:'1px solid rgba(59,130,246,0.06)',background:'rgba(59,130,246,0.02)'}}>
+              {['Date','Value','Reg','BR','Size','AED/sqft'].map((h,i)=><div key={i} style={{fontSize:9,color:'#475569',fontWeight:600,textTransform:'uppercase',letterSpacing:'0.04em'}}>{h}</div>)}
+            </div>
+            {selected.recentTxns.map((t,i)=>{
+              const ppsqft=t.s&&t.v?Math.round(t.v/t.s/10.764):0;
+              return(
+                <div key={i} style={{display:'grid',gridTemplateColumns:'90px 90px 60px 60px 80px 70px',padding:'10px 16px',borderBottom:i<selected.recentTxns.length-1?'1px solid rgba(255,255,255,0.03)':'none'}}
+                  onMouseEnter={e=>e.currentTarget.style.background='rgba(59,130,246,0.04)'}
+                  onMouseLeave={e=>e.currentTarget.style.background='transparent'}>
+                  <div style={{fontSize:11,color:'#64748B'}}>{t.d||'—'}</div>
+                  <div style={{fontSize:12,fontWeight:600,color:'#F1F5F9'}}>{t.v?fmtAED(t.v,true):'—'}</div>
+                  <div><span style={{fontSize:9,fontWeight:600,padding:'2px 4px',borderRadius:20,background:t.r==='Off'?'rgba(59,130,246,0.1)':'rgba(34,197,94,0.1)',color:t.r==='Off'?'#38BDF8':'#22C55E'}}>{t.r==='Off'?'Off':'Ready'}</span></div>
+                  <div style={{fontSize:11,color:'#94A3B8'}}>{t.b||'—'}</div>
+                  <div style={{fontSize:11,color:'#64748B'}}>{t.s?fmtNum(Math.round(t.s*10.764))+' sqft':'—'}</div>
+                  <div style={{fontSize:11,color:'#38BDF8'}}>{ppsqft?'AED '+fmtNum(ppsqft):'—'}</div>
+                </div>
+              );
+            })}
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
+export default function PropertiesPage({ recentRaw, projectsData, onProjectClick }) {
+  const [tab, setTab] = useState('properties');
+  return (
+    <div style={{flex:1,display:'flex',flexDirection:'column',background:'#060E1A',fontFamily:'system-ui',overflow:'hidden'}}>
+      <div style={{padding:'20px 28px 0',borderBottom:'1px solid rgba(59,130,246,0.08)'}}>
+        <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:16}}>
+          <div>
+            <h1 style={{margin:0,fontSize:22,fontWeight:700,color:'#F1F5F9',marginBottom:4}}>Properties</h1>
+            <div style={{fontSize:13,color:'#475569'}}>Off-plan & ready transactions · Search any building or project</div>
+          </div>
+          <div style={{display:'flex',gap:6,background:'#0D1929',border:'1px solid rgba(59,130,246,0.15)',borderRadius:10,padding:4}}>
+            {[['properties','Off-Plan & Ready'],['lookup','Property Lookup']].map(([t,l])=>(
+              <button key={t} onClick={()=>setTab(t)} style={{padding:'8px 18px',borderRadius:8,border:'none',cursor:'pointer',fontSize:13,fontFamily:'system-ui',fontWeight:tab===t?600:400,background:tab===t?'linear-gradient(135deg,#1D4ED8,#38BDF8)':'transparent',color:tab===t?'#fff':'#64748B'}}>{l}</button>
             ))}
           </div>
         </div>
       </div>
-
-      {/* Area table */}
-      <div style={{ background: '#0D1929', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 14, overflow: 'hidden' }}>
-        <div style={{ padding: '16px 20px', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
-          <div style={{ fontSize: 14, fontWeight: 600, color: '#F1F5F9' }}>Area Breakdown</div>
-          <div style={{ fontSize: 12, color: '#475569' }}>Transactions by area and property type</div>
-        </div>
-        <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr 1fr', padding: '10px 20px', borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
-          {['Area', 'Off-Plan', 'Ready', 'Total', 'Price/sqft'].map((h, i) => (
-            <div key={i} style={{ fontSize: 11, color: '#475569', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>{h}</div>
-          ))}
-        </div>
-        {areaBreakdown.map((area, i) => (
-          <div key={area.name} style={{
-            display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr 1fr',
-            padding: '14px 20px',
-            borderBottom: i < areaBreakdown.length - 1 ? '1px solid rgba(255,255,255,0.04)' : 'none',
-            background: i % 2 === 0 ? 'transparent' : 'rgba(59,130,246,0.02)',
-          }}
-            onMouseEnter={e => e.currentTarget.style.background = 'rgba(59,130,246,0.06)'}
-            onMouseLeave={e => e.currentTarget.style.background = i % 2 === 0 ? 'transparent' : 'rgba(59,130,246,0.02)'}
-          >
-            <div style={{ fontSize: 13, fontWeight: 600, color: '#F1F5F9' }}>{area.name}</div>
-            <div style={{ fontSize: 13, color: '#38BDF8', fontWeight: 500 }}>{fmtNum(area.offPlan)}</div>
-            <div style={{ fontSize: 13, color: '#22C55E', fontWeight: 500 }}>{fmtNum(area.ready)}</div>
-            <div style={{ fontSize: 13, color: '#94A3B8' }}>{fmtNum(area.total)}</div>
-            <div style={{ fontSize: 13, color: '#94A3B8' }}>AED {fmtNum(area.ppsqft)}</div>
-          </div>
-        ))}
+      <div style={{flex:1,overflowY:'auto',padding:'20px 28px'}}>
+        {tab==='properties' ? <OffPlanReadyTab recentRaw={recentRaw}/> : <PropertyLookupTab recentRaw={recentRaw}/>}
       </div>
     </div>
   );

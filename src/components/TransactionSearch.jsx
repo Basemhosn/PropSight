@@ -1,186 +1,106 @@
-import { useState, useMemo } from "react";
-import { fmtAED, fmtNum } from "../utils/format";
+import { useState, useMemo, useCallback } from 'react';
+import { fmtAED, fmtNum } from '../utils/format';
 
-export default function TransactionSearch({ rows }) {
-  const [query, setQuery] = useState("");
-  const [sortBy, setSortBy] = useState("date");
-  const [sortDir, setSortDir] = useState("desc");
-  const [page, setPage] = useState(0);
-  const [selected, setSelected] = useState(null);
-  const PAGE_SIZE = 15;
+const REG = { Off:'Off-Plan', Rea:'Ready', Mor:'Mortgage' };
+const USG = { Res:'Residential', Com:'Commercial', Mul:'Multi-Use', Ind:'Industrial', Hos:'Hospitality' };
 
-  const results = useMemo(() => {
-    const q = query.toLowerCase().trim();
-    const filtered = q
-      ? rows.filter(r =>
-          r.area?.toLowerCase().includes(q) ||
-          r.project?.toLowerCase().includes(q) ||
-          r.txn_num?.toLowerCase().includes(q) ||
-          r.prop_type?.toLowerCase().includes(q) ||
-          r.rooms?.toLowerCase().includes(q) ||
-          r.metro?.toLowerCase().includes(q)
-        )
-      : rows;
+export default function TransactionSearch({ recentRaw }) {
+  const [search, setSearch] = useState('');
+  const [typeF, setTypeF] = useState('');
+  const [regF, setRegF] = useState('');
+  const [minVal, setMinVal] = useState('');
+  const [maxVal, setMaxVal] = useState('');
+  const [pg, setPg] = useState(1);
+  const PER = 50;
 
-    return [...filtered].sort((a, b) => {
-      let av, bv;
-      if (sortBy === "date")   { av = a.dateObj?.getTime() || 0; bv = b.dateObj?.getTime() || 0; }
-      if (sortBy === "amount") { av = a.amount; bv = b.amount; }
-      if (sortBy === "size")   { av = a.txn_size; bv = b.txn_size; }
-      if (sortBy === "area")   { av = a.area; bv = b.area; return sortDir==="asc" ? av?.localeCompare(bv) : bv?.localeCompare(av); }
-      return sortDir === "asc" ? av - bv : bv - av;
-    });
-  }, [rows, query, sortBy, sortDir]);
+  const rows = useMemo(() => {
+    if (!recentRaw?.length) return [];
+    return recentRaw.map(r => ({
+      id:r.n, date:r.d, type:r.t||'Sale',
+      reg:REG[r.r]||r.r||'', usage:USG[r.u]||r.u||'',
+      area:r.a||'', project:r.j||'',
+      value:r.v||0, size:r.s||0, rooms:r.b||'',
+      ppsqft: r.s>0 ? Math.round((r.v||0)/r.s/10.764) : 0,
+    }));
+  }, [recentRaw]);
 
-  const pageData = results.slice(page * PAGE_SIZE, (page+1) * PAGE_SIZE);
-  const totalPages = Math.ceil(results.length / PAGE_SIZE);
+  const filtered = useMemo(() => {
+    let res = rows;
+    if (search) { const q=search.toLowerCase(); res=res.filter(r=>r.area.toLowerCase().includes(q)||r.project.toLowerCase().includes(q)||r.id.includes(q)); }
+    if (typeF) res=res.filter(r=>r.type===typeF);
+    if (regF) res=res.filter(r=>r.reg===regF);
+    if (minVal) res=res.filter(r=>r.value>=parseFloat(minVal.replace(/,/g,''))*1e6);
+    if (maxVal) res=res.filter(r=>r.value<=parseFloat(maxVal.replace(/,/g,''))*1e6);
+    return res;
+  }, [rows, search, typeF, regF, minVal, maxVal]);
 
-  const toggleSort = (col) => {
-    if (sortBy === col) setSortDir(d => d === "asc" ? "desc" : "asc");
-    else { setSortBy(col); setSortDir("desc"); }
-    setPage(0);
-  };
+  const paged = filtered.slice((pg-1)*PER, pg*PER);
+  const totalPages = Math.ceil(filtered.length/PER);
 
-  const SortIcon = ({ col }) => (
-    <span style={{ fontSize:9, color: sortBy===col ? "#38BDF8" : "#C5CAD6", marginLeft:3 }}>
-      {sortBy===col ? (sortDir==="desc" ? "▼" : "▲") : "⇅"}
-    </span>
-  );
+  const exportCSV = useCallback(() => {
+    const header = 'ID,Date,Type,Reg,Area,Project,Value (AED),Size (sqft),Price/sqft\n';
+    const body = filtered.map(r=>`${r.id},${r.date},${r.type},${r.reg},"${r.area}","${r.project}",${r.value},${Math.round(r.size*10.764)},${r.ppsqft}`).join('\n');
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([header+body],{type:'text/csv'}));
+    a.download = 'propsight-transactions.csv'; a.click();
+  }, [filtered]);
 
-  const badge = (text, color) => (
-    <span style={{ fontSize:10, padding:"2px 7px", borderRadius:20, background:color+"18", color, fontWeight:600, whiteSpace:"nowrap" }}>
-      {text}
-    </span>
-  );
+  const inp = {background:'#070E1B',border:'1px solid rgba(59,130,246,0.15)',borderRadius:8,color:'#F1F5F9',fontSize:12,padding:'8px 12px',outline:'none',fontFamily:'system-ui'};
+  const TC = {Sale:{bg:'rgba(59,130,246,0.1)',color:'#38BDF8'},Mortgage:{bg:'rgba(34,197,94,0.1)',color:'#22C55E'},Gift:{bg:'rgba(245,158,11,0.1)',color:'#F59E0B'}};
+  const RC = {'Off-Plan':{bg:'rgba(59,130,246,0.1)',color:'#38BDF8'},'Ready':{bg:'rgba(34,197,94,0.1)',color:'#22C55E'}};
 
   return (
-    <div style={{ background:"#0D1929", border:"1px solid #E8ECF2", borderRadius:12, padding:"1.25rem" }}>
-      {/* Header */}
-      <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:"1rem", flexWrap:"wrap", gap:8 }}>
+    <div style={{flex:1,overflowY:'auto',background:'#060E1A',fontFamily:'system-ui',padding:'24px 28px'}}>
+      <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:20}}>
         <div>
-          <div style={{ fontSize:13, fontWeight:600, color:"#F1F5F9" }}>Transaction search</div>
-          <div style={{ fontSize:11, color:"#9AA0AE", marginTop:2 }}>
-            {fmtNum(results.length)} results{query ? ` for "${query}"` : ""}
-          </div>
+          <h1 style={{margin:0,fontSize:22,fontWeight:700,color:'#F1F5F9',marginBottom:4}}>Transaction Search</h1>
+          <div style={{fontSize:13,color:'#475569'}}>{fmtNum(filtered.length)} of {fmtNum(rows.length)} transactions</div>
         </div>
-        <input
-          value={query}
-          onChange={e => { setQuery(e.target.value); setPage(0); }}
-          placeholder="Search area, project, ID, rooms…"
-          style={{
-            fontSize:12, padding:"7px 12px", borderRadius:8, border:"1px solid #E8ECF2",
-            outline:"none", width:260, color:"#F1F5F9", background:"#0D1929",
-          }}
-        />
+        <button onClick={exportCSV} style={{display:'flex',alignItems:'center',gap:8,padding:'9px 16px',borderRadius:10,border:'1px solid rgba(59,130,246,0.2)',background:'rgba(59,130,246,0.06)',color:'#38BDF8',cursor:'pointer',fontSize:13,fontWeight:600,fontFamily:'system-ui'}}>↓ Export CSV</button>
       </div>
-
-      {/* Table */}
-      <div style={{ overflowX:"auto" }}>
-        <table style={{ width:"100%", borderCollapse:"collapse", fontSize:12 }}>
-          <thead>
-            <tr style={{ borderBottom:"1px solid #E8ECF2" }}>
-              {[
-                { key:"date",   label:"Date" },
-                { key:"area",   label:"Area" },
-                { label:"Type" },
-                { label:"Property" },
-                { key:"amount", label:"Value" },
-                { key:"size",   label:"Size" },
-                { label:"Rooms" },
-                { label:"Status" },
-              ].map(col => (
-                <th key={col.label} onClick={() => col.key && toggleSort(col.key)}
-                  style={{ padding:"6px 8px", textAlign:"left", color:"#7A8499", fontWeight:500,
-                    cursor: col.key ? "pointer" : "default", whiteSpace:"nowrap",
-                    borderBottom:"2px solid " + (sortBy===col.key ? "#38BDF8" : "transparent"),
-                  }}>
-                  {col.label}{col.key && <SortIcon col={col.key} />}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {pageData.map((r, i) => (
-              <tr key={i} onClick={() => setSelected(r)}
-                style={{
-                  borderBottom:"1px solid #F4F6FA", cursor:"pointer",
-                  background: selected===r ? "rgba(59,130,246,0.1)" : i%2===0 ? "#0D1929" : "rgba(59,130,246,0.06)",
-                  transition:"background 0.1s",
-                }}>
-                <td style={{ padding:"7px 8px", color:"#7A8499", whiteSpace:"nowrap" }}>
-                  {r.dateObj ? r.dateObj.toLocaleDateString("en-AE", { day:"2-digit", month:"short", year:"numeric" }) : r.date}
-                </td>
-                <td style={{ padding:"7px 8px", color:"#F1F5F9", fontWeight:500, maxWidth:140, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>
-                  {r.area}
-                </td>
-                <td style={{ padding:"7px 8px" }}>
-                  {badge(r.type, r.type==="Sale" ? "#38BDF8" : r.type==="Mortgage" ? "#BA7517" : "#22C55E")}
-                </td>
-                <td style={{ padding:"7px 8px", color:"#4A5568", maxWidth:120, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>
-                  {r.prop_type || "—"}
-                </td>
-                <td style={{ padding:"7px 8px", color:"#F1F5F9", fontWeight:600, whiteSpace:"nowrap" }}>
-                  {fmtAED(r.amount, true)}
-                </td>
-                <td style={{ padding:"7px 8px", color:"#7A8499", whiteSpace:"nowrap" }}>
-                  {r.txn_size > 0 ? fmtNum(r.txn_size) + " m²" : "—"}
-                </td>
-                <td style={{ padding:"7px 8px", color:"#7A8499" }}>{r.rooms || "—"}</td>
-                <td style={{ padding:"7px 8px" }}>
-                  {r.reg ? badge(r.reg, r.reg==="Off-Plan" ? "#38BDF8" : "#22C55E") : "—"}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      {/* Pagination */}
-      <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginTop:"1rem", flexWrap:"wrap", gap:8 }}>
-        <div style={{ fontSize:11, color:"#9AA0AE" }}>
-          Showing {page*PAGE_SIZE+1}–{Math.min((page+1)*PAGE_SIZE, results.length)} of {fmtNum(results.length)}
-        </div>
-        <div style={{ display:"flex", gap:4 }}>
-          <button onClick={() => setPage(0)} disabled={page===0} style={{ fontSize:11, padding:"4px 10px", borderRadius:6, border:"1px solid #E8ECF2", background:page===0?"#060E1A":"#0D1929", color:page===0?"#C5CAD6":"#4A5568", cursor:page===0?"default":"pointer" }}>«</button>
-          <button onClick={() => setPage(p=>Math.max(0,p-1))} disabled={page===0} style={{ fontSize:11, padding:"4px 10px", borderRadius:6, border:"1px solid #E8ECF2", background:page===0?"#060E1A":"#0D1929", color:page===0?"#C5CAD6":"#4A5568", cursor:page===0?"default":"pointer" }}>‹</button>
-          <span style={{ fontSize:11, padding:"4px 10px", color:"#F1F5F9" }}>{page+1} / {totalPages}</span>
-          <button onClick={() => setPage(p=>Math.min(totalPages-1,p+1))} disabled={page>=totalPages-1} style={{ fontSize:11, padding:"4px 10px", borderRadius:6, border:"1px solid #E8ECF2", background:page>=totalPages-1?"#060E1A":"#0D1929", color:page>=totalPages-1?"#C5CAD6":"#4A5568", cursor:page>=totalPages-1?"default":"pointer" }}>›</button>
-          <button onClick={() => setPage(totalPages-1)} disabled={page>=totalPages-1} style={{ fontSize:11, padding:"4px 10px", borderRadius:6, border:"1px solid #E8ECF2", background:page>=totalPages-1?"#060E1A":"#0D1929", color:page>=totalPages-1?"#C5CAD6":"#4A5568", cursor:page>=totalPages-1?"default":"pointer" }}>»</button>
-        </div>
-      </div>
-
-      {/* Detail drawer */}
-      {selected && (
-        <div style={{ position:"fixed", right:0, top:0, bottom:0, width:360, background:"#0D1929",
-          boxShadow:"-4px 0 24px rgba(0,0,0,0.12)", zIndex:200, overflowY:"auto", padding:"1.5rem" }}>
-          <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:"1.5rem" }}>
-            <div style={{ fontSize:14, fontWeight:700, color:"#F1F5F9" }}>Transaction detail</div>
-            <button onClick={() => setSelected(null)} style={{ background:"none", border:"none", fontSize:18, cursor:"pointer", color:"#7A8499", lineHeight:1 }}>×</button>
+      <div style={{background:'#0D1929',border:'1px solid rgba(255,255,255,0.06)',borderRadius:12,padding:16,marginBottom:20}}>
+        <div style={{display:'grid',gridTemplateColumns:'2fr 1fr 1fr 1fr 1fr',gap:10}}>
+          <div style={{display:'flex',alignItems:'center',gap:8,background:'#070E1B',border:'1px solid rgba(59,130,246,0.15)',borderRadius:8,padding:'8px 12px'}}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#475569" strokeWidth="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            <input value={search} onChange={e=>{setSearch(e.target.value);setPg(1);}} placeholder="Search area, project, ID..." style={{background:'none',border:'none',outline:'none',color:'#94A3B8',fontSize:13,flex:1,fontFamily:'system-ui'}}/>
           </div>
-
-          <div style={{ display:"flex", gap:8, marginBottom:"1.5rem", flexWrap:"wrap" }}>
-            {selected.type && badge(selected.type, selected.type==="Sale"?"#38BDF8":selected.type==="Mortgage"?"#BA7517":"#22C55E")}
-            {selected.reg && badge(selected.reg, selected.reg==="Off-Plan"?"#38BDF8":"#22C55E")}
-            {selected.usage && badge(selected.usage, "#534AB7")}
-          </div>
-
-          {[
-            ["Transaction ID", selected.txn_num || "—"],
-            ["Date", selected.dateObj ? selected.dateObj.toLocaleDateString("en-AE", { day:"2-digit", month:"long", year:"numeric" }) : selected.date],
-            ["Area", selected.area],
-            ["Project", selected.project || "—"],
-            ["Property type", selected.prop_type || "—"],
-            ["Rooms", selected.rooms || "—"],
-            ["Transaction value", fmtAED(selected.amount)],
-            ["Price per m²", selected.txn_size > 0 ? fmtAED(Math.round(selected.amount / selected.txn_size)) + "/m²" : "—"],
-            ["Transaction size", selected.txn_size > 0 ? fmtNum(selected.txn_size) + " m²" : "—"],
-            ["Nearest metro", selected.metro || "—"],
-          ].map(([label, value]) => (
-            <div key={label} style={{ display:"flex", justifyContent:"space-between", padding:"10px 0", borderBottom:"1px solid #F4F6FA", gap:16 }}>
-              <div style={{ fontSize:12, color:"#7A8499", flexShrink:0 }}>{label}</div>
-              <div style={{ fontSize:12, color:"#F1F5F9", fontWeight:500, textAlign:"right" }}>{value}</div>
+          <select value={typeF} onChange={e=>{setTypeF(e.target.value);setPg(1);}} style={{...inp,cursor:'pointer'}}><option value="">All types</option><option>Sale</option><option>Mortgage</option><option>Gift</option></select>
+          <select value={regF} onChange={e=>{setRegF(e.target.value);setPg(1);}} style={{...inp,cursor:'pointer'}}><option value="">All registrations</option><option>Off-Plan</option><option>Ready</option></select>
+          <input value={minVal} onChange={e=>{setMinVal(e.target.value);setPg(1);}} placeholder="Min (M AED)" style={inp}/>
+          <input value={maxVal} onChange={e=>{setMaxVal(e.target.value);setPg(1);}} placeholder="Max (M AED)" style={inp}/>
+        </div>
+        {(search||typeF||regF||minVal||maxVal) && <button onClick={()=>{setSearch('');setTypeF('');setRegF('');setMinVal('');setMaxVal('');setPg(1);}} style={{marginTop:10,background:'none',border:'none',cursor:'pointer',color:'#F87171',fontSize:12,fontFamily:'system-ui'}}>× Clear filters</button>}
+      </div>
+      <div style={{background:'#0D1929',border:'1px solid rgba(255,255,255,0.06)',borderRadius:14,overflow:'hidden'}}>
+        <div style={{display:'grid',gridTemplateColumns:'130px 90px 70px 80px 1fr 1fr 100px 80px 70px',padding:'10px 16px',borderBottom:'1px solid rgba(255,255,255,0.06)',background:'rgba(59,130,246,0.04)'}}>
+          {['TXN ID','Date','Type','Reg','Area','Project','Value','Size','Price/sqft'].map((h,i)=><div key={i} style={{fontSize:10,color:'#475569',fontWeight:600,textTransform:'uppercase',letterSpacing:'0.06em'}}>{h}</div>)}
+        </div>
+        {paged.length===0 ? <div style={{textAlign:'center',padding:40,color:'#475569'}}>No transactions match filters</div>
+        : paged.map((r,i)=>{
+          const tc=TC[r.type]||{bg:'rgba(100,116,139,0.1)',color:'#94A3B8'};
+          const rc=RC[r.reg]||{bg:'rgba(100,116,139,0.1)',color:'#94A3B8'};
+          return (
+            <div key={r.id} style={{display:'grid',gridTemplateColumns:'130px 90px 70px 80px 1fr 1fr 100px 80px 70px',padding:'11px 16px',borderBottom:i<paged.length-1?'1px solid rgba(255,255,255,0.03)':'none',transition:'background 0.1s'}}
+              onMouseEnter={e=>e.currentTarget.style.background='rgba(59,130,246,0.04)'}
+              onMouseLeave={e=>e.currentTarget.style.background='transparent'}>
+              <div style={{fontSize:11,color:'#475569',fontFamily:'monospace'}}>{r.id}</div>
+              <div style={{fontSize:12,color:'#64748B'}}>{r.date}</div>
+              <div><span style={{fontSize:10,fontWeight:600,padding:'2px 7px',borderRadius:20,background:tc.bg,color:tc.color}}>{r.type}</span></div>
+              <div><span style={{fontSize:10,fontWeight:600,padding:'2px 7px',borderRadius:20,background:rc.bg,color:rc.color}}>{r.reg}</span></div>
+              <div style={{fontSize:12,color:'#94A3B8',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap',paddingRight:8}}>{r.area}</div>
+              <div style={{fontSize:11,color:'#64748B',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap',paddingRight:8}}>{r.project||'—'}</div>
+              <div style={{fontSize:13,fontWeight:600,color:'#F1F5F9'}}>{fmtAED(r.value,true)}</div>
+              <div style={{fontSize:12,color:'#64748B'}}>{r.size?fmtNum(Math.round(r.size*10.764))+' sqft':'—'}</div>
+              <div style={{fontSize:12,color:'#38BDF8'}}>{r.ppsqft?'AED '+fmtNum(r.ppsqft):'—'}</div>
             </div>
-          ))}
+          );
+        })}
+      </div>
+      {totalPages>1 && (
+        <div style={{display:'flex',justifyContent:'center',alignItems:'center',gap:8,marginTop:20}}>
+          <button onClick={()=>setPg(p=>Math.max(1,p-1))} disabled={pg===1} style={{padding:'7px 14px',borderRadius:8,border:'1px solid rgba(59,130,246,0.2)',background:'rgba(59,130,246,0.06)',color:pg===1?'#1E3A5F':'#64748B',cursor:pg===1?'default':'pointer',fontSize:12,fontFamily:'system-ui'}}>← Prev</button>
+          <span style={{fontSize:12,color:'#64748B'}}>Page {pg} of {totalPages}</span>
+          <button onClick={()=>setPg(p=>Math.min(totalPages,p+1))} disabled={pg===totalPages} style={{padding:'7px 14px',borderRadius:8,border:'1px solid rgba(59,130,246,0.2)',background:'rgba(59,130,246,0.06)',color:pg===totalPages?'#1E3A5F':'#64748B',cursor:pg===totalPages?'default':'pointer',fontSize:12,fontFamily:'system-ui'}}>Next →</button>
         </div>
       )}
     </div>

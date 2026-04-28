@@ -66,11 +66,11 @@ export default function AIConcierge() {
     setLoading(true);
 
     try {
-      const response = await fetch('https://api.anthropic.com/v1/messages', {
+      const response = await fetch('/api/claude', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514',
+          model: 'claude-haiku-4-5-20251001',
           max_tokens: 1000,
           system: `You are PropSight AI Concierge, an expert Dubai real estate investment advisor. 
 You have deep knowledge of Dubai property market, DLD data, ROI calculations, and investment strategies.

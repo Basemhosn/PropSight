@@ -1,468 +1,173 @@
-import { useState, useEffect, useMemo, useRef } from 'react';
-import { LineChart, Line, BarChart, Bar, XAxis, YAxis, Tooltip,
-         ResponsiveContainer, CartesianGrid, ScatterChart, Scatter } from 'recharts';
+import { useState, useMemo } from 'react';
+import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 import { fmtAED, fmtNum } from '../utils/format';
 
-const REG_MAP  = { Off:'Off-Plan', Rea:'Ready' };
-const USG_MAP  = { Res:'Residential', Com:'Commercial' };
+const AREA_NICE = {'Al Barsha South Fourth':'JVC','Burj Khalifa':'Downtown Dubai','Marsa Dubai':'Dubai Marina','Hadaeq Sheikh Mohammed Bin Rashid':'Dubai Hills','Al Thanyah Fifth':'JLT','Business Bay':'Business Bay','Palm Jumeirah':'Palm Jumeirah','Al Merkadh':'MBR City','Al Khairan First':'Creek Harbour','Al Hebiah Fourth':'Damac Hills'};
+const niceArea = a => AREA_NICE[a] || a;
 
-function expandRow(r) {
-  return {
-    txnNum:  r.n || '',
-    date:    r.d || '',
-    type:    r.t || 'Other',
-    reg:     REG_MAP[r.r] || r.r || '',
-    area:    r.a || '',
-    amount:  r.v || 0,
-    size:    r.s || 0,
-    rooms:   r.b || '',
-    project: r.j || '',
-    ppsqm:   r.s > 0 && r.v > 0 ? Math.round(r.v / r.s) : 0,
-  };
-}
+export default function PropertyLookup({ recentRaw }) {
+  const [query, setQuery] = useState('');
+  const [selected, setSelected] = useState(null);
+  const [showSugg, setShowSugg] = useState(false);
 
-function KPI({ label, value, sub, color = '#0A1628' }) {
-  return (
-    <div style={{ background:'#F8FAFC', borderRadius:8, padding:'8px 10px' }}>
-      <div style={{ fontSize:10, color:'#9AA0AE', marginBottom:2 }}>{label}</div>
-      <div style={{ fontSize:15, fontWeight:700, color }}>{value}</div>
-      {sub && <div style={{ fontSize:10, color:'#9AA0AE', marginTop:1 }}>{sub}</div>}
-    </div>
-  );
-}
-
-export default function PropertyLookup({ onProjectClick, projectsData }) {
-  const [searchIndex, setSearchIndex] = useState([]);
-  const [buildings,   setBuildings]   = useState({});
-  const [query,       setQuery]       = useState('');
-  const [selected,    setSelected]    = useState(null);
-  const [building,    setBuilding]    = useState(null);
-  const [showDropdown,setShowDropdown]= useState(false);
-  const [tab,         setTab]         = useState('overview');
-  const [imgError,    setImgError]    = useState(false);
-  const inputRef = useRef(null);
-
-  useEffect(() => {
-    fetch('/data/buildings.json')
-      .then(r => r.json())
-      .then(d => {
-        setSearchIndex(d.index || []);
-        setBuildings(d.buildings || {});
-      });
-  }, []);
+  const projectIndex = useMemo(() => {
+    if (!recentRaw?.length) return {};
+    const idx = {};
+    recentRaw.forEach(r => {
+      const proj = r.j||''; if (!proj.trim()) return;
+      if (!idx[proj]) idx[proj] = { name:proj, area:r.a||'', transactions:[], areas:new Set() };
+      idx[proj].transactions.push(r);
+      idx[proj].areas.add(r.a||'');
+    });
+    return idx;
+  }, [recentRaw]);
 
   const suggestions = useMemo(() => {
     if (!query || query.length < 2) return [];
     const q = query.toLowerCase();
-    return searchIndex
-      .filter(b => b.name.toLowerCase().includes(q) || b.area.toLowerCase().includes(q))
-      .slice(0, 8);
-  }, [query, searchIndex]);
+    return Object.keys(projectIndex).filter(p=>p.toLowerCase().includes(q)).slice(0,8).map(p=>({name:p,...projectIndex[p]}));
+  }, [query, projectIndex]);
 
-  const selectBuilding = (name) => {
-    setSelected(name);
-    setQuery(name);
-    setShowDropdown(false);
-    setBuilding(buildings[name] || null);
-    setTab('overview');
-    setImgError(false);
+  const selectProject = (proj) => {
+    const data = projectIndex[proj.name]; if (!data) return;
+    const txns = data.transactions;
+    const values = txns.map(t=>t.v||0).filter(v=>v>0);
+    const sizes = txns.map(t=>t.s||0).filter(s=>s>0);
+    const dates = txns.map(t=>t.d||'').filter(Boolean).sort();
+    const monthly = {};
+    txns.forEach(t => { const m=(t.d||'').slice(0,7); if(!m)return; if(!monthly[m])monthly[m]={month:m,count:0,total:0}; monthly[m].count++; monthly[m].total+=t.v||0; });
+    const rooms = {}; txns.forEach(t=>{const b=t.b||'?'; rooms[b]=(rooms[b]||0)+1;});
+    const regs = {}; txns.forEach(t=>{const r=t.r==='Off'?'Off-Plan':'Ready'; regs[r]=(regs[r]||0)+1;});
+    setSelected({
+      name:proj.name, area:niceArea([...data.areas][0]||''), count:txns.length,
+      avgValue:values.length?Math.round(values.reduce((s,v)=>s+v,0)/values.length):0,
+      minValue:values.length?Math.min(...values):0, maxValue:values.length?Math.max(...values):0,
+      avgSize:sizes.length?Math.round(sizes.reduce((s,v)=>s+v,0)/sizes.length*10.764):0,
+      avgPpsqft:sizes.length&&values.length?Math.round(values.reduce((s,v)=>s+v,0)/values.length/(sizes.reduce((s,v)=>s+v,0)/sizes.length)/10.764):0,
+      firstDate:dates[0]||'', lastDate:dates[dates.length-1]||'',
+      monthly:Object.values(monthly).sort((a,b)=>a.month.localeCompare(b.month)),
+      rooms:Object.entries(rooms).sort((a,b)=>b[1]-a[1]),
+      regs:Object.entries(regs),
+      recentTxns:txns.sort((a,b)=>(b.d||'').localeCompare(a.d||'')).slice(0,15),
+    });
+    setShowSugg(false); setQuery(proj.name);
   };
 
-  const txns = useMemo(() => {
-    if (!building) return [];
-    return (building.recent || []).map(expandRow).sort((a,b) => b.date.localeCompare(a.date));
-  }, [building]);
-
-  const priceTrend = building?.priceTrend || [];
-  const rooms      = building?.rooms || [];
-  const kpis       = building?.kpis || {};
-
-  // Scatter data: size vs price
-  const scatterData = txns
-    .filter(r => r.size > 0 && r.amount > 0)
-    .map(r => ({ size: Math.round(r.size), price: Math.round(r.amount/1e6*10)/10, date: r.date }));
-
-  const TABS = [
-    { id:'overview',  label:'Overview' },
-    { id:'history',   label:'Price History' },
-    { id:'units',     label:'Units' },
-    { id:'txns',      label:'Transactions' },
-    { id:'comps',     label:'Comparables' },
-  ];
+  const tt = {contentStyle:{background:'#0A1628',border:'1px solid rgba(59,130,246,0.2)',borderRadius:8,color:'#F1F5F9',fontSize:11}};
 
   return (
-    <div style={{ padding:'1.5rem', maxWidth:1100, margin:'0 auto' }}>
-
-      {/* Header */}
-      <div style={{ marginBottom:'1.5rem' }}>
-        <div style={{ fontSize:20, fontWeight:700, color:'#0A1628' }}>Property Lookup</div>
-        <div style={{ fontSize:12, color:'#9AA0AE', marginTop:2 }}>
-          Search any building or project — view full transaction history, price trends and comparables
-        </div>
+    <div style={{flex:1,overflowY:'auto',background:'#060E1A',fontFamily:'system-ui',padding:'24px 28px'}}>
+      <div style={{marginBottom:24}}>
+        <h1 style={{margin:0,fontSize:22,fontWeight:700,color:'#F1F5F9',marginBottom:4}}>Property Lookup</h1>
+        <div style={{fontSize:13,color:'#475569'}}>Search any building or project — full DLD transaction history</div>
       </div>
-
-      {/* Search */}
-      <div style={{ position:'relative', marginBottom:'1.5rem', maxWidth:600 }}>
-        <div style={{ display:'flex', alignItems:'center', gap:10, background:'#fff',
-          border:`2px solid ${showDropdown || query ? '#185FA5' : '#E8ECF2'}`,
-          borderRadius:12, padding:'10px 16px', transition:'border 0.15s' }}>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9AA0AE" strokeWidth="2">
-            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-          </svg>
-          <input
-            ref={inputRef}
-            value={query}
-            onChange={e => { setQuery(e.target.value); setShowDropdown(true); }}
-            onFocus={() => setShowDropdown(true)}
-            placeholder="Search building, tower or project name…"
-            style={{ border:'none', outline:'none', fontSize:14, color:'#0A1628',
-              background:'transparent', flex:1 }}
-          />
-          {query && (
-            <button onClick={() => { setQuery(''); setSelected(null); setBuilding(null); setShowDropdown(false); }}
-              style={{ background:'none', border:'none', cursor:'pointer', color:'#9AA0AE', fontSize:18 }}>×</button>
-          )}
+      <div style={{position:'relative',maxWidth:600,marginBottom:32}}>
+        <div style={{display:'flex',alignItems:'center',gap:12,background:'#0D1929',border:'1px solid rgba(59,130,246,0.2)',borderRadius:12,padding:'14px 20px',boxShadow:'0 4px 20px rgba(0,0,0,0.3)'}}>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#38BDF8" strokeWidth="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <input value={query} onChange={e=>{setQuery(e.target.value);setShowSugg(true);setSelected(null);}} onFocus={()=>setShowSugg(true)} placeholder="Search building, project..." style={{background:'none',border:'none',outline:'none',color:'#F1F5F9',fontSize:15,flex:1,fontFamily:'system-ui'}}/>
+          {query && <button onClick={()=>{setQuery('');setSelected(null);}} style={{background:'none',border:'none',cursor:'pointer',color:'#475569',fontSize:18}}>×</button>}
         </div>
-
-        {/* Dropdown */}
-        {showDropdown && suggestions.length > 0 && (
-          <div style={{ position:'absolute', top:'calc(100% + 4px)', left:0, right:0,
-            background:'#fff', border:'1px solid #E8ECF2', borderRadius:10,
-            boxShadow:'0 8px 24px rgba(0,0,0,0.12)', zIndex:50, overflow:'hidden' }}>
-            {suggestions.map(s => (
-              <div key={s.name} onClick={() => selectBuilding(s.name)}
-                style={{ padding:'10px 16px', cursor:'pointer', display:'flex',
-                  justifyContent:'space-between', alignItems:'center',
-                  borderBottom:'1px solid #F4F6FA' }}
-                onMouseEnter={e => e.currentTarget.style.background='#F8FAFC'}
-                onMouseLeave={e => e.currentTarget.style.background='#fff'}>
+        {showSugg && suggestions.length>0 && (
+          <div style={{position:'absolute',top:'100%',left:0,right:0,background:'#0D1929',border:'1px solid rgba(59,130,246,0.2)',borderRadius:12,marginTop:4,overflow:'hidden',zIndex:100,boxShadow:'0 8px 32px rgba(0,0,0,0.5)'}}>
+            {suggestions.map((s,i)=>(
+              <button key={i} onClick={()=>selectProject(s)} style={{display:'flex',justifyContent:'space-between',alignItems:'center',width:'100%',padding:'12px 16px',background:'none',border:'none',cursor:'pointer',textAlign:'left',borderBottom:i<suggestions.length-1?'1px solid rgba(255,255,255,0.04)':'none',fontFamily:'system-ui'}}
+                onMouseEnter={e=>e.currentTarget.style.background='rgba(59,130,246,0.08)'}
+                onMouseLeave={e=>e.currentTarget.style.background='none'}>
                 <div>
-                  <div style={{ fontSize:13, fontWeight:500, color:'#0A1628' }}>{s.name}</div>
-                  <div style={{ fontSize:11, color:'#9AA0AE' }}>{s.area}</div>
+                  <div style={{fontSize:13,fontWeight:600,color:'#F1F5F9',marginBottom:2}}>{s.name.length>50?s.name.slice(0,50)+'…':s.name}</div>
+                  <div style={{fontSize:11,color:'#475569'}}>{niceArea([...s.areas][0]||'')} · {s.transactions.length} transactions</div>
                 </div>
-                <div style={{ fontSize:11, color:'#9AA0AE' }}>{fmtNum(s.count)} deals</div>
-              </div>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#475569" strokeWidth="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </button>
             ))}
           </div>
         )}
       </div>
 
-      {/* Empty state */}
-      {!building && (
-        <div style={{ textAlign:'center', padding:'4rem 2rem', color:'#9AA0AE' }}>
-          <div style={{ fontSize:48, marginBottom:'1rem' }}>🏢</div>
-          <div style={{ fontSize:16, fontWeight:600, color:'#0A1628', marginBottom:8 }}>
-            Search any building in Dubai
-          </div>
-          <div style={{ fontSize:13 }}>
-            773 buildings available — type a name above to get started
-          </div>
-          <div style={{ marginTop:'1.5rem', display:'flex', gap:8, justifyContent:'center', flexWrap:'wrap' }}>
-            {['Jumeirah Gate','Business Bay','Palm Jumeirah','Dubai Marina','Downtown Dubai'].map(s => (
-              <button key={s} onClick={() => { setQuery(s); setShowDropdown(true); inputRef.current?.focus(); }}
-                style={{ padding:'6px 14px', borderRadius:20, border:'1px solid #E8ECF2',
-                  background:'#F8FAFC', fontSize:12, cursor:'pointer', color:'#7A8499' }}>
-                {s}
-              </button>
+      {!selected && !query && (
+        <div style={{textAlign:'center',padding:'60px 0'}}>
+          <div style={{fontSize:56,marginBottom:16}}>🏢</div>
+          <div style={{fontSize:18,fontWeight:600,color:'#F1F5F9',marginBottom:8}}>Search any Dubai property</div>
+          <div style={{fontSize:13,color:'#475569',marginBottom:32}}>1,145+ projects with full transaction history from DLD</div>
+          <div style={{display:'flex',justifyContent:'center',gap:8,flexWrap:'wrap'}}>
+            {['Creek Bay','DAMAC LAGOONS - VALENCIA','Terra Woods','Serenz by Danube','Creek Haven'].map(p=>(
+              <button key={p} onClick={()=>{setQuery(p);selectProject({name:p,...(projectIndex[p]||{transactions:[],areas:new Set()})});}} style={{padding:'8px 16px',borderRadius:20,border:'1px solid rgba(59,130,246,0.2)',background:'rgba(59,130,246,0.06)',color:'#64748B',cursor:'pointer',fontSize:12,fontFamily:'system-ui'}}>{p}</button>
             ))}
           </div>
         </div>
       )}
 
-      {/* Building detail */}
-      {building && (
-        <div>
-          {/* Hero */}
-          <div style={{ display:'flex', gap:'1.5rem', marginBottom:'1.5rem', flexWrap:'wrap' }}>
-            {/* Image */}
-            <div style={{ width:220, height:160, borderRadius:12, overflow:'hidden', flexShrink:0 }}>
-              {!imgError && building.image ? (
-                <img src={building.image} alt={selected} onError={() => setImgError(true)}
-                  style={{ width:'100%', height:'100%', objectFit:'cover' }}/>
-              ) : (
-                <div style={{ width:'100%', height:'100%',
-                  background:'linear-gradient(135deg,#0A1628 0%,#185FA5 100%)',
-                  display:'flex', alignItems:'center', justifyContent:'center', padding:'1rem' }}>
-                  <div style={{ fontSize:13, fontWeight:600, color:'#fff', textAlign:'center' }}>{selected}</div>
-                </div>
-              )}
-            </div>
-
-            {/* KPIs */}
-            <div style={{ flex:1, minWidth:300 }}>
-              <div style={{ fontSize:18, fontWeight:700, color:'#0A1628', marginBottom:4 }}>{selected}</div>
-              <div style={{ fontSize:12, color:'#9AA0AE', marginBottom:'1rem' }}>{building.area}</div>
-              <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:8 }}>
-                <KPI label="Transactions"   value={fmtNum(kpis.count)}       />
-                <KPI label="Total value"    value={fmtAED(kpis.total,true)}  color="#38BDF8" />
-                <KPI label="Avg deal"       value={fmtAED(kpis.avg,true)}    />
-                <KPI label="Price/m²"       value={kpis.ppsqm>0?fmtAED(kpis.ppsqm,true):'—'} color="#22C55E" />
-              </div>
-
-              {/* Open in Projects button */}
-              {projectsData?.[selected] && (
-                <button onClick={() => onProjectClick && onProjectClick(selected, projectsData[selected])}
-                  style={{ marginTop:'0.75rem', padding:'7px 16px', background:'#185FA5', color:'#fff',
-                    border:'none', borderRadius:8, fontSize:12, fontWeight:600, cursor:'pointer' }}>
-                  View full project details →
-                </button>
-              )}
-            </div>
-          </div>
-
-          {/* Tabs */}
-          <div style={{ display:'flex', borderBottom:'1px solid #E8ECF2', marginBottom:'1.25rem' }}>
-            {TABS.map(t => (
-              <button key={t.id} onClick={() => setTab(t.id)} style={{
-                padding:'8px 16px', fontSize:12, fontWeight:tab===t.id?600:400,
-                color: tab===t.id ? '#185FA5' : '#7A8499',
-                background:'none', border:'none', cursor:'pointer',
-                borderBottom: tab===t.id ? '2px solid #185FA5' : '2px solid transparent',
-              }}>{t.label}</button>
-            ))}
-          </div>
-
-          {/* ── OVERVIEW ── */}
-          {tab === 'overview' && (
-            <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'1.25rem' }}>
-              {/* Monthly volume */}
-              <div style={{ background:'#fff', border:'1px solid #E8ECF2', borderRadius:12, padding:'1rem' }}>
-                <div style={{ fontSize:12, fontWeight:600, color:'#0A1628', marginBottom:'0.75rem' }}>
-                  Transaction volume
-                </div>
-                <ResponsiveContainer width="100%" height={180}>
-                  <BarChart data={building.monthly || []} margin={{top:0,right:0,left:0,bottom:0}}>
-                    <XAxis dataKey="month" tick={{fontSize:9,fill:'#9AA0AE'}} axisLine={false} tickLine={false}
-                      tickFormatter={m => { const [,mo]=m.split('-'); return ['J','F','M','A','M','J','J','A','S','O','N','D'][+mo-1]; }}/>
-                    <YAxis hide/>
-                    <Tooltip formatter={v=>[fmtNum(v),'Deals']}
-                      contentStyle={{background:'#0A1628',border:'none',borderRadius:8,color:'#fff',fontSize:11}}/>
-                    <Bar dataKey="count" fill="#38BDF8" radius={[2,2,0,0]}/>
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-
-              {/* Size vs Price scatter */}
-              <div style={{ background:'#fff', border:'1px solid #E8ECF2', borderRadius:12, padding:'1rem' }}>
-                <div style={{ fontSize:12, fontWeight:600, color:'#0A1628', marginBottom:'0.75rem' }}>
-                  Size vs Price (recent deals)
-                </div>
-                <ResponsiveContainer width="100%" height={180}>
-                  <ScatterChart margin={{top:4,right:16,left:0,bottom:0}}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(59,130,246,0.08)"/>
-                    <XAxis dataKey="size" name="Size" unit="m²"
-                      tick={{fontSize:10,fill:'#9AA0AE'}} axisLine={false} tickLine={false}/>
-                    <YAxis dataKey="price" name="Price" unit="M"
-                      tick={{fontSize:10,fill:'#9AA0AE'}} axisLine={false} tickLine={false} width={36}/>
-                    <Tooltip cursor={{strokeDasharray:'3 3'}}
-                      formatter={(v,n) => [n==='Size'?v+'m²':'AED '+v+'M', n]}
-                      contentStyle={{background:'#0A1628',border:'none',borderRadius:8,color:'#fff',fontSize:11}}/>
-                    <Scatter data={scatterData} fill="#38BDF8" opacity={0.7} r={4}/>
-                  </ScatterChart>
-                </ResponsiveContainer>
-              </div>
-            </div>
-          )}
-
-          {/* ── PRICE HISTORY ── */}
-          {tab === 'history' && (
-            <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'1.25rem' }}>
-              <div style={{ background:'#fff', border:'1px solid #E8ECF2', borderRadius:12, padding:'1rem' }}>
-                <div style={{ fontSize:12, fontWeight:600, color:'#0A1628', marginBottom:'0.75rem' }}>
-                  Price per m² trend
-                </div>
-                {priceTrend.length > 0 ? (
-                  <ResponsiveContainer width="100%" height={220}>
-                    <LineChart data={priceTrend} margin={{top:4,right:16,left:0,bottom:0}}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="rgba(59,130,246,0.08)"/>
-                      <XAxis dataKey="year" tick={{fontSize:11,fill:'#9AA0AE'}} axisLine={false} tickLine={false}/>
-                      <YAxis tick={{fontSize:10,fill:'#9AA0AE'}} axisLine={false} tickLine={false}
-                        tickFormatter={v=>fmtAED(v,true)} width={72}/>
-                      <Tooltip formatter={v=>[fmtAED(v,true)+'/m²','Price']}
-                        contentStyle={{background:'#0A1628',border:'none',borderRadius:8,color:'#fff',fontSize:11}}/>
-                      <Line type="monotone" dataKey="ppsqm" stroke="#22C55E" strokeWidth={2.5}
-                        dot={{r:4,fill:'#1D9E75'}}/>
-                    </LineChart>
-                  </ResponsiveContainer>
-                ) : (
-                  <div style={{textAlign:'center',padding:'3rem',color:'#9AA0AE',fontSize:13}}>
-                    Not enough data for price trend
-                  </div>
-                )}
-              </div>
-
-              <div style={{ background:'#fff', border:'1px solid #E8ECF2', borderRadius:12, padding:'1rem' }}>
-                <div style={{ fontSize:12, fontWeight:600, color:'#0A1628', marginBottom:'0.75rem' }}>
-                  Recent deal prices
-                </div>
-                {txns.slice(0,15).map((r,i) => (
-                  <div key={i} style={{ display:'flex', justifyContent:'space-between', alignItems:'center',
-                    padding:'7px 0', borderBottom:'1px solid #F4F6FA' }}>
-                    <div>
-                      <div style={{ fontSize:12, fontWeight:600, color:'#0A1628' }}>{fmtAED(r.amount)}</div>
-                      <div style={{ fontSize:10, color:'#9AA0AE' }}>
-                        {r.date} {r.rooms && `· ${r.rooms}`} {r.size>0 && `· ${fmtNum(r.size)}m²`}
-                      </div>
-                    </div>
-                    <div style={{ textAlign:'right' }}>
-                      {r.ppsqm > 0 && <div style={{ fontSize:11, color:'#1D9E75', fontWeight:600 }}>
-                        {fmtAED(r.ppsqm)}/m²
-                      </div>}
-                      <span style={{ fontSize:10, padding:'2px 7px', borderRadius:20, fontWeight:600,
-                        background:r.type==='Sale'?'#EDF4FC':'#FEF3E2',
-                        color:r.type==='Sale'?'#185FA5':'#BA7517' }}>{r.type}</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* ── UNITS ── */}
-          {tab === 'units' && (
-            <div style={{ background:'#fff', border:'1px solid #E8ECF2', borderRadius:12, padding:'1.25rem' }}>
-              <div style={{ fontSize:13, fontWeight:600, color:'#0A1628', marginBottom:'1rem' }}>
-                Breakdown by bedroom type
-              </div>
-              {rooms.length > 0 ? (
-                <>
-                  <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(200px,1fr))', gap:10, marginBottom:'1.25rem' }}>
-                    {rooms.map((r,i) => (
-                      <div key={r.rooms} style={{ background:'#F8FAFC', borderRadius:10, padding:'0.875rem' }}>
-                        <div style={{ fontSize:13, fontWeight:600, color:'#0A1628', marginBottom:6 }}>{r.rooms}</div>
-                        <div style={{ fontSize:11, color:'#9AA0AE', lineHeight:1.8 }}>
-                          <div>{fmtNum(r.count)} transactions</div>
-                          <div>Avg price: <strong style={{color:'#185FA5'}}>{fmtAED(r.avg,true)}</strong></div>
-                          {r.avgSize > 0 && <div>Avg size: <strong style={{color:'#0A1628'}}>{r.avgSize}m²</strong></div>}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                  <ResponsiveContainer width="100%" height={200}>
-                    <BarChart data={rooms} margin={{top:0,right:0,left:0,bottom:0}}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="rgba(59,130,246,0.08)"/>
-                      <XAxis dataKey="rooms" tick={{fontSize:11,fill:'#9AA0AE'}} axisLine={false} tickLine={false}/>
-                      <YAxis hide/>
-                      <Tooltip formatter={v=>[fmtNum(v),'Units']}
-                        contentStyle={{background:'#0A1628',border:'none',borderRadius:8,color:'#fff',fontSize:11}}/>
-                      <Bar dataKey="count" fill="#38BDF8" radius={[3,3,0,0]}/>
-                    </BarChart>
-                  </ResponsiveContainer>
-                </>
-              ) : (
-                <div style={{textAlign:'center',padding:'2rem',color:'#9AA0AE',fontSize:13}}>
-                  No unit breakdown available for this building
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* ── COMPARABLES ── */}
-          {tab === 'comps' && (
+      {selected && <>
+        <div style={{background:'linear-gradient(135deg,rgba(59,130,246,0.1),rgba(6,14,26,0.5))',border:'1px solid rgba(59,130,246,0.2)',borderRadius:16,padding:24,marginBottom:24}}>
+          <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start'}}>
             <div>
-              <div style={{ fontSize:13, color:'#7A8499', marginBottom:'1rem' }}>
-                Similar deals in <strong style={{color:'#0A1628'}}>{building.area}</strong> — same area, last 90 days
-              </div>
-              {(() => {
-                // Find comparable transactions from areas data using window-level cache
-                const comps = txns.filter(r =>
-                  r.size > 0 &&
-                  txns[0]?.size > 0 &&
-                  Math.abs(r.size - (txns[0]?.size || 0)) / (txns[0]?.size || 1) < 0.4
-                ).slice(0,20);
-                if (comps.length === 0) return (
-                  <div style={{textAlign:'center',padding:'2rem',color:'#9AA0AE',fontSize:13}}>
-                    No comparable sales data available
-                  </div>
-                );
-                const avgComp = comps.reduce((s,r)=>s+r.ppsqm,0)/comps.length;
-                const lastPpsqm = txns[0]?.ppsqm || 0;
-                const vsAvg = lastPpsqm > 0 && avgComp > 0 ? ((lastPpsqm-avgComp)/avgComp*100).toFixed(1) : null;
-                return (
-                  <div>
-                    {vsAvg !== null && (
-                      <div style={{background: +vsAvg >= 0 ? '#E1F5EE' : '#FEF3E2', borderRadius:10,
-                        padding:'10px 14px', marginBottom:'1rem', fontSize:13}}>
-                        Latest deal price/m² is <strong style={{color:+vsAvg>=0?'#1D9E75':'#D85A30'}}>
-                        {vsAvg >= 0 ? '+' : ''}{vsAvg}%</strong> vs comparable sales in this area
-                      </div>
-                    )}
-                    <div style={{ background:'#fff', border:'1px solid #E8ECF2', borderRadius:12, overflow:'hidden' }}>
-                      <table style={{width:'100%',borderCollapse:'collapse',fontSize:12}}>
-                        <thead>
-                          <tr style={{borderBottom:'2px solid #E8ECF2'}}>
-                            {['Project','Date','Size','Amount','Price/m²','Rooms'].map(h=>(
-                              <th key={h} style={{padding:'8px 10px',textAlign:'left',fontSize:11,color:'#9AA0AE',fontWeight:600}}>{h}</th>
-                            ))}
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {comps.map((r,i)=>(
-                            <tr key={i} style={{borderBottom:'1px solid #F4F6FA'}}
-                              onMouseEnter={e=>e.currentTarget.style.background='#F8FAFC'}
-                              onMouseLeave={e=>e.currentTarget.style.background='#fff'}>
-                              <td style={{padding:'8px 10px',color:'#0A1628',maxWidth:160,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{r.project||'—'}</td>
-                              <td style={{padding:'8px 10px',color:'#7A8499'}}>{r.date}</td>
-                              <td style={{padding:'8px 10px',color:'#7A8499'}}>{fmtNum(r.size)}m²</td>
-                              <td style={{padding:'8px 10px',fontWeight:600,color:'#185FA5'}}>{fmtAED(r.amount)}</td>
-                              <td style={{padding:'8px 10px',fontWeight:600,color:'#1D9E75'}}>{r.ppsqm>0?fmtAED(r.ppsqm):'—'}</td>
-                              <td style={{padding:'8px 10px',color:'#7A8499'}}>{r.rooms||'—'}</td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                );
-              })()}
+              <div style={{fontSize:11,color:'#38BDF8',fontWeight:600,textTransform:'uppercase',letterSpacing:'0.08em',marginBottom:6}}>DLD Transaction History</div>
+              <div style={{fontSize:22,fontWeight:800,color:'#F1F5F9',marginBottom:4}}>{selected.name}</div>
+              <div style={{fontSize:13,color:'#64748B'}}>📍 {selected.area} · {selected.firstDate} → {selected.lastDate}</div>
             </div>
-          )}
-
-        {/* ── TRANSACTIONS ── */}
-          {tab === 'txns' && (
-            <div style={{ background:'#fff', border:'1px solid #E8ECF2', borderRadius:12, padding:'1.25rem' }}>
-              <div style={{ fontSize:13, fontWeight:600, color:'#0A1628', marginBottom:'1rem' }}>
-                Transaction history ({txns.length} records)
-              </div>
-              <div style={{ overflowX:'auto' }}>
-                <table style={{ width:'100%', borderCollapse:'collapse', fontSize:12 }}>
-                  <thead>
-                    <tr style={{ borderBottom:'2px solid #E8ECF2' }}>
-                      {['Date','Amount','Size','Price/m²','Type','Status','Rooms'].map(h => (
-                        <th key={h} style={{ padding:'8px 10px', textAlign:'left',
-                          fontSize:11, color:'#9AA0AE', fontWeight:600, whiteSpace:'nowrap' }}>{h}</th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {txns.map((r,i) => (
-                      <tr key={i} style={{ borderBottom:'1px solid #F4F6FA' }}
-                        onMouseEnter={e=>e.currentTarget.style.background='#F8FAFC'}
-                        onMouseLeave={e=>e.currentTarget.style.background='#fff'}>
-                        <td style={{ padding:'8px 10px', color:'#0A1628' }}>{r.date}</td>
-                        <td style={{ padding:'8px 10px', fontWeight:600, color:'#185FA5' }}>{fmtAED(r.amount)}</td>
-                        <td style={{ padding:'8px 10px', color:'#7A8499' }}>{r.size>0?fmtNum(r.size)+'m²':'—'}</td>
-                        <td style={{ padding:'8px 10px', color:'#1D9E75', fontWeight:500 }}>{r.ppsqm>0?fmtAED(r.ppsqm):'—'}</td>
-                        <td style={{ padding:'8px 10px' }}>
-                          <span style={{ fontSize:10, padding:'2px 7px', borderRadius:20, fontWeight:600,
-                            background:r.type==='Sale'?'#EDF4FC':r.type==='Mortgage'?'#FEF3E2':'#E1F5EE',
-                            color:r.type==='Sale'?'#185FA5':r.type==='Mortgage'?'#BA7517':'#0F6E56' }}>{r.type}</span>
-                        </td>
-                        <td style={{ padding:'8px 10px' }}>
-                          {r.reg && <span style={{ fontSize:10, padding:'2px 7px', borderRadius:20, fontWeight:600,
-                            background:r.reg==='Off-Plan'?'#EDF4FC':'#E1F5EE',
-                            color:r.reg==='Off-Plan'?'#185FA5':'#0F6E56' }}>{r.reg}</span>}
-                        </td>
-                        <td style={{ padding:'8px 10px', color:'#7A8499' }}>{r.rooms || '—'}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+            <div style={{textAlign:'right'}}>
+              <div style={{fontSize:32,fontWeight:800,color:'#F1F5F9'}}>{fmtNum(selected.count)}</div>
+              <div style={{fontSize:12,color:'#64748B'}}>total transactions</div>
             </div>
-          )}
+          </div>
         </div>
-      )}
+        <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(130px,1fr))',gap:12,marginBottom:24}}>
+          {[['Avg Deal',fmtAED(selected.avgValue,true),'#F1F5F9',''],['Min Price',fmtAED(selected.minValue,true),'#22C55E','rgba(34,197,94,0.1)'],['Max Price',fmtAED(selected.maxValue,true),'#F87171','rgba(248,113,113,0.1)'],['Avg Size',selected.avgSize?fmtNum(selected.avgSize)+' sqft':'N/A','#64748B',''],['Price/sqft',selected.avgPpsqft?'AED '+fmtNum(selected.avgPpsqft):'N/A','#38BDF8','rgba(59,130,246,0.1)']].map(([l,v,c,bg],i)=>(
+            <div key={i} style={{background:bg||'#0D1929',border:'1px solid rgba(255,255,255,0.06)',borderRadius:12,padding:'14px 16px'}}>
+              <div style={{fontSize:11,color:'#64748B',marginBottom:5,textTransform:'uppercase',letterSpacing:'0.05em'}}>{l}</div>
+              <div style={{fontSize:17,fontWeight:700,color:c}}>{v}</div>
+            </div>
+          ))}
+        </div>
+        <div style={{display:'grid',gridTemplateColumns:'2fr 1fr',gap:16,marginBottom:24}}>
+          <div style={{background:'#0D1929',border:'1px solid rgba(255,255,255,0.06)',borderRadius:14,padding:20}}>
+            <div style={{fontSize:13,fontWeight:600,color:'#F1F5F9',marginBottom:14}}>Transaction Volume Over Time</div>
+            <ResponsiveContainer width="100%" height={160}>
+              <AreaChart data={selected.monthly} margin={{top:4,right:4,left:0,bottom:0}}>
+                <defs><linearGradient id="plg" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor="#38BDF8" stopOpacity={0.15}/><stop offset="95%" stopColor="#38BDF8" stopOpacity={0}/></linearGradient></defs>
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)"/>
+                <XAxis dataKey="month" tick={{fontSize:9,fill:'#475569'}} axisLine={false} tickLine={false}/>
+                <YAxis hide/>
+                <Tooltip {...tt} formatter={v=>[v,'Transactions']}/>
+                <Area type="monotone" dataKey="count" stroke="#38BDF8" strokeWidth={2.5} fill="url(#plg)"/>
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+          <div style={{background:'#0D1929',border:'1px solid rgba(255,255,255,0.06)',borderRadius:14,padding:20}}>
+            <div style={{fontSize:13,fontWeight:600,color:'#F1F5F9',marginBottom:14}}>Breakdown</div>
+            <div style={{marginBottom:14}}>
+              <div style={{fontSize:11,color:'#64748B',marginBottom:6}}>REGISTRATION</div>
+              {selected.regs.map(([k,v],i)=><div key={i} style={{display:'flex',justifyContent:'space-between',marginBottom:4}}><span style={{fontSize:12,color:'#94A3B8'}}>{k}</span><span style={{fontSize:12,fontWeight:600,color:k==='Off-Plan'?'#38BDF8':'#22C55E'}}>{v} ({Math.round(v/selected.count*100)}%)</span></div>)}
+            </div>
+            <div style={{borderTop:'1px solid rgba(255,255,255,0.04)',paddingTop:12}}>
+              <div style={{fontSize:11,color:'#64748B',marginBottom:6}}>BEDROOMS</div>
+              {selected.rooms.slice(0,5).map(([k,v],i)=><div key={i} style={{display:'flex',justifyContent:'space-between',marginBottom:4}}><span style={{fontSize:12,color:'#94A3B8'}}>{k||'Unknown'}</span><span style={{fontSize:12,fontWeight:600,color:'#F1F5F9'}}>{v}</span></div>)}
+            </div>
+          </div>
+        </div>
+        <div style={{background:'#0D1929',border:'1px solid rgba(255,255,255,0.06)',borderRadius:14,overflow:'hidden'}}>
+          <div style={{padding:'16px 20px',borderBottom:'1px solid rgba(255,255,255,0.06)'}}><div style={{fontSize:14,fontWeight:600,color:'#F1F5F9'}}>Recent Transactions</div></div>
+          <div style={{display:'grid',gridTemplateColumns:'100px 90px 65px 65px 1fr 80px 80px',padding:'10px 20px',borderBottom:'1px solid rgba(255,255,255,0.06)',background:'rgba(59,130,246,0.04)'}}>
+            {['Date','Value','Reg','BR','Project','Size','Price/sqft'].map((h,i)=><div key={i} style={{fontSize:10,color:'#475569',fontWeight:600,textTransform:'uppercase',letterSpacing:'0.05em'}}>{h}</div>)}
+          </div>
+          {selected.recentTxns.map((t,i)=>{
+            const ppsqft=t.s&&t.v?Math.round(t.v/t.s/10.764):0;
+            return (
+              <div key={i} style={{display:'grid',gridTemplateColumns:'100px 90px 65px 65px 1fr 80px 80px',padding:'11px 20px',borderBottom:i<selected.recentTxns.length-1?'1px solid rgba(255,255,255,0.03)':'none'}}
+                onMouseEnter={e=>e.currentTarget.style.background='rgba(59,130,246,0.04)'}
+                onMouseLeave={e=>e.currentTarget.style.background='transparent'}>
+                <div style={{fontSize:11,color:'#64748B'}}>{t.d||'—'}</div>
+                <div style={{fontSize:12,fontWeight:600,color:'#F1F5F9'}}>{t.v?fmtAED(t.v,true):'—'}</div>
+                <div><span style={{fontSize:9,fontWeight:600,padding:'2px 5px',borderRadius:20,background:t.r==='Off'?'rgba(59,130,246,0.1)':'rgba(34,197,94,0.1)',color:t.r==='Off'?'#38BDF8':'#22C55E'}}>{t.r==='Off'?'Off-Plan':'Ready'}</span></div>
+                <div style={{fontSize:11,color:'#94A3B8'}}>{t.b||'—'}</div>
+                <div style={{fontSize:11,color:'#64748B',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{t.j||'—'}</div>
+                <div style={{fontSize:11,color:'#64748B'}}>{t.s?fmtNum(Math.round(t.s*10.764))+' sqft':'—'}</div>
+                <div style={{fontSize:11,fontWeight:600,color:'#38BDF8'}}>{ppsqft?'AED '+fmtNum(ppsqft):'—'}</div>
+              </div>
+            );
+          })}
+        </div>
+      </>}
     </div>
   );
 }

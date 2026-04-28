@@ -1,179 +1,118 @@
-import { useState, useEffect, useCallback } from "react";
-import { fetchTodayTransactions } from "../services/ddaApi";
-import { fmtAED, fmtNum } from "../utils/format";
+import { useState, useMemo } from 'react';
+import { fmtAED, fmtNum } from '../utils/format';
 
-const TYPE_COLORS = {
-  Sale:     { bg:"rgba(59,130,246,0.1)", color:"#38BDF8" },
-  Mortgage: { bg:"#FEF3E2", color:"#BA7517" },
-  Gift:     { bg:"rgba(34,197,94,0.1)", color:"#22C55E" },
-};
+const AREA_NICE = {'Al Barsha South Fourth':'JVC','Burj Khalifa':'Downtown Dubai','Marsa Dubai':'Dubai Marina','Hadaeq Sheikh Mohammed Bin Rashid':'Dubai Hills','Al Thanyah Fifth':'JLT','Business Bay':'Business Bay','Palm Jumeirah':'Palm Jumeirah','Al Merkadh':'MBR City','Al Khairan First':'Creek Harbour'};
+const niceArea = a => AREA_NICE[a] || a;
+const TYPE_COLOR = {Sale:{bg:'rgba(59,130,246,0.1)',color:'#38BDF8'},Mortgage:{bg:'rgba(34,197,94,0.1)',color:'#22C55E'},Gift:{bg:'rgba(245,158,11,0.1)',color:'#F59E0B'}};
 
-function LiveBadge() {
-  const [on, setOn] = useState(true);
-  useEffect(() => {
-    const t = setInterval(() => setOn(v => !v), 800);
-    return () => clearInterval(t);
-  }, []);
-  return (
-    <span style={{ display:"inline-flex", alignItems:"center", gap:5 }}>
-      <span style={{
-        width:8, height:8, borderRadius:"50%",
-        background: on ? "#22C55E" : "transparent",
-        border:"2px solid #1D9E75",
-        transition:"background 0.3s",
-      }} />
-      <span style={{ fontSize:11, fontWeight:600, color:"#22C55E" }}>LIVE</span>
-    </span>
-  );
-}
+export default function LiveFeed({ recentRaw }) {
+  const [filter, setFilter] = useState('all');
+  const [areaFilter, setAreaFilter] = useState('');
+  const [minVal, setMinVal] = useState('');
+  const [visibleCount, setVisibleCount] = useState(50);
 
-export default function LiveFeed() {
-  const [txns,    setTxns]    = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error,   setError]   = useState(null);
-  const [lastUpdate, setLastUpdate] = useState(null);
-  const [stats,   setStats]   = useState(null);
+  const areas = useMemo(() => {
+    if (!recentRaw?.length) return [];
+    return [...new Set(recentRaw.map(r=>r.a||'').filter(Boolean))].sort();
+  }, [recentRaw]);
 
-  const load = useCallback(async () => {
-    try {
-      setError(null);
-      const data = await fetchTodayTransactions();
+  const rows = useMemo(() => {
+    if (!recentRaw?.length) return [];
+    let r = [...recentRaw].sort((a,b)=>(b.d||'').localeCompare(a.d||''));
+    if (filter !== 'all') r = r.filter(x=>(x.t||'Sale')===filter);
+    if (areaFilter) r = r.filter(x=>(x.a||'')===areaFilter);
+    if (minVal) r = r.filter(x=>(x.v||0)>=parseFloat(minVal)*1e6);
+    return r;
+  }, [recentRaw, filter, areaFilter, minVal]);
 
-      // Handle different response shapes
-      const rows = Array.isArray(data) ? data
-        : data?.result?.records || data?.records || data?.data || [];
+  const stats = useMemo(() => {
+    if (!rows.length) return null;
+    const today = rows.filter(r=>r.d===rows[0]?.d);
+    return {
+      todayCount: today.length,
+      todayValue: today.reduce((s,r)=>s+(r.v||0),0),
+      totalShown: rows.slice(0,100).reduce((s,r)=>s+(r.v||0),0),
+      avg: rows.length ? rows.slice(0,100).reduce((s,r)=>s+(r.v||0),0)/Math.min(rows.length,100) : 0,
+    };
+  }, [rows]);
 
-      // Compute quick stats
-      const sales = rows.filter(r => r.trans_group_en === "Sales" || r.transaction_type_en === "Sale");
-      const totalVal = rows.reduce((s, r) => s + (parseFloat(r.trans_value || r.transaction_value || 0)), 0);
-
-      setTxns(rows.slice(0, 50));
-      setStats({
-        total: rows.length,
-        totalVal,
-        sales:  sales.length,
-        avgVal: rows.length ? totalVal / rows.length : 0,
-      });
-      setLastUpdate(new Date());
-    } catch (e) {
-      setError(e.message);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    load();
-    // Refresh every 5 minutes
-    const interval = setInterval(load, 5 * 60 * 1000);
-    return () => clearInterval(interval);
-  }, [load]);
-
-  if (loading) return (
-    <div style={{ padding:"2rem", textAlign:"center" }}>
-      <div style={{ width:32,height:32,border:"3px solid #E8ECF2",borderTopColor:"#38BDF8",
-        borderRadius:"50%",animation:"spin 0.7s linear infinite",margin:"0 auto 1rem"}} />
-      <div style={{ fontSize:13,color:"#9AA0AE" }}>Connecting to Dubai Data Authority…</div>
-      <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
-    </div>
-  );
-
-  if (error) return (
-    <div style={{ padding:"1.5rem", background:"#FFF8F0", borderRadius:10, border:"1px solid #F5DDB8", margin:"1rem" }}>
-      <div style={{ fontSize:13,fontWeight:600,color:"#BA7517",marginBottom:6 }}>⚠ Live feed unavailable</div>
-      <div style={{ fontSize:12,color:"#9AA0AE",marginBottom:12 }}>{error}</div>
-      <div style={{ fontSize:11,color:"#9AA0AE" }}>
-        The DDA test environment has a daily quota. Dashboard is showing cached data.
-        Live feed will reconnect automatically.
-      </div>
-      <button onClick={load} style={{
-        marginTop:12,fontSize:12,padding:"6px 14px",borderRadius:8,
-        background:"#38BDF8",color:"#0D1929",border:"none",cursor:"pointer"
-      }}>Retry</button>
-    </div>
-  );
+  const inp = {background:'#070E1B',border:'1px solid rgba(59,130,246,0.15)',borderRadius:8,color:'#F1F5F9',fontSize:12,padding:'7px 10px',outline:'none',fontFamily:'system-ui'};
 
   return (
-    <div style={{ padding:"1.25rem" }}>
-      {/* Header */}
-      <div style={{ display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"1.25rem" }}>
-        <div>
-          <div style={{ display:"flex",alignItems:"center",gap:10 }}>
-            <div style={{ fontSize:18,fontWeight:700,color:"#F1F5F9" }}>Live Transactions</div>
-            <LiveBadge />
-          </div>
-          <div style={{ fontSize:12,color:"#9AA0AE",marginTop:2 }}>
-            Today · DLD via Dubai Data Authority
-            {lastUpdate && ` · Updated ${lastUpdate.toLocaleTimeString("en-AE",{hour:"2-digit",minute:"2-digit"})}`}
-          </div>
-        </div>
-        <button onClick={load} style={{
-          fontSize:12,padding:"6px 12px",borderRadius:8,
-          background:"#0D1929",border:"1px solid #E8ECF2",cursor:"pointer",color:"#7A8499"
-        }}>↻ Refresh</button>
-      </div>
-
-      {/* Stats */}
-      {stats && (
-        <div style={{ display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:10,marginBottom:"1.25rem" }}>
-          {[
-            ["Today's deals",  fmtNum(stats.total),        "#F1F5F9"],
-            ["Total value",    fmtAED(stats.totalVal,true), "#38BDF8"],
-            ["Sales",          fmtNum(stats.sales),         "#22C55E"],
-            ["Avg deal",       fmtAED(stats.avgVal,true),   "#F1F5F9"],
-          ].map(([label,value,color]) => (
-            <div key={label} style={{ background:"#0D1929",borderRadius:8,padding:"10px 12px" }}>
-              <div style={{ fontSize:10,color:"#9AA0AE",marginBottom:3 }}>{label}</div>
-              <div style={{ fontSize:16,fontWeight:700,color }}>{value}</div>
+    <div style={{flex:1,display:'flex',flexDirection:'column',background:'#060E1A',fontFamily:'system-ui'}}>
+      <div style={{padding:'20px 28px',borderBottom:'1px solid rgba(59,130,246,0.08)'}}>
+        <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:16}}>
+          <div>
+            <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:4}}>
+              <h1 style={{margin:0,fontSize:22,fontWeight:700,color:'#F1F5F9'}}>Live DLD Feed</h1>
+              <div style={{display:'flex',alignItems:'center',gap:6,background:'rgba(34,197,94,0.08)',border:'1px solid rgba(34,197,94,0.15)',borderRadius:20,padding:'4px 12px'}}>
+                <div style={{width:6,height:6,borderRadius:'50%',background:'#22C55E',boxShadow:'0 0 6px #22C55E'}}/>
+                <span style={{fontSize:11,fontWeight:600,color:'#22C55E'}}>LIVE</span>
+              </div>
             </div>
-          ))}
+            <div style={{fontSize:13,color:'#475569'}}>{fmtNum(rows.length)} transactions · latest: {rows[0]?.d||'—'}</div>
+          </div>
         </div>
-      )}
-
-      {/* Transaction list */}
-      {txns.length === 0 ? (
-        <div style={{ textAlign:"center",padding:"2rem",color:"#9AA0AE",fontSize:13 }}>
-          No transactions recorded today yet
+        {stats && (
+          <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:12,marginBottom:16}}>
+            {[["Today's Txns",fmtNum(stats.todayCount),'#F1F5F9'],["Today's Value",fmtAED(stats.todayValue,true),'#38BDF8'],['Feed Value',fmtAED(stats.totalShown,true),'#F1F5F9'],['Avg Deal',fmtAED(stats.avg,true),'#22C55E']].map(([l,v,c],i)=>(
+              <div key={i} style={{background:'#0D1929',border:'1px solid rgba(255,255,255,0.06)',borderRadius:10,padding:'10px 14px'}}>
+                <div style={{fontSize:10,color:'#64748B',marginBottom:4,textTransform:'uppercase',letterSpacing:'0.05em'}}>{l}</div>
+                <div style={{fontSize:15,fontWeight:700,color:c}}>{v}</div>
+              </div>
+            ))}
+          </div>
+        )}
+        <div style={{display:'flex',gap:8,flexWrap:'wrap',alignItems:'center'}}>
+          <div style={{display:'flex',gap:6}}>
+            {['all','Sale','Mortgage','Gift'].map(f=>(
+              <button key={f} onClick={()=>setFilter(f)} style={{padding:'6px 14px',borderRadius:20,border:'none',cursor:'pointer',fontSize:11,fontWeight:filter===f?600:400,fontFamily:'system-ui',background:filter===f?'linear-gradient(135deg,#1D4ED8,#38BDF8)':'rgba(59,130,246,0.06)',color:filter===f?'#fff':'#64748B'}}>{f==='all'?'All':f}</button>
+            ))}
+          </div>
+          <select value={areaFilter} onChange={e=>setAreaFilter(e.target.value)} style={{...inp,cursor:'pointer'}}>
+            <option value="">All areas</option>
+            {areas.map(a=><option key={a} value={a}>{niceArea(a)}</option>)}
+          </select>
+          <input value={minVal} onChange={e=>setMinVal(e.target.value)} placeholder="Min (M AED)" style={{...inp,width:110}}/>
+          {(areaFilter||minVal||filter!=='all') && <button onClick={()=>{setFilter('all');setAreaFilter('');setMinVal('');}} style={{background:'none',border:'none',cursor:'pointer',color:'#F87171',fontSize:12,fontFamily:'system-ui'}}>× Clear</button>}
         </div>
-      ) : (
-        <div style={{ display:"flex",flexDirection:"column",gap:0 }}>
-          {txns.map((r, i) => {
-            const type  = r.trans_group_en || r.transaction_type_en || "—";
-            const area  = r.area_name_en   || r.area || "—";
-            const val   = parseFloat(r.trans_value || r.transaction_value || 0);
-            const size  = parseFloat(r.procedure_area || r.size || 0);
-            const proj  = r.project_name_en || r.project || "";
-            const date  = r.instance_date  || r.transaction_date || "";
-            const style = TYPE_COLORS[type] || { bg:"#0D1929", color:"#7A8499" };
+      </div>
 
+      <div style={{flex:1,overflowY:'auto'}}>
+        {rows.length===0 ? <div style={{textAlign:'center',padding:60,color:'#475569'}}>No transactions match your filters</div> : <>
+          <div style={{display:'grid',gridTemplateColumns:'90px 1fr 90px 70px 70px 80px 75px',padding:'10px 28px',borderBottom:'1px solid rgba(59,130,246,0.06)',background:'rgba(59,130,246,0.02)',position:'sticky',top:0,zIndex:10}}>
+            {['Date','Project / Area','Value','Reg','Type','Size','Price/sqft'].map((h,i)=><div key={i} style={{fontSize:10,color:'#475569',fontWeight:600,textTransform:'uppercase',letterSpacing:'0.05em'}}>{h}</div>)}
+          </div>
+          {rows.slice(0,visibleCount).map((r,i)=>{
+            const tc=TYPE_COLOR[r.t||'Sale']||TYPE_COLOR.Sale;
+            const ppsqft=r.s&&r.v?Math.round(r.v/r.s/10.764):0;
+            const isNew=i<5;
             return (
-              <div key={i} style={{
-                display:"flex",alignItems:"flex-start",justifyContent:"space-between",
-                padding:"10px 0",borderBottom:"1px solid #F4F6FA",gap:12,
-              }}>
-                <div style={{ flex:1,minWidth:0 }}>
-                  <div style={{ fontSize:13,fontWeight:600,color:"#F1F5F9",marginBottom:2 }}>
-                    {fmtAED(val,true)}
-                  </div>
-                  <div style={{ fontSize:11,color:"#9AA0AE" }}>
-                    {area}{proj ? ` · ${proj.slice(0,30)}` : ""}
-                    {size > 0 ? ` · ${fmtNum(Math.round(size))}m²` : ""}
-                  </div>
-                  {date && (
-                    <div style={{ fontSize:10,color:"#C0C6D2",marginTop:1 }}>
-                      {date.slice(0,10)}
-                    </div>
-                  )}
+              <div key={r.n||i} style={{display:'grid',gridTemplateColumns:'90px 1fr 90px 70px 70px 80px 75px',padding:'11px 28px',borderBottom:'1px solid rgba(255,255,255,0.03)',background:isNew?'rgba(59,130,246,0.03)':'transparent'}}
+                onMouseEnter={e=>e.currentTarget.style.background='rgba(59,130,246,0.05)'}
+                onMouseLeave={e=>e.currentTarget.style.background=isNew?'rgba(59,130,246,0.03)':'transparent'}>
+                <div style={{fontSize:11,color:'#64748B',display:'flex',alignItems:'center',gap:5}}>
+                  {isNew&&<div style={{width:5,height:5,borderRadius:'50%',background:'#22C55E',flexShrink:0}}/>}{r.d||'—'}
                 </div>
-                <span style={{
-                  fontSize:10,fontWeight:600,padding:"3px 8px",borderRadius:20,
-                  flexShrink:0,background:style.bg,color:style.color,
-                }}>{type}</span>
+                <div style={{minWidth:0,paddingRight:8}}>
+                  <div style={{fontSize:12,fontWeight:600,color:'#F1F5F9',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{r.j||'—'}</div>
+                  <div style={{fontSize:10,color:'#475569'}}>{niceArea(r.a||'')} {r.b?'· '+r.b:''}</div>
+                </div>
+                <div style={{fontSize:12,fontWeight:700,color:'#F1F5F9'}}>{r.v?fmtAED(r.v,true):'—'}</div>
+                <div><span style={{fontSize:9,fontWeight:600,padding:'2px 5px',borderRadius:20,background:r.r==='Off'?'rgba(59,130,246,0.1)':'rgba(34,197,94,0.1)',color:r.r==='Off'?'#38BDF8':'#22C55E'}}>{r.r==='Off'?'Off-Plan':'Ready'}</span></div>
+                <div><span style={{fontSize:9,fontWeight:600,padding:'2px 5px',borderRadius:20,background:tc.bg,color:tc.color}}>{r.t||'Sale'}</span></div>
+                <div style={{fontSize:11,color:'#64748B'}}>{r.s?fmtNum(Math.round(r.s*10.764))+' sqft':'—'}</div>
+                <div style={{fontSize:11,color:'#38BDF8'}}>{ppsqft?'AED '+fmtNum(ppsqft):'—'}</div>
               </div>
             );
           })}
-        </div>
-      )}
+          {visibleCount<rows.length && (
+            <div style={{textAlign:'center',padding:20}}>
+              <button onClick={()=>setVisibleCount(c=>c+50)} style={{padding:'10px 24px',borderRadius:10,border:'1px solid rgba(59,130,246,0.2)',background:'rgba(59,130,246,0.06)',color:'#64748B',cursor:'pointer',fontSize:13,fontFamily:'system-ui'}}>Load more ({fmtNum(rows.length-visibleCount)} remaining)</button>
+            </div>
+          )}
+        </>}
+      </div>
     </div>
   );
 }

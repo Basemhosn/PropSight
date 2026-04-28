@@ -124,6 +124,15 @@ export default function App() {
       }}
     />;
   }
+  if (user && profile && profile.role === 'investor') {
+    return <InvestorApp areaData={areaData} recentRaw={recentRaw} core={core} onSwitchToBroker={() => {
+      const { createClient } = require('@supabase/supabase-js');
+      // Update role in profile
+      fetch('/api/update-role', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({userId:user.id,role:'broker'})});
+      window.location.reload();
+    }} />;
+  }
+
   if (!core) {
     return (
       <div style={{height:"100vh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:16,background:"#060E1A"}}>

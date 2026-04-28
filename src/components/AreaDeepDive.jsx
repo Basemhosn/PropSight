@@ -124,10 +124,11 @@ export default function AreaDeepDive({ areaData, areaList }) {
         <ChartCard title="Transaction type" subtitle={selected}>
           <ResponsiveContainer width="100%" height={180}>
             <PieChart>
-              <Pie data={typeData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={70} label={({name,percent})=>`${name} ${(percent*100).toFixed(0)}%`} labelLine={false} fontSize={11}>
+              <Pie data={typeData} dataKey="value" nameKey="name" cx="50%" cy="45%" outerRadius={55} labelLine={false} fontSize={10}>
                 {typeData.map((_,i) => <Cell key={i} fill={COLORS[i%COLORS.length]} />)}
               </Pie>
-              <Tooltip formatter={(v)=>[fmtNum(v),'Deals']} contentStyle={{background:"#F1F5F9",border:"none",borderRadius:8,color:"#0D1929",fontSize:12}} />
+              <Tooltip formatter={(v)=>[fmtNum(v),'Deals']} contentStyle={{background:"#0A1628",border:"1px solid rgba(59,130,246,0.2)",borderRadius:8,color:"#F1F5F9",fontSize:11}} />
+              <Legend iconSize={8} iconType="circle" formatter={(value)=>value} wrapperStyle={{fontSize:11,color:'#94A3B8'}}/>
             </PieChart>
           </ResponsiveContainer>
         </ChartCard>

@@ -44,7 +44,7 @@ export function AuthProvider({ children }) {
   }, [user]);
 
   async function fetchProfile(userId) {
-    let { data } = await supabase
+    const { data } = await supabase
       .from('profiles')
       .select('*')
       .eq('id', userId)
@@ -105,7 +105,7 @@ export function AuthProvider({ children }) {
     const today = new Date().toISOString().split('T')[0];
     const resetDate = profile?.searches_reset_at;
     const newCount = resetDate === today ? (profile?.searches_today || 0) + 1 : 1;
-    let { data } = await supabase
+    const { data } = await supabase
       .from('profiles')
       .update({ searches_today: newCount, searches_reset_at: today })
       .eq('id', user.id)

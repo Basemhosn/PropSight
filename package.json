@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
-    "@supabase/supabase-js": "^2.39.0",
+    "@api/keyper": "file:.api/apis/keyper",
+    "@supabase/supabase-js": "^2.104.1",
     "ajv": "^8.20.0",
     "date-fns": "^3.3.1",
     "html2canvas": "^1.4.1",
@@ -14,7 +15,8 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
-    "recharts": "^2.10.3"
+    "recharts": "^2.10.3",
+    "stripe": "^22.1.0"
   },
   "scripts": {
     "start": "react-scripts start",

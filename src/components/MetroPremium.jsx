@@ -9,17 +9,17 @@ const CustomTooltip = ({ active, payload, label }) => {
   if (!active || !payload || !payload.length) return null;
   const d = payload[0].payload;
   return (
-    <div style={{ background: "#F1F5F9", color: "#0D1929", borderRadius: 8,
+    <div style={{ background: "#0D1929", color: "#F1F5F9", borderRadius: 8,
       padding: "10px 14px", fontSize: 12, minWidth: 220 }}>
       <div style={{ fontWeight: 600, marginBottom: 6, fontSize: 13 }}>{d.fullName}</div>
       <div style={{ color: "#8AAAC8", marginBottom: 3 }}>
         Median price: <span style={{ color: "#4ADE80", fontWeight: 600 }}>{fmtAED(d.median, true)}</span>
       </div>
       <div style={{ color: "#8AAAC8", marginBottom: 3 }}>
-        Avg price: <span style={{ color: "#0D1929" }}>{fmtAED(d.avg, true)}</span>
+        Avg price: <span style={{ color: "#F1F5F9" }}>{fmtAED(d.avg, true)}</span>
       </div>
       <div style={{ color: "#8AAAC8", marginBottom: 3 }}>
-        Transactions: <span style={{ color: "#0D1929", fontWeight: 600 }}>{fmtNum(d.count)}</span>
+        Transactions: <span style={{ color: "#F1F5F9", fontWeight: 600 }}>{fmtNum(d.count)}</span>
       </div>
       {d.premium !== 0 && (
         <div style={{
@@ -77,7 +77,7 @@ export default function MetroPremium({ rows }) {
 
   if (!withPremium.length) {
     return (
-      <div style={{ background: "#0D1929", border: "1px solid #E8ECF2", borderRadius: 12, padding: "1.25rem" }}>
+      <div style={{ background: "#0D1929", border: "1px solid rgba(59,130,246,0.12)", borderRadius: 12, padding: "1.25rem" }}>
         <div style={{ fontSize: 13, fontWeight: 600, color: "#F1F5F9", marginBottom: "0.5rem" }}>Nearest metro price premium</div>
         <div style={{ fontSize: 13, color: "#9AA0AE", padding: "2rem", textAlign: "center" }}>
           No metro data available in current filter selection
@@ -87,7 +87,7 @@ export default function MetroPremium({ rows }) {
   }
 
   return (
-    <div style={{ background: "#0D1929", border: "1px solid #E8ECF2", borderRadius: 12, padding: "1.25rem" }}>
+    <div style={{ background: "#0D1929", border: "1px solid rgba(59,130,246,0.12)", borderRadius: 12, padding: "1.25rem" }}>
       {/* Header */}
       <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between",
         marginBottom: "0.75rem", flexWrap: "wrap", gap: 8 }}>
@@ -102,7 +102,7 @@ export default function MetroPremium({ rows }) {
           {[{ k: "median", l: "Median" }, { k: "avg", l: "Average" }, { k: "count", l: "Volume" }].map(t => (
             <button key={t.k} onClick={() => setMetric(t.k)} style={{
               fontSize: 11, padding: "4px 10px", borderRadius: 6, cursor: "pointer", fontWeight: 500,
-              border: metric === t.k ? "1px solid #185FA5" : "1px solid #E8ECF2",
+              border: metric === t.k ? "1px solid #185FA5" : "1px solid rgba(59,130,246,0.12)",
               background: metric === t.k ? "rgba(59,130,246,0.1)" : "#0D1929",
               color: metric === t.k ? "#38BDF8" : "#7A8499",
             }}>{t.l}</button>
@@ -116,7 +116,7 @@ export default function MetroPremium({ rows }) {
         {[50, 100, 200, 500].map(n => (
           <button key={n} onClick={() => setMinTxns(n)} style={{
             fontSize: 11, padding: "3px 8px", borderRadius: 5, cursor: "pointer",
-            border: minTxns === n ? "1px solid #185FA5" : "1px solid #E8ECF2",
+            border: minTxns === n ? "1px solid #185FA5" : "1px solid rgba(59,130,246,0.12)",
             background: minTxns === n ? "rgba(59,130,246,0.1)" : "#0D1929",
             color: minTxns === n ? "#38BDF8" : "#7A8499",
           }}>{n}+</button>
@@ -129,14 +129,14 @@ export default function MetroPremium({ rows }) {
           const up = m.premium >= 0;
           return (
             <div key={m.fullName} style={{
-              background: up ? "rgba(34,197,94,0.1)" : "#FCEBEB",
+              background: up ? "rgba(34,197,94,0.1)" : "rgba(248,113,113,0.1)",
               borderRadius: 6, padding: "4px 10px", fontSize: 11,
             }}>
               <span style={{ color: "#F1F5F9", fontWeight: 500 }}>
                 {m.fullName.split(" ").slice(0, 3).join(" ")}
               </span>
               {" "}
-              <span style={{ color: up ? "#22C55E" : "#A32D2D", fontWeight: 700 }}>
+              <span style={{ color: up ? "#22C55E" : "#F87171", fontWeight: 700 }}>
                 {up ? "▲" : "▼"}{Math.abs(m.premium).toFixed(0)}%
               </span>
             </div>
@@ -165,7 +165,7 @@ export default function MetroPremium({ rows }) {
             }}>
             {withPremium.map((m, i) => (
               <Cell key={i}
-                fill={metric === "count" ? "#38BDF8" : m.premium >= 0 ? "#38BDF8" : "#C5CAD6"} />
+                fill={metric === "count" ? "#38BDF8" : m.premium >= 0 ? "#38BDF8" : "#475569"} />
             ))}
           </Bar>
         </BarChart>
@@ -177,7 +177,7 @@ export default function MetroPremium({ rows }) {
           Above market median
         </span>
         <span style={{ display: "flex", alignItems: "center", gap: 5 }}>
-          <span style={{ width: 10, height: 10, borderRadius: 2, background: "#C5CAD6", display: "inline-block" }} />
+          <span style={{ width: 10, height: 10, borderRadius: 2, background: "#475569", display: "inline-block" }} />
           Below market median
         </span>
       </div>

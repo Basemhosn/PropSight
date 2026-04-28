@@ -154,7 +154,7 @@ export default function LoginPage() {
 
         <div style={{ marginTop:'1.25rem', textAlign:'center', fontSize:11, color:'#1E3A5F', lineHeight:1.8 }}>
           Free: Overview, Pulse & 3 Lookups/day<br/>
-          <span style={{ color:'#38BDF8', fontWeight:600 }}>Pro ($29/mo)</span> — full access
+          <span style={{ color:'#38BDF8', fontWeight:600 }}>Pro (AED 99/mo)</span> — full access
         </div>
       </div>
     </div>

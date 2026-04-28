@@ -1,0 +1,11 @@
+{
+  "version": "1.0",
+  "apis": [
+    {
+      "identifier": "keyper",
+      "source": "@keyper/v2.0#ryq0wrnm70jiz9m",
+      "integrity": "sha512-0CeVKJ8/XoiuebdgvcTfYsA9KI3IS8JBmUiw2FvjerUS6EqiVflTaHn2gjzGgHBiJMLStYdT4BSmSwykAeYmuw==",
+      "installerVersion": "6.1.3"
+    }
+  ]
+}
