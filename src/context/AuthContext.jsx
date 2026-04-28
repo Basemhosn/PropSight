@@ -15,6 +15,11 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Clean up OAuth callback URL on initial load — prevents back button returning to Google auth URL
+    if (window.location.hash.includes('access_token') || window.location.hash.includes('error')) {
+      window.history.replaceState(null, '', window.location.pathname + window.location.search);
+    }
+
     // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null);
@@ -23,10 +28,18 @@ export function AuthProvider({ children }) {
     });
 
     // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       setUser(session?.user ?? null);
-      if (session?.user) fetchProfile(session.user.id);
-      else { setProfile(null); setLoading(false); }
+      if (session?.user) {
+        fetchProfile(session.user.id);
+        // After SIGNED_IN, also clean up any lingering OAuth fragments
+        if (event === 'SIGNED_IN' && window.location.hash) {
+          window.history.replaceState(null, '', window.location.pathname + window.location.search);
+        }
+      } else {
+        setProfile(null);
+        setLoading(false);
+      }
     });
 
     return () => subscription.unsubscribe();
