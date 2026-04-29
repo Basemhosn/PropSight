@@ -63,6 +63,7 @@ function Icon({ name, size=15 }) {
 export default function Sidebar({ page, setPage }) {
   const { user, profile, signOut, isPro, isLite, theme, toggleTheme, lang, toggleLang } = useAuth();
   const [open, setOpen] = useState(false);
+  const [themeMode, setThemeMode] = useState(() => localStorage.getItem('theme') || 'dark');
   const [isMobile, setIsMobile] = useState(true);
 
   useEffect(() => {
@@ -143,7 +144,7 @@ export default function Sidebar({ page, setPage }) {
           <div style={{ fontSize:12, fontWeight:600, color:'#94A3B8', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{profile?.full_name?.split(' ')[0] || user?.email?.split('@')[0] || 'User'}</div>
           <div style={{ fontSize:10, color:'#1E3A5F' }}>{isPro?<span style={{color:'#F59E0B',fontWeight:700}}>⭐ Pro</span>:isLite?<span style={{color:'#A78BFA',fontWeight:700}}>✦ Lite</span>:'Free plan'}</div>
         </div>
-        <button onClick={() => { const c=document.documentElement.getAttribute('data-theme')||'dark'; const n=c==='dark'?'light':'dark'; document.documentElement.setAttribute('data-theme',n); localStorage.setItem('theme',n); }} style={{ background:'none', border:'none', cursor:'pointer', color:'#64748B', padding:4, fontSize:13 }}>{(document.documentElement.getAttribute('data-theme')||'dark')==='dark'?'☀️':'🌙'}</button>
+        <button onClick={() => { const c=document.documentElement.getAttribute('data-theme')||'dark'; const n=c==='dark'?'light':'dark'; document.documentElement.setAttribute('data-theme',n); localStorage.setItem('theme',n); setThemeMode(n); }} style={{ background:'none', border:'none', cursor:'pointer', color:'#64748B', padding:4, fontSize:13 }}>{themeMode==='dark'?'☀️':'🌙'}</button>
         <button onClick={signOut} style={{ background:'none', border:'none', cursor:'pointer', color:'#1E3A5F', padding:4 }}><Icon name="logout" size={14}/></button>
       </div>
     </div>
