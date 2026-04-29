@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import PropSightLogo from './PropSightLogo';
 import { useAuth, supabase } from '../context/AuthContext';
+import { useTheme } from '../hooks/useTheme';
 
 const NAV_SECTIONS = [
   { items: [{ id:'home', label:'Home', icon:'home' }] },
@@ -61,7 +62,8 @@ function Icon({ name, size=15 }) {
 }
 
 export default function Sidebar({ page, setPage }) {
-  const { user, profile, signOut, isPro, isLite, theme, toggleTheme, lang, toggleLang } = useAuth();
+  const { user, profile, signOut, isPro, isLite } = useAuth();
+  const { theme, toggleTheme, colors } = useTheme();
   const [open, setOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(true);
 
@@ -134,6 +136,13 @@ export default function Sidebar({ page, setPage }) {
           <button onClick={() => nav('upgrade')} style={{ width:'100%', padding:'8px', borderRadius:8, border:'none', background:'linear-gradient(135deg,#B45309,#F59E0B)', color:'#fff', fontSize:13, fontWeight:600, cursor:'pointer', fontFamily:'system-ui' }}>Upgrade to Pro →</button>
         </div>
       )}
+      {/* Theme toggle */}
+      <div style={{ padding:'8px 12px', borderTop:`1px solid ${colors.border}`, display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+        <span style={{ fontSize:11, color:colors.textMuted, fontWeight:500 }}>Theme</span>
+        <button onClick={toggleTheme} style={{ background:'none', border:`1px solid ${colors.border}`, borderRadius:6, padding:'4px 10px', fontSize:11, color:colors.textSecondary, cursor:'pointer', fontFamily:'inherit' }}>
+          {theme === 'dark' ? '☀️ Light' : '🌙 Dark'}
+        </button>
+      </div>
       <div style={{ padding:'12px', borderTop:'1px solid rgba(59,130,246,0.08)', display:'flex', alignItems:'center', gap:10 }}>
         {profile?.avatar_url
           ? <img src={profile.avatar_url} alt="avatar" style={{ width:32, height:32, borderRadius:'50%', objectFit:'cover', border:'1px solid rgba(59,130,246,0.3)', flexShrink:0 }}/>
