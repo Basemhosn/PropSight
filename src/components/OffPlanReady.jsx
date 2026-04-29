@@ -14,10 +14,10 @@ const CustomTooltip = ({ active, payload, label }) => {
   const total = (off?.value || 0) + (rdy?.value || 0);
   const pct = total ? ((off?.value || 0) / total * 100).toFixed(0) : 0;
   return (
-    <div style={{ background: "#F1F5F9", color: "#0D1929", borderRadius: 8, padding: "10px 14px", fontSize: 12, minWidth: 190 }}>
+    <div style={{ background: "var(--text-primary)", color: "var(--surface)", borderRadius: 8, padding: "10px 14px", fontSize: 12, minWidth: 190 }}>
       <div style={{ fontWeight: 600, marginBottom: 6 }}>{label}</div>
-      {off && <div style={{ color: OFF_COLOR, marginBottom: 3 }}>Off-plan: <span style={{ color: "#0D1929", fontWeight: 600 }}>{fmtNum(off.value)}</span></div>}
-      {rdy && <div style={{ color: RDY_COLOR, marginBottom: 3 }}>Ready: <span style={{ color: "#0D1929", fontWeight: 600 }}>{fmtNum(rdy.value)}</span></div>}
+      {off && <div style={{ color: OFF_COLOR, marginBottom: 3 }}>Off-plan: <span style={{ color: "var(--surface)", fontWeight: 600 }}>{fmtNum(off.value)}</span></div>}
+      {rdy && <div style={{ color: RDY_COLOR, marginBottom: 3 }}>Ready: <span style={{ color: "var(--surface)", fontWeight: 600 }}>{fmtNum(rdy.value)}</span></div>}
       <div style={{ color: "#8AAAC8", marginTop: 4, fontSize: 11 }}>Off-plan share: <span style={{ color: "#4ADE80", fontWeight: 600 }}>{pct}%</span></div>
     </div>
   );
@@ -71,12 +71,12 @@ export default function OffPlanReady({ rows, areas }) {
   const fmtTick = v => metric === "count" ? fmtNum(v) : fmtAED(v, true);
 
   return (
-    <div style={{ background: "#0D1929", border: "1px solid #E8ECF2", borderRadius: 12, padding: "1.25rem" }}>
+    <div style={{ background: "var(--surface)", border: "1px solid #E8ECF2", borderRadius: 12, padding: "1.25rem" }}>
       {/* Header */}
       <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between",
         marginBottom: "1rem", flexWrap: "wrap", gap: 8 }}>
         <div>
-          <div style={{ fontSize: 13, fontWeight: 600, color: "#F1F5F9" }}>Off-plan vs ready market</div>
+          <div style={{ fontSize: 13, fontWeight: 600, color: "var(--text-primary)" }}>Off-plan vs ready market</div>
           <div style={{ fontSize: 11, color: "#9AA0AE", marginTop: 2 }}>
             {offPct}% off-plan · {(100 - parseFloat(offPct)).toFixed(1)}% ready · {fmtNum(totalTxns)} total
           </div>
@@ -86,8 +86,8 @@ export default function OffPlanReady({ rows, areas }) {
             <button key={t.k} onClick={() => setView(t.k)} style={{
               fontSize: 11, padding: "4px 10px", borderRadius: 6, cursor: "pointer", fontWeight: 500,
               border: view === t.k ? "1px solid #0A1628" : "1px solid #E8ECF2",
-              background: view === t.k ? "#F1F5F9" : "#0D1929",
-              color: view === t.k ? "#0D1929" : "#7A8499",
+              background: view === t.k ? "var(--text-primary)" : "var(--surface)",
+              color: view === t.k ? "var(--surface)" : "#7A8499",
             }}>{t.l}</button>
           ))}
           <div style={{ width: 1, background: "rgba(59,130,246,0.12)", margin: "0 2px" }} />
@@ -95,7 +95,7 @@ export default function OffPlanReady({ rows, areas }) {
             <button key={t.k} onClick={() => setMetric(t.k)} style={{
               fontSize: 11, padding: "4px 10px", borderRadius: 6, cursor: "pointer", fontWeight: 500,
               border: metric === t.k ? "1px solid #185FA5" : "1px solid #E8ECF2",
-              background: metric === t.k ? "rgba(59,130,246,0.1)" : "#0D1929",
+              background: metric === t.k ? "rgba(59,130,246,0.1)" : "var(--surface)",
               color: metric === t.k ? "#38BDF8" : "#7A8499",
             }}>{t.l}</button>
           ))}
@@ -140,7 +140,7 @@ export default function OffPlanReady({ rows, areas }) {
               tickFormatter={fmtTick} axisLine={false} tickLine={false} />
             <YAxis type="category" dataKey="name" width={148}
               tick={{ fontSize: 11, fill: "#4A5568" }} axisLine={false} tickLine={false} />
-            <Tooltip content={<CustomTooltip />} cursor={{ fill: "#0D1929" }} />
+            <Tooltip content={<CustomTooltip />} cursor={{ fill: "var(--surface)" }} />
             <Bar dataKey="offPlan" stackId="a" fill={OFF_COLOR} maxBarSize={14} radius={[0, 0, 0, 0]} name="Off-plan" />
             <Bar dataKey="ready" stackId="a" fill={RDY_COLOR} maxBarSize={14} radius={[0, 4, 4, 0]} name="Ready" />
           </BarChart>
@@ -152,7 +152,7 @@ export default function OffPlanReady({ rows, areas }) {
             <XAxis dataKey="month" tick={{ fontSize: 10, fill: "#9AA0AE" }} axisLine={false} tickLine={false} />
             <YAxis tick={{ fontSize: 10, fill: "#9AA0AE" }} axisLine={false} tickLine={false}
               tickFormatter={fmtTick} width={72} />
-            <Tooltip content={<CustomTooltip />} cursor={{ fill: "#0D1929" }} />
+            <Tooltip content={<CustomTooltip />} cursor={{ fill: "var(--surface)" }} />
             <Bar dataKey="offPlan" stackId="a" fill={OFF_COLOR} name="Off-plan" />
             <Bar dataKey="ready" stackId="a" fill={RDY_COLOR} name="Ready" radius={[3, 3, 0, 0]} />
           </BarChart>

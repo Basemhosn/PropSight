@@ -63,8 +63,8 @@ export default function ROIEstimator({ rows, areas }) {
   const totalROI    = price > 0 ? (totalReturn / price * 100) : 0;
   const annualROI   = holdYears > 0 ? totalROI / holdYears : 0;
 
-  const card = (label, value, sub, color="#F1F5F9") => (
-    <div style={{ background:"#0D1929", borderRadius:8, padding:"0.75rem 1rem" }}>
+  const card = (label, value, sub, color="var(--text-primary)") => (
+    <div style={{ background:"var(--surface)", borderRadius:8, padding:"0.75rem 1rem" }}>
       <div style={{ fontSize:11, color:"#9AA0AE", marginBottom:4 }}>{label}</div>
       <div style={{ fontSize:18, fontWeight:700, color }}>{value}</div>
       {sub && <div style={{ fontSize:11, color:"#9AA0AE", marginTop:2 }}>{sub}</div>}
@@ -72,9 +72,9 @@ export default function ROIEstimator({ rows, areas }) {
   );
 
   return (
-    <div style={{ background:"#0D1929", border:"1px solid #E8ECF2", borderRadius:12, padding:"1.25rem" }}>
+    <div style={{ background:"var(--surface)", border:"1px solid #E8ECF2", borderRadius:12, padding:"1.25rem" }}>
       <div style={{ marginBottom:"1rem" }}>
-        <div style={{ fontSize:13, fontWeight:600, color:"#F1F5F9" }}>ROI & yield estimator</div>
+        <div style={{ fontSize:13, fontWeight:600, color:"var(--text-primary)" }}>ROI & yield estimator</div>
         <div style={{ fontSize:11, color:"#9AA0AE", marginTop:2 }}>Estimate rental yield and return on investment</div>
       </div>
 
@@ -83,7 +83,7 @@ export default function ROIEstimator({ rows, areas }) {
         <div style={{ gridColumn:"1/-1" }}>
           <label style={{ fontSize:11, color:"#7A8499", display:"block", marginBottom:4 }}>Area</label>
           <select value={selectedArea} onChange={e => setSelectedArea(e.target.value)}
-            style={{ width:"100%", fontSize:12, padding:"7px 10px", borderRadius:8, border:"1px solid #E8ECF2", background:"#0D1929", color:"#F1F5F9" }}>
+            style={{ width:"100%", fontSize:12, padding:"7px 10px", borderRadius:8, border:"1px solid #E8ECF2", background:"var(--surface)", color:"var(--text-primary)" }}>
             <option value="">Select an area…</option>
             {topAreas.map(a => (
               <option key={a.area} value={a.area}>{a.area} — avg {fmtAED(a.avg, true)}</option>
@@ -99,7 +99,7 @@ export default function ROIEstimator({ rows, areas }) {
           <input value={purchasePrice}
             onChange={e => setPurchasePrice(e.target.value)}
             placeholder={currentArea ? fmtNum(Math.round(currentArea.avg)) : "e.g. 1,200,000"}
-            style={{ width:"100%", fontSize:12, padding:"7px 10px", borderRadius:8, border:"1px solid #E8ECF2", background:"#0D1929", color:"#F1F5F9", boxSizing:"border-box" }}
+            style={{ width:"100%", fontSize:12, padding:"7px 10px", borderRadius:8, border:"1px solid #E8ECF2", background:"var(--surface)", color:"var(--text-primary)", boxSizing:"border-box" }}
           />
           {currentArea && !purchasePrice && (
             <div style={{ fontSize:10, color:"#9AA0AE", marginTop:3 }}>Using area avg: {fmtAED(currentArea.avg, true)}</div>
@@ -114,7 +114,7 @@ export default function ROIEstimator({ rows, areas }) {
           <input value={annualRent}
             onChange={e => setAnnualRent(e.target.value)}
             placeholder={price > 0 ? fmtNum(Math.round(price * estYield / 100)) : "e.g. 80,000"}
-            style={{ width:"100%", fontSize:12, padding:"7px 10px", borderRadius:8, border:"1px solid #E8ECF2", background:"#0D1929", color:"#F1F5F9", boxSizing:"border-box" }}
+            style={{ width:"100%", fontSize:12, padding:"7px 10px", borderRadius:8, border:"1px solid #E8ECF2", background:"var(--surface)", color:"var(--text-primary)", boxSizing:"border-box" }}
           />
           {!annualRent && (
             <div style={{ fontSize:10, color:"#9AA0AE", marginTop:3 }}>Est. {estYield}% yield benchmark</div>

@@ -6,11 +6,11 @@ export default function AreaAnalysis({ areaData, recentRaw }) {
   const [tab, setTab] = useState('overview');
 
   return (
-    <div style={{flex:1,display:'flex',flexDirection:'column',background:'#060E1A',fontFamily:'system-ui',overflow:'hidden'}}>
+    <div style={{flex:1,display:'flex',flexDirection:'column',background:'var(--bg)',fontFamily:'system-ui',overflow:'hidden'}}>
       <div style={{padding:'12px 28px 0',borderBottom:'1px solid rgba(59,130,246,0.08)',display:'flex',justifyContent:'flex-end'}}>
-        <div style={{display:'flex',gap:6,background:'#0D1929',border:'1px solid rgba(59,130,246,0.15)',borderRadius:10,padding:4,marginBottom:12}}>
+        <div style={{display:'flex',gap:6,background:'var(--surface)',border:'1px solid rgba(59,130,246,0.15)',borderRadius:10,padding:4,marginBottom:12}}>
           {[['overview','Area Overview'],['comps','Comparable Sales']].map(([t,l])=>(
-            <button key={t} onClick={()=>setTab(t)} style={{padding:'7px 16px',borderRadius:8,border:'none',cursor:'pointer',fontSize:13,fontFamily:'system-ui',fontWeight:tab===t?600:400,background:tab===t?'linear-gradient(135deg,#1D4ED8,#38BDF8)':'transparent',color:tab===t?'#fff':'#64748B'}}>{l}</button>
+            <button key={t} onClick={()=>setTab(t)} style={{padding:'7px 16px',borderRadius:8,border:'none',cursor:'pointer',fontSize:13,fontFamily:'system-ui',fontWeight:tab===t?600:400,background:tab===t?'linear-gradient(135deg,#1D4ED8,#38BDF8)':'transparent',color:tab===t?'#fff':'var(--text-muted)'}}>{l}</button>
           ))}
         </div>
       </div>

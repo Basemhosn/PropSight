@@ -42,10 +42,10 @@ export default function AreaTable({ areas, onRowClick }) {
   };
 
   return (
-    <div style={{ background: "#0D1929", border: "1px solid #E8ECF2", borderRadius: 12, overflow: "hidden" }}>
+    <div style={{ background: "var(--surface)", border: "1px solid #E8ECF2", borderRadius: 12, overflow: "hidden" }}>
       <div style={{ padding: "1rem 1.25rem", borderBottom: "1px solid #E8ECF2",
         display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <div style={{ fontSize: 13, fontWeight: 600, color: "#F1F5F9" }}>
+        <div style={{ fontSize: 13, fontWeight: 600, color: "var(--text-primary)" }}>
           Area breakdown{" "}
           <span style={{ color: "#9AA0AE", fontWeight: 400 }}>— {fmtNum(areas.length)} areas</span>
         </div>
@@ -82,15 +82,15 @@ export default function AreaTable({ areas, onRowClick }) {
               <tr key={row.area}
                 onClick={() => onRowClick && onRowClick(row)}
                 style={{ borderBottom: "1px solid #F4F6FA", cursor: "pointer" }}
-                onMouseEnter={e => e.currentTarget.style.background = "#0D1929"}
+                onMouseEnter={e => e.currentTarget.style.background = "var(--surface)"}
                 onMouseLeave={e => e.currentTarget.style.background = "transparent"}>
                 <td style={{ padding: "9px 12px", fontSize: 12, color: "#C5CAD6" }}>{page * PAGE + i + 1}</td>
-                <td style={{ padding: "9px 12px", fontSize: 13, fontWeight: 600, color: "#F1F5F9", whiteSpace: "nowrap" }}>{row.area}</td>
-                <td style={{ padding: "9px 12px", fontSize: 13, color: "#F1F5F9" }}>{fmtNum(row.count)}</td>
-                <td style={{ padding: "9px 12px", fontSize: 13, color: "#F1F5F9" }}>{fmtAED(row.total, true)}</td>
-                <td style={{ padding: "9px 12px", fontSize: 13, color: "#F1F5F9" }}>{fmtAED(row.avg, true)}</td>
+                <td style={{ padding: "9px 12px", fontSize: 13, fontWeight: 600, color: "var(--text-primary)", whiteSpace: "nowrap" }}>{row.area}</td>
+                <td style={{ padding: "9px 12px", fontSize: 13, color: "var(--text-primary)" }}>{fmtNum(row.count)}</td>
+                <td style={{ padding: "9px 12px", fontSize: 13, color: "var(--text-primary)" }}>{fmtAED(row.total, true)}</td>
+                <td style={{ padding: "9px 12px", fontSize: 13, color: "var(--text-primary)" }}>{fmtAED(row.avg, true)}</td>
                 <td style={{ padding: "9px 12px", fontSize: 13, color: "#7A8499" }}>{fmtSqm(Math.round(row.avgSize))}</td>
-                <td style={{ padding: "9px 12px", fontSize: 13, color: row.avgSize > 0 ? "#F1F5F9" : "#C5CAD6" }}>
+                <td style={{ padding: "9px 12px", fontSize: 13, color: row.avgSize > 0 ? "var(--text-primary)" : "#C5CAD6" }}>
                   {row.avgSize > 0 ? "AED " + Math.round(row.avg / row.avgSize).toLocaleString() + "/m²" : "—"}
                 </td>
                 <td style={{ padding: "9px 12px" }}><Pill label={row.topType} /></td>
@@ -107,8 +107,8 @@ export default function AreaTable({ areas, onRowClick }) {
             <button key={i} onClick={() => setPage(i)} style={{
               width: 28, height: 28, borderRadius: 6,
               border: "1px solid #E8ECF2",
-              background: page === i ? "#38BDF8" : "#0D1929",
-              color: page === i ? "#0D1929" : "#4A5568",
+              background: page === i ? "#38BDF8" : "var(--surface)",
+              color: page === i ? "var(--surface)" : "#4A5568",
               fontSize: 12, fontWeight: 500, cursor: "pointer",
             }}>{i + 1}</button>
           ))}

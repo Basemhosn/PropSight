@@ -112,19 +112,19 @@ export default function PDFExport({ areaData, core }) {
     setTimeout(() => { win.print(); setGenerating(false); }, 500);
   };
 
-  const inp = {background:'#070E1B',border:'1px solid rgba(59,130,246,0.15)',borderRadius:8,color:'#F1F5F9',fontSize:13,padding:'10px 12px',outline:'none',fontFamily:'system-ui',width:'100%',boxSizing:'border-box'};
+  const inp = {background:'var(--bg-alt)',border:'1px solid rgba(59,130,246,0.15)',borderRadius:8,color:'var(--text-primary)',fontSize:13,padding:'10px 12px',outline:'none',fontFamily:'system-ui',width:'100%',boxSizing:'border-box'};
 
   return (
-    <div style={{flex:1,overflowY:'auto',background:'#060E1A',fontFamily:'system-ui',padding:'24px 28px'}}>
+    <div style={{flex:1,overflowY:'auto',background:'var(--bg)',fontFamily:'system-ui',padding:'24px 28px'}}>
       <div style={{marginBottom:24}}>
-        <h1 style={{margin:0,fontSize:22,fontWeight:700,color:'#F1F5F9',marginBottom:4}}>PDF Export</h1>
+        <h1 style={{margin:0,fontSize:22,fontWeight:700,color:'var(--text-primary)',marginBottom:4}}>PDF Export</h1>
         <div style={{fontSize:13,color:'#475569'}}>Generate branded market intelligence reports — print or save as PDF</div>
       </div>
       <div style={{display:'grid',gridTemplateColumns:'320px 1fr',gap:20,alignItems:'start'}}>
-        <div style={{background:'#0D1929',border:'1px solid rgba(255,255,255,0.06)',borderRadius:14,padding:24}}>
-          <div style={{fontSize:14,fontWeight:600,color:'#F1F5F9',marginBottom:16}}>Generate Report</div>
+        <div style={{background:'var(--surface)',border:'1px solid rgba(255,255,255,0.06)',borderRadius:14,padding:24}}>
+          <div style={{fontSize:14,fontWeight:600,color:'var(--text-primary)',marginBottom:16}}>Generate Report</div>
           <div style={{marginBottom:16}}>
-            <label style={{fontSize:12,color:'#64748B',marginBottom:6,display:'block',fontWeight:500}}>Select Area</label>
+            <label style={{fontSize:12,color:'var(--text-muted)',marginBottom:6,display:'block',fontWeight:500}}>Select Area</label>
             <select value={selectedArea} onChange={e=>setSelectedArea(e.target.value)} style={{...inp,cursor:'pointer'}}>
               <option value="">Choose an area...</option>
               {areas.map(a=><option key={a.key} value={a.key}>{a.label}</option>)}
@@ -132,9 +132,9 @@ export default function PDFExport({ areaData, core }) {
           </div>
           {selectedArea && (
             <div style={{background:'rgba(59,130,246,0.06)',border:'1px solid rgba(59,130,246,0.1)',borderRadius:10,padding:14,marginBottom:16}}>
-              <div style={{fontSize:11,color:'#64748B',fontWeight:600,marginBottom:8,textTransform:'uppercase',letterSpacing:'0.05em'}}>Report includes</div>
+              <div style={{fontSize:11,color:'var(--text-muted)',fontWeight:600,marginBottom:8,textTransform:'uppercase',letterSpacing:'0.05em'}}>Report includes</div>
               {['Price trend chart & history','Transaction volume breakdown','Off-plan vs Ready split','YoY growth analysis','Market summary & insights','PropSight branding'].map((f,i)=>(
-                <div key={i} style={{display:'flex',alignItems:'center',gap:8,padding:'3px 0',fontSize:12,color:'#94A3B8'}}><span style={{color:'#22C55E'}}>✓</span>{f}</div>
+                <div key={i} style={{display:'flex',alignItems:'center',gap:8,padding:'3px 0',fontSize:12,color:'var(--text-secondary)'}}><span style={{color:'#22C55E'}}>✓</span>{f}</div>
               ))}
             </div>
           )}
@@ -143,16 +143,16 @@ export default function PDFExport({ areaData, core }) {
           </button>
           <div style={{fontSize:11,color:'#475569',marginTop:10,textAlign:'center'}}>Opens print dialog — save as PDF or print directly</div>
         </div>
-        <div style={{background:'#0D1929',border:'1px solid rgba(255,255,255,0.06)',borderRadius:14,overflow:'hidden'}}>
+        <div style={{background:'var(--surface)',border:'1px solid rgba(255,255,255,0.06)',borderRadius:14,overflow:'hidden'}}>
           <div style={{padding:'16px 20px',borderBottom:'1px solid rgba(255,255,255,0.06)',display:'flex',justifyContent:'space-between',alignItems:'center'}}>
-            <div style={{fontSize:13,fontWeight:600,color:'#F1F5F9'}}>Report Preview</div>
+            <div style={{fontSize:13,fontWeight:600,color:'var(--text-primary)'}}>Report Preview</div>
             {selectedArea && <span style={{fontSize:11,color:'#38BDF8',fontWeight:600}}>{niceArea(selectedArea)}</span>}
           </div>
           <div style={{padding:24}}>
             {!selectedArea ? (
               <div style={{textAlign:'center',padding:40}}>
                 <div style={{fontSize:48,marginBottom:16}}>📄</div>
-                <div style={{fontSize:15,fontWeight:600,color:'#F1F5F9',marginBottom:8}}>Select an area to preview</div>
+                <div style={{fontSize:15,fontWeight:600,color:'var(--text-primary)',marginBottom:8}}>Select an area to preview</div>
                 <div style={{fontSize:13,color:'#475569'}}>Professional branded report ready to print or share</div>
               </div>
             ) : (()=>{

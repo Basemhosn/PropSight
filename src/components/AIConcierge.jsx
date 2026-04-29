@@ -25,12 +25,12 @@ function Message({ msg }) {
       )}
       <div style={{
         maxWidth: '72%',
-        background: isUser ? 'linear-gradient(135deg,#1D4ED8,#38BDF8)' : '#0D1929',
+        background: isUser ? 'linear-gradient(135deg,#1D4ED8,#38BDF8)' : 'var(--surface)',
         border: isUser ? 'none' : '1px solid rgba(255,255,255,0.06)',
         borderRadius: isUser ? '14px 14px 4px 14px' : '4px 14px 14px 14px',
         padding: '12px 16px',
       }}>
-        <div style={{ fontSize: 14, color: '#F1F5F9', lineHeight: 1.6, whiteSpace: 'pre-wrap' }}>
+        <div style={{ fontSize: 14, color: 'var(--text-primary)', lineHeight: 1.6, whiteSpace: 'pre-wrap' }}>
           {msg.content}
         </div>
         <div style={{ fontSize: 11, color: isUser ? 'rgba(255,255,255,0.5)' : '#475569', marginTop: 6 }}>
@@ -100,12 +100,12 @@ top areas: JVC, Business Bay, Dubai Marina, Downtown, Dubai Hills, Palm Jumeirah
 
   return (
     <div style={{
-      flex: 1, display: 'flex', background: '#060E1A',
+      flex: 1, display: 'flex', background: 'var(--bg)',
       fontFamily: 'system-ui', height: '100vh', overflow: 'hidden',
     }}>
       {/* Sidebar */}
       <div style={{
-        width: 260, flexShrink: 0, background: '#070E1B',
+        width: 260, flexShrink: 0, background: 'var(--bg-alt)',
         borderRight: '1px solid rgba(255,255,255,0.06)',
         display: 'flex', flexDirection: 'column', padding: '16px',
       }}>
@@ -124,7 +124,7 @@ top areas: JVC, Business Bay, Dubai Marina, Downtown, Dubai Hills, Palm Jumeirah
         <button onClick={() => {}} style={{
           display: 'flex', alignItems: 'center', gap: 6,
           background: 'none', border: 'none', cursor: 'pointer',
-          color: '#64748B', fontSize: 13, padding: '8px 0',
+          color: 'var(--text-muted)', fontSize: 13, padding: '8px 0',
         }}>
           ← Back
         </button>
@@ -153,9 +153,9 @@ top areas: JVC, Business Bay, Dubai Marina, Downtown, Dubai Hills, Palm Jumeirah
               }}/>
             </div>
             <div>
-              <div style={{ fontSize: 15, fontWeight: 700, color: '#F1F5F9' }}>PropSight AI Concierge</div>
+              <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-primary)' }}>PropSight AI Concierge</div>
               <div style={{ fontSize: 12, color: '#22C55E' }}>
-                Online • <span style={{ color: '#64748B' }}>Ready to assist</span>
+                Online • <span style={{ color: 'var(--text-muted)' }}>Ready to assist</span>
               </div>
             </div>
           </div>
@@ -179,7 +179,7 @@ top areas: JVC, Business Bay, Dubai Marina, Downtown, Dubai Hills, Palm Jumeirah
                 display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16,
               }}>🤖</div>
               <div style={{
-                background: '#0D1929', border: '1px solid rgba(255,255,255,0.06)',
+                background: 'var(--surface)', border: '1px solid rgba(255,255,255,0.06)',
                 borderRadius: '4px 14px 14px 14px', padding: '14px 18px',
                 display: 'flex', gap: 6, alignItems: 'center',
               }}>
@@ -203,8 +203,8 @@ top areas: JVC, Business Bay, Dubai Marina, Downtown, Dubai Hills, Palm Jumeirah
                 {SUGGESTED.slice(0, 4).map((s, i) => (
                   <button key={i} onClick={() => sendMessage(s.text)} style={{
                     padding: '8px 14px', borderRadius: 20,
-                    background: '#0D1929', border: '1px solid rgba(255,255,255,0.08)',
-                    color: '#94A3B8', fontSize: 12, cursor: 'pointer', fontFamily: 'system-ui',
+                    background: 'var(--surface)', border: '1px solid rgba(255,255,255,0.08)',
+                    color: 'var(--text-secondary)', fontSize: 12, cursor: 'pointer', fontFamily: 'system-ui',
                     display: 'flex', alignItems: 'center', gap: 6,
                   }}>
                     <span>{s.icon}</span> {s.text}
@@ -214,8 +214,8 @@ top areas: JVC, Business Bay, Dubai Marina, Downtown, Dubai Hills, Palm Jumeirah
               <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 12 }}>
                 <button onClick={() => sendMessage(SUGGESTED[4].text)} style={{
                   padding: '8px 14px', borderRadius: 20,
-                  background: '#0D1929', border: '1px solid rgba(255,255,255,0.08)',
-                  color: '#94A3B8', fontSize: 12, cursor: 'pointer', fontFamily: 'system-ui',
+                  background: 'var(--surface)', border: '1px solid rgba(255,255,255,0.08)',
+                  color: 'var(--text-secondary)', fontSize: 12, cursor: 'pointer', fontFamily: 'system-ui',
                   display: 'flex', alignItems: 'center', gap: 6,
                 }}>
                   <span>{SUGGESTED[4].icon}</span> {SUGGESTED[4].text}
@@ -229,7 +229,7 @@ top areas: JVC, Business Bay, Dubai Marina, Downtown, Dubai Hills, Palm Jumeirah
 
           <div style={{
             display: 'flex', gap: 10, alignItems: 'center',
-            background: '#0D1929', border: '1px solid rgba(255,255,255,0.08)',
+            background: 'var(--surface)', border: '1px solid rgba(255,255,255,0.08)',
             borderRadius: 14, padding: '10px 14px',
           }}>
             <button style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#475569', fontSize: 18 }}>
@@ -242,7 +242,7 @@ top areas: JVC, Business Bay, Dubai Marina, Downtown, Dubai Hills, Palm Jumeirah
               placeholder="Message PropSight AI..."
               style={{
                 flex: 1, background: 'none', border: 'none', outline: 'none',
-                color: '#F1F5F9', fontSize: 14, fontFamily: 'system-ui',
+                color: 'var(--text-primary)', fontSize: 14, fontFamily: 'system-ui',
               }}
             />
             <button onClick={() => sendMessage()} disabled={!input.trim() || loading} style={{

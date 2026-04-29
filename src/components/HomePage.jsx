@@ -19,12 +19,12 @@ function KPICard({ label, value, sub, subColor = '#38BDF8', trend }) {
   const isUp = trend > 0;
   return (
     <div style={{
-      background: '#0D1929',
+      background: 'var(--surface)',
       border: '1px solid rgba(255,255,255,0.06)',
       borderRadius: 12, padding: '18px 20px', flex: 1, minWidth: 0,
     }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 10 }}>
-        <div style={{ fontSize: 12, color: '#64748B', fontWeight: 400 }}>{label}</div>
+        <div style={{ fontSize: 12, color: 'var(--text-muted)', fontWeight: 400 }}>{label}</div>
         {trend !== undefined && (
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
             stroke={isUp ? '#22D3EE' : '#F87171'} strokeWidth="2">
@@ -33,7 +33,7 @@ function KPICard({ label, value, sub, subColor = '#38BDF8', trend }) {
           </svg>
         )}
       </div>
-      <div style={{ fontSize: 26, fontWeight: 700, color: '#F1F5F9', letterSpacing: '-0.5px', marginBottom: 6, lineHeight: 1 }}>
+      <div style={{ fontSize: 26, fontWeight: 700, color: 'var(--text-primary)', letterSpacing: '-0.5px', marginBottom: 6, lineHeight: 1 }}>
         {value}
       </div>
       {sub && (
@@ -88,7 +88,7 @@ export default function HomePage({ core, areaData, recentRaw, onNavigate, isPro 
 
   return (
     <div style={{
-      flex: 1, overflowY: 'auto', background: '#060E1A',
+      flex: 1, overflowY: 'auto', background: 'var(--bg)',
       fontFamily: 'system-ui, sans-serif', minHeight: '100vh',
     }}>
       {/* Pro banner */}
@@ -103,7 +103,7 @@ export default function HomePage({ core, areaData, recentRaw, onNavigate, isPro 
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#38BDF8" strokeWidth="2">
             <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
           </svg>
-          <span style={{ fontSize: 12, color: '#64748B' }}>
+          <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>
             <span style={{ color: '#38BDF8', fontWeight: 600 }}>PropSight Pro</span>
             {' '}— Market Intelligence · Deal Analyzer · Dubai Heatmap ·{' '}
             <span style={{ color: '#F59E0B', fontWeight: 500 }}>Upgrade today</span>
@@ -121,7 +121,7 @@ export default function HomePage({ core, areaData, recentRaw, onNavigate, isPro 
         {/* Search */}
         <div style={{
           display: 'flex', gap: 10, marginBottom: 20, alignItems: 'center',
-          background: '#0D1929', border: '1px solid rgba(59,130,246,0.15)',
+          background: 'var(--surface)', border: '1px solid rgba(59,130,246,0.15)',
           borderRadius: 12, padding: '10px 16px',
         }}>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#475569" strokeWidth="2">
@@ -130,7 +130,7 @@ export default function HomePage({ core, areaData, recentRaw, onNavigate, isPro 
           <input value={searchQuery} onChange={e=>setSearchQuery(e.target.value)} placeholder="Search areas, projects, developers..." onKeyDown={e=>{if(e.key==="Enter"){if(searchQuery.trim())setShowResults(true);else onNavigate&&onNavigate('recent');}}}
             style={{
               background: 'none', border: 'none', outline: 'none',
-              color: '#94A3B8', fontSize: 14, flex: 1, fontFamily: 'system-ui',
+              color: 'var(--text-secondary)', fontSize: 14, flex: 1, fontFamily: 'system-ui',
             }}/>
           <div style={{ display: 'flex', gap: 6 }}>
             {['Sales', 'Rental'].map(t => (
@@ -138,7 +138,7 @@ export default function HomePage({ core, areaData, recentRaw, onNavigate, isPro 
                 padding: '5px 14px', borderRadius: 20, border: 'none', cursor: 'pointer',
                 fontSize: 11, fontWeight: 600, fontFamily: 'system-ui',
                 background: searchType===t ? 'linear-gradient(135deg,#1D4ED8,#38BDF8)' : 'rgba(59,130,246,0.08)',
-                color: searchType===t ? '#fff' : '#64748B',
+                color: searchType===t ? '#fff' : 'var(--text-muted)',
               }}>{t}</button>
             ))}
           </div>
@@ -171,16 +171,16 @@ export default function HomePage({ core, areaData, recentRaw, onNavigate, isPro 
           const avgPsqft = psqfts.length ? Math.round(psqfts.reduce((s,v)=>s+v,0)/psqfts.length) : 0;
 
           return (
-            <div style={{background:'#0D1929',border:'1px solid rgba(59,130,246,0.2)',borderRadius:14,padding:20,marginBottom:20}}>
+            <div style={{background:'var(--surface)',border:'1px solid rgba(59,130,246,0.2)',borderRadius:14,padding:20,marginBottom:20}}>
               <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:14}}>
                 <div>
-                  <span style={{fontSize:14,fontWeight:600,color:'#F1F5F9'}}>{results.length} {isRental?'Ready Residential':'Sale'} results</span>
+                  <span style={{fontSize:14,fontWeight:600,color:'var(--text-primary)'}}>{results.length} {isRental?'Ready Residential':'Sale'} results</span>
                   <span style={{fontSize:12,color:'#475569',marginLeft:8}}>{searchQuery?`for "${searchQuery}"`:'latest'}</span>
                   {isRental&&<span style={{fontSize:10,color:'#F59E0B',marginLeft:8,background:'rgba(245,158,11,0.1)',padding:'2px 8px',borderRadius:20}}>Ready residential — DLD sales data</span>}
                 </div>
                 <div style={{display:'flex',gap:16}}>
                   {avgVal>0 && <div style={{textAlign:'right'}}><div style={{fontSize:10,color:'#475569'}}>AVG DEAL</div><div style={{fontSize:14,fontWeight:700,color:'#38BDF8'}}>{fmtAED(avgVal,true)}</div></div>}
-                  {avgPsqft>0 && <div style={{textAlign:'right'}}><div style={{fontSize:10,color:'#475569'}}>AVG/SQFT</div><div style={{fontSize:14,fontWeight:700,color:'#F1F5F9'}}>AED {fmtNum(avgPsqft)}</div></div>}
+                  {avgPsqft>0 && <div style={{textAlign:'right'}}><div style={{fontSize:10,color:'#475569'}}>AVG/SQFT</div><div style={{fontSize:14,fontWeight:700,color:'var(--text-primary)'}}>AED {fmtNum(avgPsqft)}</div></div>}
                 </div>
               </div>
               {results.length === 0 ? (
@@ -191,12 +191,12 @@ export default function HomePage({ core, areaData, recentRaw, onNavigate, isPro 
                     const ppsqft=r.s&&r.v?Math.round(r.v/r.s/10.764):0;
                     return (
                       <div key={r.n||i} style={{display:'grid',gridTemplateColumns:'90px 1fr 100px 70px 70px',padding:'10px 14px',borderBottom:i<results.length-1?'1px solid rgba(255,255,255,0.04)':'none',background:i%2===0?'rgba(59,130,246,0.02)':'transparent'}}>
-                        <div style={{fontSize:11,color:'#64748B'}}>{r.d||'—'}</div>
+                        <div style={{fontSize:11,color:'var(--text-muted)'}}>{r.d||'—'}</div>
                         <div>
-                          <div style={{fontSize:12,fontWeight:600,color:'#F1F5F9',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{r.j||'—'}</div>
+                          <div style={{fontSize:12,fontWeight:600,color:'var(--text-primary)',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{r.j||'—'}</div>
                           <div style={{fontSize:10,color:'#475569'}}>{r.a||''} {r.b?'· '+r.b:''}</div>
                         </div>
-                        <div style={{fontSize:12,fontWeight:700,color:'#F1F5F9'}}>{r.v?fmtAED(r.v,true):'—'}</div>
+                        <div style={{fontSize:12,fontWeight:700,color:'var(--text-primary)'}}>{r.v?fmtAED(r.v,true):'—'}</div>
                         <div><span style={{fontSize:9,fontWeight:600,padding:'2px 5px',borderRadius:20,background:r.r==='Off'?'rgba(59,130,246,0.1)':'rgba(34,197,94,0.1)',color:r.r==='Off'?'#38BDF8':'#22C55E'}}>{r.r==='Off'?'Off-Plan':'Ready'}</span></div>
                         <div style={{fontSize:11,color:'#38BDF8'}}>{ppsqft?'AED '+fmtNum(ppsqft):'—'}</div>
                       </div>
@@ -219,7 +219,7 @@ export default function HomePage({ core, areaData, recentRaw, onNavigate, isPro 
                 padding: '6px 14px', borderRadius: 20, cursor: 'pointer', fontSize: 12,
                 fontWeight: active ? 600 : 400, fontFamily: 'system-ui',
                 background: active ? 'linear-gradient(135deg,#1D4ED8,#38BDF8)' : 'rgba(59,130,246,0.06)',
-                color: active ? '#fff' : '#64748B',
+                color: active ? '#fff' : 'var(--text-muted)',
                 border: active ? 'none' : '1px solid rgba(59,130,246,0.12)',
               }}>{lbl}</button>
             );
@@ -236,7 +236,7 @@ export default function HomePage({ core, areaData, recentRaw, onNavigate, isPro 
               color: timeframe === t ? '#38BDF8' : '#475569',
             }}>{t}</button>
           ))}
-          <span style={{ fontSize: 12, color: '#1E3A5F', marginLeft: 12 }}>
+          <span style={{ fontSize: 12, color: 'var(--text-faint)', marginLeft: 12 }}>
             All Dubai · {fmtNum(meta.totalRows || 0)} transactions
           </span>
         </div>
@@ -256,8 +256,8 @@ export default function HomePage({ core, areaData, recentRaw, onNavigate, isPro 
             return (<>
               <KPICard label="Median Price" value={fmtAED(avgVal)} sub={`${aYoy>0?'+':''}${aYoy}% YoY`} subColor={aYoy>0?"#22D3EE":"#F87171"} trend={aYoy>0?1:-1}/>
               <KPICard label="Price / sqft" value={'AED '+fmtNum(ppsqft)} sub={isAll?'+14% YoY':(aKpis?`${aYoy>0?'+':''}${aYoy}% YoY`:'')} subColor="#22D3EE" trend={1}/>
-              <KPICard label="Transactions" value={fmtNum(txnCount)} sub={isAll?"All time":"Area total"} subColor="#64748B"/>
-              <KPICard label={isAll?"Off-Plan Share":"Off-Plan"} value={isAll?(Math.round((core?.slices?.['r:Off-Plan']?.count||0)/(core?.slices?.all?.count||1)*100)+'%'):(opPct+'%')} sub="of transactions" subColor="#64748B"/>
+              <KPICard label="Transactions" value={fmtNum(txnCount)} sub={isAll?"All time":"Area total"} subColor="var(--text-muted)"/>
+              <KPICard label={isAll?"Off-Plan Share":"Off-Plan"} value={isAll?(Math.round((core?.slices?.['r:Off-Plan']?.count||0)/(core?.slices?.all?.count||1)*100)+'%'):(opPct+'%')} sub="of transactions" subColor="var(--text-muted)"/>
               <KPICard label="Market Score" value={`${mScore}/10`} sub={mLabel} subColor="#F59E0B"/>
             </>);
           })()}
@@ -277,7 +277,7 @@ export default function HomePage({ core, areaData, recentRaw, onNavigate, isPro 
             </svg>
             Analyse My Property
           </button>
-          <span style={{ fontSize: 12, color: '#1E3A5F' }}>
+          <span style={{ fontSize: 12, color: 'var(--text-faint)' }}>
             ✓ Verified DLD Data · Updated daily
           </span>
         </div>
@@ -286,7 +286,7 @@ export default function HomePage({ core, areaData, recentRaw, onNavigate, isPro 
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginBottom: 24 }}>
           {/* Price trend */}
           <div style={{
-            background: '#0D1929', border: '1px solid rgba(255,255,255,0.06)',
+            background: 'var(--surface)', border: '1px solid rgba(255,255,255,0.06)',
             borderRadius: 14, padding: '20px',
           }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
@@ -295,7 +295,7 @@ export default function HomePage({ core, areaData, recentRaw, onNavigate, isPro 
                   <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/>
                   <polyline points="16 7 22 7 22 13"/>
                 </svg>
-                <span style={{ fontSize: 13, fontWeight: 600, color: '#F1F5F9' }}>12-Month Price Trend</span>
+                <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-primary)' }}>12-Month Price Trend</span>
               </div>
               <span style={{ fontSize: 11, color: '#475569' }}>Dubai avg · AED/sqft</span>
             </div>
@@ -312,8 +312,8 @@ export default function HomePage({ core, areaData, recentRaw, onNavigate, isPro 
                 <YAxis hide/>
                 <Tooltip
                   formatter={v => [fmtAED(v) + '/sqft', 'Price']}
-                  contentStyle={{ background: '#0A1628', border: '1px solid rgba(59,130,246,0.2)', borderRadius: 8, color: '#F1F5F9', fontSize: 11 }}
-                  labelStyle={{ color: '#64748B' }}/>
+                  contentStyle={{ background: '#0A1628', border: '1px solid rgba(59,130,246,0.2)', borderRadius: 8, color: 'var(--text-primary)', fontSize: 11 }}
+                  labelStyle={{ color: 'var(--text-muted)' }}/>
                 <Area type="monotone" dataKey="ppsqm" stroke="#38BDF8" strokeWidth={2.5} fill="url(#pg)"/>
               </AreaChart>
             </ResponsiveContainer>
@@ -321,7 +321,7 @@ export default function HomePage({ core, areaData, recentRaw, onNavigate, isPro 
 
           {/* Volume */}
           <div style={{
-            background: '#0D1929', border: '1px solid rgba(255,255,255,0.06)',
+            background: 'var(--surface)', border: '1px solid rgba(255,255,255,0.06)',
             borderRadius: 14, padding: '20px',
           }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
@@ -329,7 +329,7 @@ export default function HomePage({ core, areaData, recentRaw, onNavigate, isPro 
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#38BDF8" strokeWidth="2">
                   <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>
                 </svg>
-                <span style={{ fontSize: 13, fontWeight: 600, color: '#F1F5F9' }}>Transaction Volume (30d)</span>
+                <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-primary)' }}>Transaction Volume (30d)</span>
               </div>
               <span style={{ fontSize: 11, color: '#475569' }}>Top areas by activity</span>
             </div>
@@ -346,7 +346,7 @@ export default function HomePage({ core, areaData, recentRaw, onNavigate, isPro 
                 <YAxis hide/>
                 <Tooltip
                   formatter={v => [fmtNum(v), 'Deals']}
-                  contentStyle={{ background: '#0A1628', border: '1px solid rgba(59,130,246,0.2)', borderRadius: 8, color: '#F1F5F9', fontSize: 11 }}/>
+                  contentStyle={{ background: '#0A1628', border: '1px solid rgba(59,130,246,0.2)', borderRadius: 8, color: 'var(--text-primary)', fontSize: 11 }}/>
                 <Bar dataKey="count" radius={[4, 4, 0, 0]} fill="url(#bg)"/>
               </BarChart>
             </ResponsiveContainer>
@@ -359,7 +359,7 @@ export default function HomePage({ core, areaData, recentRaw, onNavigate, isPro 
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" strokeWidth="2">
               <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
             </svg>
-            <span style={{ fontSize: 14, fontWeight: 600, color: '#F1F5F9' }}>
+            <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>
               Intelligence tools built for{' '}
               <span style={{ background: 'linear-gradient(135deg,#38BDF8,#1D4ED8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
                 Dubai investors
@@ -434,9 +434,9 @@ export default function HomePage({ core, areaData, recentRaw, onNavigate, isPro 
                     border: `1px solid ${t.badgeColor}40`,
                   }}>{t.badge}</span>
                 </div>
-                <div style={{ fontSize: 22, fontWeight: 800, color: '#F1F5F9', lineHeight: 1.1 }}>{t.big}</div>
+                <div style={{ fontSize: 22, fontWeight: 800, color: 'var(--text-primary)', lineHeight: 1.1 }}>{t.big}</div>
                 <div style={{ fontSize: 11, color: t.badgeColor, fontWeight: 600 }}>{t.bigSub}</div>
-                <div style={{ fontSize: 12, fontWeight: 600, color: '#94A3B8' }}>{t.label}</div>
+                <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)' }}>{t.label}</div>
                 <div style={{ fontSize: 11, color: '#475569', lineHeight: 1.6, marginTop: 2 }}>{t.desc}</div>
               </div>
             ))}
@@ -446,7 +446,7 @@ export default function HomePage({ core, areaData, recentRaw, onNavigate, isPro 
         {/* Upgrade bar */}
         {!isPro && (
         <div style={{
-          background: '#0D1929', border: '1px solid rgba(59,130,246,0.15)',
+          background: 'var(--surface)', border: '1px solid rgba(59,130,246,0.15)',
           borderRadius: 14, padding: '16px 20px',
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         }}>
@@ -456,12 +456,12 @@ export default function HomePage({ core, areaData, recentRaw, onNavigate, isPro 
               background: 'linear-gradient(135deg,#1D4ED8,#38BDF8)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
             }}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0D1929" strokeWidth="2">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--surface)" strokeWidth="2">
                 <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
               </svg>
             </div>
             <div>
-              <div style={{ fontSize: 14, fontWeight: 600, color: '#F1F5F9' }}>
+              <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>
                 Unlock PropSight Pro — AED 99/mo
               </div>
               <div style={{ fontSize: 12, color: '#475569' }}>

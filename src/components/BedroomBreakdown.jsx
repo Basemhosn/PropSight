@@ -13,7 +13,7 @@ const ROOM_COLORS = {
   "3 B/R":   "#D85A30",
   "4 B/R":   "#BA7517",
   "5 B/R":   "#993556",
-  "Office":  "#64748B",
+  "Office":  "var(--text-muted)",
   "Shop":    "#3b6d11",
 };
 
@@ -21,10 +21,10 @@ const CustomTooltip = ({ active, payload, label, metric }) => {
   if (!active || !payload || !payload.length) return null;
   const d = payload[0].payload;
   return (
-    <div style={{ background: "#F1F5F9", color: "#0D1929", borderRadius: 8, padding: "10px 14px", fontSize: 12, minWidth: 190 }}>
+    <div style={{ background: "var(--text-primary)", color: "var(--surface)", borderRadius: 8, padding: "10px 14px", fontSize: 12, minWidth: 190 }}>
       <div style={{ fontWeight: 600, marginBottom: 6, fontSize: 13 }}>{label}</div>
       <div style={{ color: "#8AAAC8", marginBottom: 3 }}>
-        Transactions: <span style={{ color: "#0D1929", fontWeight: 600 }}>{fmtNum(d.count)}</span>
+        Transactions: <span style={{ color: "var(--surface)", fontWeight: 600 }}>{fmtNum(d.count)}</span>
       </div>
       <div style={{ color: "#8AAAC8", marginBottom: 3 }}>
         Avg price: <span style={{ color: "#4ADE80", fontWeight: 600 }}>{fmtAED(d.avg, true)}</span>
@@ -33,7 +33,7 @@ const CustomTooltip = ({ active, payload, label, metric }) => {
         Median price: <span style={{ color: "#FAC775", fontWeight: 600 }}>{fmtAED(d.median, true)}</span>
       </div>
       <div style={{ color: "#8AAAC8" }}>
-        Total value: <span style={{ color: "#0D1929" }}>{fmtAED(d.total, true)}</span>
+        Total value: <span style={{ color: "var(--surface)" }}>{fmtAED(d.total, true)}</span>
       </div>
     </div>
   );
@@ -78,12 +78,12 @@ export default function BedroomBreakdown({ rows, areas }) {
   const priceLadder = [...data].sort((a, b) => a.avg - b.avg);
 
   return (
-    <div style={{ background: "#0D1929", border: "1px solid #E8ECF2", borderRadius: 12, padding: "1.25rem" }}>
+    <div style={{ background: "var(--surface)", border: "1px solid #E8ECF2", borderRadius: 12, padding: "1.25rem" }}>
       {/* Header */}
       <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between",
         marginBottom: "1rem", flexWrap: "wrap", gap: 8 }}>
         <div>
-          <div style={{ fontSize: 13, fontWeight: 600, color: "#F1F5F9" }}>Bedroom type breakdown</div>
+          <div style={{ fontSize: 13, fontWeight: 600, color: "var(--text-primary)" }}>Bedroom type breakdown</div>
           <div style={{ fontSize: 11, color: "#9AA0AE", marginTop: 2 }}>
             {fmtNum(totalTxns)} transactions with room data
           </div>
@@ -93,7 +93,7 @@ export default function BedroomBreakdown({ rows, areas }) {
             <button key={t.k} onClick={() => setMetric(t.k)} style={{
               fontSize: 11, padding: "4px 10px", borderRadius: 6, cursor: "pointer", fontWeight: 500,
               border: metric === t.k ? "1px solid #185FA5" : "1px solid #E8ECF2",
-              background: metric === t.k ? "rgba(59,130,246,0.1)" : "#0D1929",
+              background: metric === t.k ? "rgba(59,130,246,0.1)" : "var(--surface)",
               color: metric === t.k ? "#38BDF8" : "#7A8499",
             }}>{t.l}</button>
           ))}
@@ -107,8 +107,8 @@ export default function BedroomBreakdown({ rows, areas }) {
             fontSize: 11, padding: "4px 10px", borderRadius: 20, cursor: "pointer",
             marginRight: 5, fontWeight: selectedArea === a ? 600 : 400,
             border: selectedArea === a ? "1px solid #0A1628" : "1px solid #E8ECF2",
-            background: selectedArea === a ? "#F1F5F9" : "#0D1929",
-            color: selectedArea === a ? "#0D1929" : "#7A8499",
+            background: selectedArea === a ? "var(--text-primary)" : "var(--surface)",
+            color: selectedArea === a ? "var(--surface)" : "#7A8499",
             flexShrink: 0,
           }}>{a === "ALL" ? "All areas" : a}</button>
         ))}
@@ -137,7 +137,7 @@ export default function BedroomBreakdown({ rows, areas }) {
           <XAxis dataKey="room" tick={{ fontSize: 11, fill: "#7A8499" }} axisLine={false} tickLine={false} />
           <YAxis tick={{ fontSize: 10, fill: "#9AA0AE" }} axisLine={false} tickLine={false}
             tickFormatter={v => metric === "count" ? fmtNum(v) : fmtAED(v, true)} width={72} />
-          <Tooltip content={<CustomTooltip metric={metric} />} cursor={{ fill: "#0D1929" }} />
+          <Tooltip content={<CustomTooltip metric={metric} />} cursor={{ fill: "var(--surface)" }} />
           <Bar dataKey={metric} radius={[4, 4, 0, 0]} maxBarSize={40}>
             {data.map(d => <Cell key={d.room} fill={ROOM_COLORS[d.room] || "#888"} />)}
           </Bar>
@@ -160,7 +160,7 @@ export default function BedroomBreakdown({ rows, areas }) {
                 <div style={{ height: "100%", width: `${pct}%`,
                   background: ROOM_COLORS[d.room] || "#888", borderRadius: 3 }} />
               </div>
-              <div style={{ width: 90, fontSize: 11, color: "#F1F5F9", fontWeight: 600, textAlign: "right" }}>
+              <div style={{ width: 90, fontSize: 11, color: "var(--text-primary)", fontWeight: 600, textAlign: "right" }}>
                 {fmtAED(d.median, true)}
               </div>
             </div>

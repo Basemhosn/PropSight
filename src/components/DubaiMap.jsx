@@ -154,12 +154,12 @@ export default function DubaiMap({ areas }) {
   const fmtVal = (v) => metric === "count" ? fmtNum(v) + " deals" : fmtAED(v, true);
 
   return (
-    <div style={{ background: "#0D1929", border: "1px solid #E8ECF2", borderRadius: 12, padding: "1.25rem" }}>
+    <div style={{ background: "var(--surface)", border: "1px solid #E8ECF2", borderRadius: 12, padding: "1.25rem" }}>
       {/* Header */}
       <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between",
         marginBottom: "1rem", flexWrap: "wrap", gap: 8 }}>
         <div>
-          <div style={{ fontSize: 13, fontWeight: 600, color: "#F1F5F9" }}>Dubai transaction heatmap</div>
+          <div style={{ fontSize: 13, fontWeight: 600, color: "var(--text-primary)" }}>Dubai transaction heatmap</div>
           <div style={{ fontSize: 11, color: "#9AA0AE", marginTop: 2 }}>
             Bubble size + colour = activity level · hover for details
           </div>
@@ -173,7 +173,7 @@ export default function DubaiMap({ areas }) {
             <button key={t.k} onClick={() => setMetric(t.k)} style={{
               fontSize: 11, padding: "4px 10px", borderRadius: 6, cursor: "pointer", fontWeight: 500,
               border: metric === t.k ? "1px solid #185FA5" : "1px solid #E8ECF2",
-              background: metric === t.k ? "rgba(59,130,246,0.1)" : "#0D1929",
+              background: metric === t.k ? "rgba(59,130,246,0.1)" : "var(--surface)",
               color: metric === t.k ? "#38BDF8" : "#7A8499",
             }}>{t.l}</button>
           ))}
@@ -240,7 +240,7 @@ export default function DubaiMap({ areas }) {
 
           {/* Compass */}
           <g transform="translate(860, 40)">
-            <circle cx="0" cy="0" r="18" fill="#0D1929" stroke="rgba(59,130,246,0.12)" strokeWidth="1" />
+            <circle cx="0" cy="0" r="18" fill="var(--surface)" stroke="rgba(59,130,246,0.12)" strokeWidth="1" />
             <text x="0" y="-6" textAnchor="middle" fontSize="10" fontWeight="700" fill="#38BDF8">N</text>
             <polygon points="0,-14 -4,-2 0,2 4,-2" fill="#38BDF8" />
             <polygon points="0,14 -4,2 0,-2 4,2" fill="#C5CAD6" />
@@ -253,7 +253,7 @@ export default function DubaiMap({ areas }) {
             position: "absolute",
             left: Math.min(tooltip.x + 12, W * 0.6),
             top: Math.max(tooltip.y - 80, 8),
-            background: "#F1F5F9", color: "#0D1929",
+            background: "var(--text-primary)", color: "var(--surface)",
             borderRadius: 8, padding: "10px 14px",
             fontSize: 12, pointerEvents: "none",
             zIndex: 10, minWidth: 180,
@@ -261,13 +261,13 @@ export default function DubaiMap({ areas }) {
           }}>
             <div style={{ fontWeight: 600, marginBottom: 6, fontSize: 13 }}>{hovered.name}</div>
             <div style={{ color: "#8AAAC8", marginBottom: 3 }}>
-              Transactions: <span style={{ color: "#0D1929", fontWeight: 600 }}>{fmtNum(hovered.data.count)}</span>
+              Transactions: <span style={{ color: "var(--surface)", fontWeight: 600 }}>{fmtNum(hovered.data.count)}</span>
             </div>
             <div style={{ color: "#8AAAC8", marginBottom: 3 }}>
-              Total value: <span style={{ color: "#0D1929", fontWeight: 600 }}>{fmtAED(hovered.data.total, true)}</span>
+              Total value: <span style={{ color: "var(--surface)", fontWeight: 600 }}>{fmtAED(hovered.data.total, true)}</span>
             </div>
             <div style={{ color: "#8AAAC8", marginBottom: 3 }}>
-              Avg price: <span style={{ color: "#0D1929", fontWeight: 600 }}>{fmtAED(hovered.data.avg, true)}</span>
+              Avg price: <span style={{ color: "var(--surface)", fontWeight: 600 }}>{fmtAED(hovered.data.avg, true)}</span>
             </div>
             {hovered.data.avgSize > 0 && (
               <div style={{ color: "#8AAAC8" }}>

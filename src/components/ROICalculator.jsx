@@ -65,24 +65,24 @@ export default function ROICalculator({ areaData }) {
   const positive = (n) => n >= 0;
 
   return (
-    <div style={{ flex:1, overflowY:'auto', background:'#060E1A', fontFamily:'system-ui', padding:'24px 28px' }}>
+    <div style={{ flex:1, overflowY:'auto', background:'var(--bg)', fontFamily:'system-ui', padding:'24px 28px' }}>
       <div style={{ marginBottom:24 }}>
-        <h1 style={{ margin:0, fontSize:22, fontWeight:700, color:'#F1F5F9', marginBottom:4 }}>ROI Calculator</h1>
+        <h1 style={{ margin:0, fontSize:22, fontWeight:700, color:'var(--text-primary)', marginBottom:4 }}>ROI Calculator</h1>
         <div style={{ fontSize:13, color:'#475569' }}>Estimate rental yield, mortgage payments and 5-year return</div>
       </div>
 
       <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'1.5rem' }}>
 
         {/* Inputs */}
-        <div style={{ background:'#0D1929', border:'1px solid rgba(255,255,255,0.06)', borderRadius:12, padding:'1.25rem' }}>
-          <div style={{ fontSize:13, fontWeight:600, color:'#F1F5F9', marginBottom:'1rem' }}>Property Details</div>
+        <div style={{ background:'var(--surface)', border:'1px solid rgba(255,255,255,0.06)', borderRadius:12, padding:'1.25rem' }}>
+          <div style={{ fontSize:13, fontWeight:600, color:'var(--text-primary)', marginBottom:'1rem' }}>Property Details</div>
 
           {/* Area */}
           <div style={{ marginBottom:'1rem' }}>
-            <label style={{ fontSize:11, color:'#64748B', display:'block', marginBottom:4 }}>Area</label>
+            <label style={{ fontSize:11, color:'var(--text-muted)', display:'block', marginBottom:4 }}>Area</label>
             <select value={area} onChange={e=>setArea(e.target.value)} style={{
               width:'100%', padding:'8px 10px', borderRadius:8, border:'1px solid rgba(255,255,255,0.06)',
-              fontSize:13, color:'#F1F5F9', background:'#070E1B', border:'1px solid rgba(59,130,246,0.15)', borderRadius:6, padding:'6px 10px', outline:'none', fontFamily:'system-ui'
+              fontSize:13, color:'var(--text-primary)', background:'var(--bg-alt)', border:'1px solid rgba(59,130,246,0.15)', borderRadius:6, padding:'6px 10px', outline:'none', fontFamily:'system-ui'
             }}>
               {areas.map(a => <option key={a} value={a}>{a}</option>)}
             </select>
@@ -90,7 +90,7 @@ export default function ROICalculator({ areaData }) {
 
           {/* Purchase Price */}
           <div style={{ marginBottom:'1rem' }}>
-            <label style={{ fontSize:11, color:'#64748B', display:'block', marginBottom:4 }}>
+            <label style={{ fontSize:11, color:'var(--text-muted)', display:'block', marginBottom:4 }}>
               Purchase price — {fmtAED(price)}
             </label>
             <input type="range" min={500000} max={20000000} step={100000} value={price}
@@ -103,7 +103,7 @@ export default function ROICalculator({ areaData }) {
 
           {/* Down payment */}
           <div style={{ marginBottom:'1rem' }}>
-            <label style={{ fontSize:11, color:'#64748B', display:'block', marginBottom:4 }}>
+            <label style={{ fontSize:11, color:'var(--text-muted)', display:'block', marginBottom:4 }}>
               Down payment — {downPct}% ({fmtAED(price * downPct / 100)})
             </label>
             <input type="range" min={20} max={100} step={5} value={downPct}
@@ -116,7 +116,7 @@ export default function ROICalculator({ areaData }) {
 
           {/* Mortgage rate */}
           <div style={{ marginBottom:'1rem' }}>
-            <label style={{ fontSize:11, color:'#64748B', display:'block', marginBottom:4 }}>
+            <label style={{ fontSize:11, color:'var(--text-muted)', display:'block', marginBottom:4 }}>
               Mortgage rate — {mortgageRate}%
             </label>
             <input type="range" min={3} max={8} step={0.1} value={mortgageRate}
@@ -129,7 +129,7 @@ export default function ROICalculator({ areaData }) {
 
           {/* Holding period */}
           <div style={{ marginBottom:'1rem' }}>
-            <label style={{ fontSize:11, color:'#64748B', display:'block', marginBottom:4 }}>
+            <label style={{ fontSize:11, color:'var(--text-muted)', display:'block', marginBottom:4 }}>
               Holding period — {years} years
             </label>
             <input type="range" min={1} max={15} step={1} value={years}
@@ -142,9 +142,9 @@ export default function ROICalculator({ areaData }) {
 
           {/* Furnished toggle */}
           <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between',
-            padding:'10px 12px', background:'#0D1929', borderRadius:8 }}>
+            padding:'10px 12px', background:'var(--surface)', borderRadius:8 }}>
             <div>
-              <div style={{ fontSize:12, fontWeight:500, color:'#F1F5F9' }}>Furnished rental</div>
+              <div style={{ fontSize:12, fontWeight:500, color:'var(--text-primary)' }}>Furnished rental</div>
               <div style={{ fontSize:10, color:'#475569' }}>+0.8% yield premium</div>
             </div>
             <div onClick={() => setFurnished(f=>!f)} style={{
@@ -154,7 +154,7 @@ export default function ROICalculator({ areaData }) {
             }}>
               <div style={{
                 position:'absolute', top:3, left: furnished ? 21 : 3,
-                width:16, height:16, borderRadius:'50%', background:'#0D1929',
+                width:16, height:16, borderRadius:'50%', background:'var(--surface)',
                 transition:'left 0.2s',
               }}/>
             </div>
@@ -173,27 +173,27 @@ export default function ROICalculator({ areaData }) {
               { label:'Annual rental income',  value:fmt(calc.annualRent),               color:'#1D9E75', bg:'#E1F5EE' },
             ].map(m => (
               <div key={m.label} style={{ background:m.bg, borderRadius:10, padding:'0.875rem' }}>
-                <div style={{ fontSize:10, color:'#64748B', marginBottom:3 }}>{m.label}</div>
+                <div style={{ fontSize:10, color:'var(--text-muted)', marginBottom:3 }}>{m.label}</div>
                 <div style={{ fontSize:17, fontWeight:700, color:m.color }}>{m.value}</div>
               </div>
             ))}
           </div>
 
           {/* Cash flow */}
-          <div style={{ background:'#0D1929', border:'1px solid rgba(255,255,255,0.06)', borderRadius:12, padding:'1rem' }}>
-            <div style={{ fontSize:12, fontWeight:600, color:'#F1F5F9', marginBottom:'0.75rem' }}>
+          <div style={{ background:'var(--surface)', border:'1px solid rgba(255,255,255,0.06)', borderRadius:12, padding:'1rem' }}>
+            <div style={{ fontSize:12, fontWeight:600, color:'var(--text-primary)', marginBottom:'0.75rem' }}>
               Annual cash flow
             </div>
             <div style={{ display:'flex', justifyContent:'space-between', padding:'6px 0', borderBottom:'1px solid #F4F6FA' }}>
-              <span style={{ fontSize:12, color:'#64748B' }}>Rental income</span>
+              <span style={{ fontSize:12, color:'var(--text-muted)' }}>Rental income</span>
               <span style={{ fontSize:12, fontWeight:600, color:'#1D9E75' }}>+{fmt(calc.annualRent)}</span>
             </div>
             <div style={{ display:'flex', justifyContent:'space-between', padding:'6px 0', borderBottom:'1px solid #F4F6FA' }}>
-              <span style={{ fontSize:12, color:'#64748B' }}>Mortgage payments</span>
+              <span style={{ fontSize:12, color:'var(--text-muted)' }}>Mortgage payments</span>
               <span style={{ fontSize:12, fontWeight:600, color:'#D85A30' }}>-{fmt(calc.monthlyPayment*12)}</span>
             </div>
             <div style={{ display:'flex', justifyContent:'space-between', padding:'8px 0' }}>
-              <span style={{ fontSize:13, fontWeight:600, color:'#F1F5F9' }}>Net cash flow</span>
+              <span style={{ fontSize:13, fontWeight:600, color:'var(--text-primary)' }}>Net cash flow</span>
               <span style={{ fontSize:13, fontWeight:700, color:positive(calc.annualCashflow)?'#1D9E75':'#D85A30' }}>
                 {positive(calc.annualCashflow)?'+':''}{fmt(calc.annualCashflow)}/yr
               </span>
@@ -201,7 +201,7 @@ export default function ROICalculator({ areaData }) {
           </div>
 
           {/* {years}-year projection */}
-          <div style={{ background:'#0D1929', borderRadius:12, padding:'1rem', color:'#F1F5F9' }}>
+          <div style={{ background:'var(--surface)', borderRadius:12, padding:'1rem', color:'var(--text-primary)' }}>
             <div style={{ fontSize:12, fontWeight:600, marginBottom:'0.75rem' }}>
               {years}-year projection
             </div>

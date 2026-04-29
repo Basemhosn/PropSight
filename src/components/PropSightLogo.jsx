@@ -86,7 +86,7 @@ export default function PropSightLogo({ size = 'md', showSlogan = false }) {
           fontWeight: 800,
           letterSpacing: '-0.5px',
           lineHeight: 1,
-          color: '#F1F5F9',
+          color: 'var(--text-primary)',
           fontFamily: 'system-ui, sans-serif',
         }}>
           Prop<span style={{

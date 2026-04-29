@@ -7,7 +7,7 @@ import { TYPE_COLORS } from "../utils/colors";
 const CustomTooltip = ({ active, payload }) => {
   if (!active || !payload?.length) return null;
   return (
-    <div style={{ background: "#F1F5F9", color: "#0D1929", borderRadius: 8, padding: "8px 12px", fontSize: 12 }}>
+    <div style={{ background: "var(--text-primary)", color: "var(--surface)", borderRadius: 8, padding: "8px 12px", fontSize: 12 }}>
       <div style={{ fontWeight: 600 }}>{payload[0].name}</div>
       <div>{fmtNum(payload[0].value)} transactions</div>
     </div>
@@ -18,8 +18,8 @@ export default function TypeDonut({ data }) {
   const total = data.reduce((s, d) => s + d.value, 0);
 
   return (
-    <div style={{ background: "#0D1929", border: "1px solid #E8ECF2", borderRadius: 12, padding: "1.25rem" }}>
-      <div style={{ fontSize: 13, fontWeight: 600, color: "#F1F5F9", marginBottom: "1rem" }}>
+    <div style={{ background: "var(--surface)", border: "1px solid #E8ECF2", borderRadius: 12, padding: "1.25rem" }}>
+      <div style={{ fontSize: 13, fontWeight: 600, color: "var(--text-primary)", marginBottom: "1rem" }}>
         Transaction type split
       </div>
 

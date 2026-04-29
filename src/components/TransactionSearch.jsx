@@ -45,24 +45,24 @@ export default function TransactionSearch({ recentRaw }) {
     a.download = 'propsight-transactions.csv'; a.click();
   }, [filtered]);
 
-  const inp = {background:'#070E1B',border:'1px solid rgba(59,130,246,0.15)',borderRadius:8,color:'#F1F5F9',fontSize:12,padding:'8px 12px',outline:'none',fontFamily:'system-ui'};
+  const inp = {background:'var(--bg-alt)',border:'1px solid rgba(59,130,246,0.15)',borderRadius:8,color:'var(--text-primary)',fontSize:12,padding:'8px 12px',outline:'none',fontFamily:'system-ui'};
   const TC = {Sale:{bg:'rgba(59,130,246,0.1)',color:'#38BDF8'},Mortgage:{bg:'rgba(34,197,94,0.1)',color:'#22C55E'},Gift:{bg:'rgba(245,158,11,0.1)',color:'#F59E0B'}};
   const RC = {'Off-Plan':{bg:'rgba(59,130,246,0.1)',color:'#38BDF8'},'Ready':{bg:'rgba(34,197,94,0.1)',color:'#22C55E'}};
 
   return (
-    <div style={{flex:1,overflowY:'auto',background:'#060E1A',fontFamily:'system-ui',padding:'24px 28px'}}>
+    <div style={{flex:1,overflowY:'auto',background:'var(--bg)',fontFamily:'system-ui',padding:'24px 28px'}}>
       <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:20}}>
         <div>
-          <h1 style={{margin:0,fontSize:22,fontWeight:700,color:'#F1F5F9',marginBottom:4}}>Transaction Search</h1>
+          <h1 style={{margin:0,fontSize:22,fontWeight:700,color:'var(--text-primary)',marginBottom:4}}>Transaction Search</h1>
           <div style={{fontSize:13,color:'#475569'}}>{fmtNum(filtered.length)} of {fmtNum(rows.length)} transactions</div>
         </div>
         <button onClick={exportCSV} style={{display:'flex',alignItems:'center',gap:8,padding:'9px 16px',borderRadius:10,border:'1px solid rgba(59,130,246,0.2)',background:'rgba(59,130,246,0.06)',color:'#38BDF8',cursor:'pointer',fontSize:13,fontWeight:600,fontFamily:'system-ui'}}>↓ Export CSV</button>
       </div>
-      <div style={{background:'#0D1929',border:'1px solid rgba(255,255,255,0.06)',borderRadius:12,padding:16,marginBottom:20}}>
+      <div style={{background:'var(--surface)',border:'1px solid rgba(255,255,255,0.06)',borderRadius:12,padding:16,marginBottom:20}}>
         <div style={{display:'grid',gridTemplateColumns:'2fr 1fr 1fr 1fr 1fr',gap:10}}>
-          <div style={{display:'flex',alignItems:'center',gap:8,background:'#070E1B',border:'1px solid rgba(59,130,246,0.15)',borderRadius:8,padding:'8px 12px'}}>
+          <div style={{display:'flex',alignItems:'center',gap:8,background:'var(--bg-alt)',border:'1px solid rgba(59,130,246,0.15)',borderRadius:8,padding:'8px 12px'}}>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#475569" strokeWidth="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-            <input value={search} onChange={e=>{setSearch(e.target.value);setPg(1);}} placeholder="Search area, project, ID..." style={{background:'none',border:'none',outline:'none',color:'#94A3B8',fontSize:13,flex:1,fontFamily:'system-ui'}}/>
+            <input value={search} onChange={e=>{setSearch(e.target.value);setPg(1);}} placeholder="Search area, project, ID..." style={{background:'none',border:'none',outline:'none',color:'var(--text-secondary)',fontSize:13,flex:1,fontFamily:'system-ui'}}/>
           </div>
           <select value={typeF} onChange={e=>{setTypeF(e.target.value);setPg(1);}} style={{...inp,cursor:'pointer'}}><option value="">All types</option><option>Sale</option><option>Mortgage</option><option>Gift</option></select>
           <select value={regF} onChange={e=>{setRegF(e.target.value);setPg(1);}} style={{...inp,cursor:'pointer'}}><option value="">All registrations</option><option>Off-Plan</option><option>Ready</option></select>
@@ -71,26 +71,26 @@ export default function TransactionSearch({ recentRaw }) {
         </div>
         {(search||typeF||regF||minVal||maxVal) && <button onClick={()=>{setSearch('');setTypeF('');setRegF('');setMinVal('');setMaxVal('');setPg(1);}} style={{marginTop:10,background:'none',border:'none',cursor:'pointer',color:'#F87171',fontSize:12,fontFamily:'system-ui'}}>× Clear filters</button>}
       </div>
-      <div style={{background:'#0D1929',border:'1px solid rgba(255,255,255,0.06)',borderRadius:14,overflow:'hidden'}}>
+      <div style={{background:'var(--surface)',border:'1px solid rgba(255,255,255,0.06)',borderRadius:14,overflow:'hidden'}}>
         <div style={{display:'grid',gridTemplateColumns:'130px 90px 70px 80px 1fr 1fr 100px 80px 70px',padding:'10px 16px',borderBottom:'1px solid rgba(255,255,255,0.06)',background:'rgba(59,130,246,0.04)'}}>
           {['TXN ID','Date','Type','Reg','Area','Project','Value','Size','Price/sqft'].map((h,i)=><div key={i} style={{fontSize:10,color:'#475569',fontWeight:600,textTransform:'uppercase',letterSpacing:'0.06em'}}>{h}</div>)}
         </div>
         {paged.length===0 ? <div style={{textAlign:'center',padding:40,color:'#475569'}}>No transactions match filters</div>
         : paged.map((r,i)=>{
-          const tc=TC[r.type]||{bg:'rgba(100,116,139,0.1)',color:'#94A3B8'};
-          const rc=RC[r.reg]||{bg:'rgba(100,116,139,0.1)',color:'#94A3B8'};
+          const tc=TC[r.type]||{bg:'rgba(100,116,139,0.1)',color:'var(--text-secondary)'};
+          const rc=RC[r.reg]||{bg:'rgba(100,116,139,0.1)',color:'var(--text-secondary)'};
           return (
             <div key={r.id} style={{display:'grid',gridTemplateColumns:'130px 90px 70px 80px 1fr 1fr 100px 80px 70px',padding:'11px 16px',borderBottom:i<paged.length-1?'1px solid rgba(255,255,255,0.03)':'none',transition:'background 0.1s'}}
               onMouseEnter={e=>e.currentTarget.style.background='rgba(59,130,246,0.04)'}
               onMouseLeave={e=>e.currentTarget.style.background='transparent'}>
               <div style={{fontSize:11,color:'#475569',fontFamily:'monospace'}}>{r.id}</div>
-              <div style={{fontSize:12,color:'#64748B'}}>{r.date}</div>
+              <div style={{fontSize:12,color:'var(--text-muted)'}}>{r.date}</div>
               <div><span style={{fontSize:10,fontWeight:600,padding:'2px 7px',borderRadius:20,background:tc.bg,color:tc.color}}>{r.type}</span></div>
               <div><span style={{fontSize:10,fontWeight:600,padding:'2px 7px',borderRadius:20,background:rc.bg,color:rc.color}}>{r.reg}</span></div>
-              <div style={{fontSize:12,color:'#94A3B8',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap',paddingRight:8}}>{r.area}</div>
-              <div style={{fontSize:11,color:'#64748B',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap',paddingRight:8}}>{r.project||'—'}</div>
-              <div style={{fontSize:13,fontWeight:600,color:'#F1F5F9'}}>{fmtAED(r.value,true)}</div>
-              <div style={{fontSize:12,color:'#64748B'}}>{r.size?fmtNum(Math.round(r.size*10.764))+' sqft':'—'}</div>
+              <div style={{fontSize:12,color:'var(--text-secondary)',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap',paddingRight:8}}>{r.area}</div>
+              <div style={{fontSize:11,color:'var(--text-muted)',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap',paddingRight:8}}>{r.project||'—'}</div>
+              <div style={{fontSize:13,fontWeight:600,color:'var(--text-primary)'}}>{fmtAED(r.value,true)}</div>
+              <div style={{fontSize:12,color:'var(--text-muted)'}}>{r.size?fmtNum(Math.round(r.size*10.764))+' sqft':'—'}</div>
               <div style={{fontSize:12,color:'#38BDF8'}}>{r.ppsqft?'AED '+fmtNum(r.ppsqft):'—'}</div>
             </div>
           );
@@ -98,9 +98,9 @@ export default function TransactionSearch({ recentRaw }) {
       </div>
       {totalPages>1 && (
         <div style={{display:'flex',justifyContent:'center',alignItems:'center',gap:8,marginTop:20}}>
-          <button onClick={()=>setPg(p=>Math.max(1,p-1))} disabled={pg===1} style={{padding:'7px 14px',borderRadius:8,border:'1px solid rgba(59,130,246,0.2)',background:'rgba(59,130,246,0.06)',color:pg===1?'#1E3A5F':'#64748B',cursor:pg===1?'default':'pointer',fontSize:12,fontFamily:'system-ui'}}>← Prev</button>
-          <span style={{fontSize:12,color:'#64748B'}}>Page {pg} of {totalPages}</span>
-          <button onClick={()=>setPg(p=>Math.min(totalPages,p+1))} disabled={pg===totalPages} style={{padding:'7px 14px',borderRadius:8,border:'1px solid rgba(59,130,246,0.2)',background:'rgba(59,130,246,0.06)',color:pg===totalPages?'#1E3A5F':'#64748B',cursor:pg===totalPages?'default':'pointer',fontSize:12,fontFamily:'system-ui'}}>Next →</button>
+          <button onClick={()=>setPg(p=>Math.max(1,p-1))} disabled={pg===1} style={{padding:'7px 14px',borderRadius:8,border:'1px solid rgba(59,130,246,0.2)',background:'rgba(59,130,246,0.06)',color:pg===1?'var(--text-faint)':'var(--text-muted)',cursor:pg===1?'default':'pointer',fontSize:12,fontFamily:'system-ui'}}>← Prev</button>
+          <span style={{fontSize:12,color:'var(--text-muted)'}}>Page {pg} of {totalPages}</span>
+          <button onClick={()=>setPg(p=>Math.min(totalPages,p+1))} disabled={pg===totalPages} style={{padding:'7px 14px',borderRadius:8,border:'1px solid rgba(59,130,246,0.2)',background:'rgba(59,130,246,0.06)',color:pg===totalPages?'var(--text-faint)':'var(--text-muted)',cursor:pg===totalPages?'default':'pointer',fontSize:12,fontFamily:'system-ui'}}>Next →</button>
         </div>
       )}
     </div>

@@ -40,7 +40,7 @@ export default function LoginPage() {
   return (
     <div style={{
       minHeight: '100vh',
-      background: '#060E1A',
+      background: 'var(--bg)',
       display: 'flex', flexDirection: 'column',
       alignItems: 'center', justifyContent: 'center',
       padding: '1rem', position: 'relative', overflow: 'hidden',
@@ -87,7 +87,7 @@ export default function LoginPage() {
               flex:1, padding:'8px', borderRadius:8, border:'none', cursor:'pointer',
               fontSize:13, fontWeight:600, transition:'all 0.15s',
               background: mode===m ? 'linear-gradient(135deg,#1D4ED8,#38BDF8)' : 'transparent',
-              color: mode===m ? '#fff' : '#64748B',
+              color: mode===m ? '#fff' : 'var(--text-muted)',
             }}>{label}</button>
           ))}
         </div>
@@ -116,7 +116,7 @@ export default function LoginPage() {
 
         <div style={{ display:'flex', alignItems:'center', gap:10, marginBottom:'1.25rem' }}>
           <div style={{ flex:1, height:1, background:'rgba(59,130,246,0.1)' }}/>
-          <span style={{ fontSize:11, color:'#1E3A5F' }}>or</span>
+          <span style={{ fontSize:11, color:'var(--text-faint)' }}>or</span>
           <div style={{ flex:1, height:1, background:'rgba(59,130,246,0.1)' }}/>
         </div>
 
@@ -152,7 +152,7 @@ export default function LoginPage() {
           {loading ? 'Please wait…' : mode==='signin' ? 'Sign in' : 'Create account'}
         </button>
 
-        <div style={{ marginTop:'1.25rem', textAlign:'center', fontSize:11, color:'#1E3A5F', lineHeight:1.8 }}>
+        <div style={{ marginTop:'1.25rem', textAlign:'center', fontSize:11, color:'var(--text-faint)', lineHeight:1.8 }}>
           Free: Overview, Pulse & 3 Lookups/day<br/>
           <span style={{ color:'#38BDF8', fontWeight:600 }}>Pro (AED 99/mo)</span> — full access
         </div>

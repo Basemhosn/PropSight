@@ -20,9 +20,9 @@ function expandRow(r) {
     rooms:r.b||"", metro:r.e||"", project:r.j||"" };
 }
 
-function KPI({ label, value, sub, color="#F1F5F9" }) {
+function KPI({ label, value, sub, color="var(--text-primary)" }) {
   return (
-    <div style={{ background:"#0D1929", borderRadius:8, padding:"0.6rem 0.75rem" }}>
+    <div style={{ background:"var(--surface)", borderRadius:8, padding:"0.6rem 0.75rem" }}>
       <div style={{ fontSize:10, color:"#9AA0AE", marginBottom:3 }}>{label}</div>
       <div style={{ fontSize:16, fontWeight:700, color }}>{value}</div>
       {sub && <div style={{ fontSize:10, color:"#9AA0AE", marginTop:1 }}>{sub}</div>}
@@ -80,7 +80,7 @@ export default function ProjectDetail({ project, data, onClose }) {
       <div onClick={onClose} style={{ position:"fixed",inset:0,background:"rgba(10,22,40,0.4)",zIndex:190 }} />
 
       {/* Panel */}
-      <div style={{ position:"fixed",right:0,top:0,bottom:0,width:480,background:"#0D1929",
+      <div style={{ position:"fixed",right:0,top:0,bottom:0,width:480,background:"var(--surface)",
         zIndex:200,overflowY:"auto",display:"flex",flexDirection:"column" }}>
 
         {/* Hero image */}
@@ -91,18 +91,18 @@ export default function ProjectDetail({ project, data, onClose }) {
           ) : (
             <div style={{ width:"100%",height:"100%",background:"linear-gradient(135deg,#0A1628 0%,#185FA5 100%)",
               display:"flex",alignItems:"center",justifyContent:"center",padding:"1.5rem" }}>
-              <div style={{ fontSize:18,fontWeight:700,color:"#0D1929",textAlign:"center",lineHeight:1.4 }}>{project}</div>
+              <div style={{ fontSize:18,fontWeight:700,color:"var(--surface)",textAlign:"center",lineHeight:1.4 }}>{project}</div>
             </div>
           )}
           {/* Gradient overlay */}
           <div style={{ position:"absolute",inset:0,background:"linear-gradient(to top,rgba(10,22,40,0.7) 0%,transparent 60%)" }} />
           {/* Close btn */}
           <button onClick={onClose} style={{ position:"absolute",top:12,right:12,background:"rgba(255,255,255,0.2)",
-            border:"none",borderRadius:"50%",width:32,height:32,cursor:"pointer",color:"#0D1929",
+            border:"none",borderRadius:"50%",width:32,height:32,cursor:"pointer",color:"var(--surface)",
             fontSize:18,display:"flex",alignItems:"center",justifyContent:"center",backdropFilter:"blur(4px)" }}>×</button>
           {/* Project name overlay */}
           <div style={{ position:"absolute",bottom:12,left:16,right:48 }}>
-            <div style={{ fontSize:16,fontWeight:700,color:"#0D1929",lineHeight:1.3,marginBottom:3 }}>{project}</div>
+            <div style={{ fontSize:16,fontWeight:700,color:"var(--surface)",lineHeight:1.3,marginBottom:3 }}>{project}</div>
             <div style={{ fontSize:11,color:"rgba(255,255,255,0.7)" }}>{data.area}</div>
           </div>
         </div>
@@ -134,7 +134,7 @@ export default function ProjectDetail({ project, data, onClose }) {
               </div>
 
               {/* Price range */}
-              <div style={{ background:"#0D1929",borderRadius:8,padding:"0.875rem",marginBottom:"1.25rem" }}>
+              <div style={{ background:"var(--surface)",borderRadius:8,padding:"0.875rem",marginBottom:"1.25rem" }}>
                 <div style={{ fontSize:11,color:"#9AA0AE",marginBottom:8 }}>Price range (2020–2026)</div>
                 <div style={{ display:"flex",alignItems:"center",justifyContent:"space-between" }}>
                   <div>
@@ -164,13 +164,13 @@ export default function ProjectDetail({ project, data, onClose }) {
               </div>
 
               {/* Monthly trend */}
-              <div style={{ fontSize:12,fontWeight:600,color:"#F1F5F9",marginBottom:8 }}>Monthly volume</div>
+              <div style={{ fontSize:12,fontWeight:600,color:"var(--text-primary)",marginBottom:8 }}>Monthly volume</div>
               <ResponsiveContainer width="100%" height={160}>
                 <BarChart data={data.monthly} margin={{top:0,right:0,left:0,bottom:0}}>
                   <XAxis dataKey="month" tick={{fontSize:9,fill:"#9AA0AE"}} axisLine={false} tickLine={false}
                     tickFormatter={m=>{const[,mo]=m.split('-');return['J','F','M','A','M','J','J','A','S','O','N','D'][+mo-1];}} />
                   <YAxis hide />
-                  <Tooltip formatter={(v)=>[fmtNum(v),'Txns']} contentStyle={{background:"#F1F5F9",border:"none",borderRadius:8,color:"#0D1929",fontSize:11}} />
+                  <Tooltip formatter={(v)=>[fmtNum(v),'Txns']} contentStyle={{background:"var(--text-primary)",border:"none",borderRadius:8,color:"var(--surface)",fontSize:11}} />
                   <Bar dataKey="count" fill="#38BDF8" radius={[2,2,0,0]} />
                 </BarChart>
               </ResponsiveContainer>
@@ -180,29 +180,29 @@ export default function ProjectDetail({ project, data, onClose }) {
           {/* ── PRICES ── */}
           {tab === "price" && (
             <>
-              <div style={{ fontSize:12,fontWeight:600,color:"#F1F5F9",marginBottom:8 }}>Price per m² by year</div>
+              <div style={{ fontSize:12,fontWeight:600,color:"var(--text-primary)",marginBottom:8 }}>Price per m² by year</div>
               <ResponsiveContainer width="100%" height={200}>
                 <LineChart data={data.priceTrend} margin={{top:4,right:16,left:0,bottom:0}}>
                   <CartesianGrid strokeDasharray="3 3" stroke="rgba(59,130,246,0.08)" />
                   <XAxis dataKey="year" tick={{fontSize:11,fill:"#9AA0AE"}} axisLine={false} tickLine={false} />
                   <YAxis tick={{fontSize:10,fill:"#9AA0AE"}} axisLine={false} tickLine={false} tickFormatter={v=>fmtAED(v,true)} width={72} />
-                  <Tooltip formatter={(v)=>[fmtAED(v,true)+'/m²','Price']} contentStyle={{background:"#F1F5F9",border:"none",borderRadius:8,color:"#0D1929",fontSize:11}} />
+                  <Tooltip formatter={(v)=>[fmtAED(v,true)+'/m²','Price']} contentStyle={{background:"var(--text-primary)",border:"none",borderRadius:8,color:"var(--surface)",fontSize:11}} />
                   <Line type="monotone" dataKey="ppsqm" stroke="#22C55E" strokeWidth={2.5} dot={{r:4,fill:"#22C55E"}} />
                 </LineChart>
               </ResponsiveContainer>
 
-              <div style={{ marginTop:"1.25rem",fontSize:12,fontWeight:600,color:"#F1F5F9",marginBottom:8 }}>Transaction type split</div>
+              <div style={{ marginTop:"1.25rem",fontSize:12,fontWeight:600,color:"var(--text-primary)",marginBottom:8 }}>Transaction type split</div>
               <ResponsiveContainer width="100%" height={160}>
                 <PieChart>
                   <Pie data={typeData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={60}
                     label={({name,percent})=>`${name} ${(percent*100).toFixed(0)}%`} labelLine={false} fontSize={11}>
                     {typeData.map((_,i)=><Cell key={i} fill={COLORS[i%COLORS.length]} />)}
                   </Pie>
-                  <Tooltip formatter={(v)=>[fmtNum(v),'Deals']} contentStyle={{background:"#F1F5F9",border:"none",borderRadius:8,color:"#0D1929",fontSize:11}} />
+                  <Tooltip formatter={(v)=>[fmtNum(v),'Deals']} contentStyle={{background:"var(--text-primary)",border:"none",borderRadius:8,color:"var(--surface)",fontSize:11}} />
                 </PieChart>
               </ResponsiveContainer>
 
-              <div style={{ marginTop:"1.25rem",fontSize:12,fontWeight:600,color:"#F1F5F9",marginBottom:8 }}>Price range summary</div>
+              <div style={{ marginTop:"1.25rem",fontSize:12,fontWeight:600,color:"var(--text-primary)",marginBottom:8 }}>Price range summary</div>
               {[
                 ["Minimum price", fmtAED(kpis.minPrice)],
                 ["Maximum price", fmtAED(kpis.maxPrice)],
@@ -212,7 +212,7 @@ export default function ProjectDetail({ project, data, onClose }) {
               ].map(([label,value])=>(
                 <div key={label} style={{ display:"flex",justifyContent:"space-between",padding:"8px 0",borderBottom:"1px solid #F4F6FA" }}>
                   <div style={{ fontSize:12,color:"#7A8499" }}>{label}</div>
-                  <div style={{ fontSize:12,color:"#F1F5F9",fontWeight:500 }}>{value}</div>
+                  <div style={{ fontSize:12,color:"var(--text-primary)",fontWeight:500 }}>{value}</div>
                 </div>
               ))}
             </>
@@ -221,22 +221,22 @@ export default function ProjectDetail({ project, data, onClose }) {
           {/* ── UNITS ── */}
           {tab === "units" && (
             <>
-              <div style={{ fontSize:12,fontWeight:600,color:"#F1F5F9",marginBottom:"1rem" }}>Unit breakdown by bedroom type</div>
+              <div style={{ fontSize:12,fontWeight:600,color:"var(--text-primary)",marginBottom:"1rem" }}>Unit breakdown by bedroom type</div>
               {(data.rooms||[]).map((r, i) => {
                 const maxCount = data.rooms[0]?.count || 1;
                 const barW = Math.max(4, (r.count/maxCount)*100);
                 return (
                   <div key={r.rooms} style={{ marginBottom:16 }}>
                     <div style={{ display:"flex",justifyContent:"space-between",marginBottom:4 }}>
-                      <div style={{ fontSize:13,fontWeight:500,color:"#F1F5F9" }}>{r.rooms}</div>
+                      <div style={{ fontSize:13,fontWeight:500,color:"var(--text-primary)" }}>{r.rooms}</div>
                       <div style={{ fontSize:11,color:"#9AA0AE" }}>{fmtNum(r.count)} units</div>
                     </div>
-                    <div style={{ height:8,background:"#060E1A",borderRadius:4,overflow:"hidden",marginBottom:4 }}>
+                    <div style={{ height:8,background:"var(--bg)",borderRadius:4,overflow:"hidden",marginBottom:4 }}>
                       <div style={{ width:`${barW}%`,height:"100%",background:COLORS[i%COLORS.length],borderRadius:4 }} />
                     </div>
                     <div style={{ display:"flex",gap:16,fontSize:11,color:"#9AA0AE" }}>
-                      <span>Avg price: <span style={{ color:"#F1F5F9",fontWeight:500 }}>{fmtAED(r.avg,true)}</span></span>
-                      {r.avgSize > 0 && <span>Avg size: <span style={{ color:"#F1F5F9",fontWeight:500 }}>{r.avgSize}m²</span></span>}
+                      <span>Avg price: <span style={{ color:"var(--text-primary)",fontWeight:500 }}>{fmtAED(r.avg,true)}</span></span>
+                      {r.avgSize > 0 && <span>Avg size: <span style={{ color:"var(--text-primary)",fontWeight:500 }}>{r.avgSize}m²</span></span>}
                     </div>
                   </div>
                 );
@@ -256,14 +256,14 @@ export default function ProjectDetail({ project, data, onClose }) {
                 <input value={txnSearch} onChange={e=>setTxnSearch(e.target.value)}
                   placeholder="Filter by rooms, type…"
                   style={{ fontSize:12,padding:"6px 10px",borderRadius:8,border:"1px solid #E8ECF2",
-                    width:180,color:"#F1F5F9",background:"#0D1929",outline:"none" }} />
+                    width:180,color:"var(--text-primary)",background:"var(--surface)",outline:"none" }} />
               </div>
 
               {filteredTxns.map((r,i) => (
                 <div key={i} style={{ padding:"10px 0",borderBottom:"1px solid #F4F6FA" }}>
                   <div style={{ display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:8 }}>
                     <div>
-                      <div style={{ fontSize:13,fontWeight:600,color:"#F1F5F9" }}>{fmtAED(r.amount,true)}</div>
+                      <div style={{ fontSize:13,fontWeight:600,color:"var(--text-primary)" }}>{fmtAED(r.amount,true)}</div>
                       <div style={{ fontSize:11,color:"#9AA0AE",marginTop:2 }}>
                         {r.dateObj?.toLocaleDateString("en-AE",{day:"2-digit",month:"short",year:"numeric"})||r.date}
                         {r.rooms && ` · ${r.rooms}`}

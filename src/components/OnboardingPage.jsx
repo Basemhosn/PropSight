@@ -33,29 +33,29 @@ export default function OnboardingPage({ user, onComplete }) {
   };
 
   return (
-    <div style={{minHeight:'100vh',background:'#060E1A',display:'flex',alignItems:'center',justifyContent:'center',fontFamily:'system-ui',padding:24}}>
+    <div style={{minHeight:'100vh',background:'var(--bg)',display:'flex',alignItems:'center',justifyContent:'center',fontFamily:'system-ui',padding:24}}>
       <div style={{width:'100%',maxWidth:560}}>
         <div style={{textAlign:'center',marginBottom:32}}>
-          <div style={{fontSize:28,fontWeight:800,color:'#F1F5F9',marginBottom:4}}>Prop<span style={{color:'#38BDF8'}}>Sight</span></div>
+          <div style={{fontSize:28,fontWeight:800,color:'var(--text-primary)',marginBottom:4}}>Prop<span style={{color:'#38BDF8'}}>Sight</span></div>
           <div style={{fontSize:13,color:'#475569',marginBottom:20}}>Step {step} of 3</div>
           <div style={{background:'rgba(59,130,246,0.1)',borderRadius:20,height:4,overflow:'hidden'}}>
             <div style={{height:'100%',background:'linear-gradient(90deg,#1D4ED8,#38BDF8)',borderRadius:20,width:`${(step/3)*100}%`,transition:'width 0.4s ease'}}/>
           </div>
         </div>
 
-        <div style={{background:'#0D1929',border:'1px solid rgba(59,130,246,0.15)',borderRadius:20,padding:32}}>
+        <div style={{background:'var(--surface)',border:'1px solid rgba(59,130,246,0.15)',borderRadius:20,padding:32}}>
 
           {step===1 && <>
             <div style={{textAlign:'center',marginBottom:28}}>
-              <div style={{fontSize:22,fontWeight:700,color:'#F1F5F9',marginBottom:8}}>What best describes you?</div>
-              <div style={{fontSize:14,color:'#64748B'}}>We'll personalize PropSight for your needs</div>
+              <div style={{fontSize:22,fontWeight:700,color:'var(--text-primary)',marginBottom:8}}>What best describes you?</div>
+              <div style={{fontSize:14,color:'var(--text-muted)'}}>We'll personalize PropSight for your needs</div>
             </div>
             <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12,marginBottom:28}}>
               {INVESTOR_TYPES.map(t=>(
                 <button key={t.id} onClick={()=>setInvestorType(t.id)} style={{padding:'18px 16px',borderRadius:14,cursor:'pointer',textAlign:'left',background:investorType===t.id?'rgba(59,130,246,0.15)':'rgba(59,130,246,0.04)',border:investorType===t.id?'2px solid #38BDF8':'2px solid rgba(59,130,246,0.1)',transition:'all 0.15s',fontFamily:'system-ui'}}>
                   <div style={{fontSize:28,marginBottom:8}}>{t.icon}</div>
-                  <div style={{fontSize:14,fontWeight:700,color:'#F1F5F9',marginBottom:4}}>{t.label}</div>
-                  <div style={{fontSize:11,color:'#64748B',lineHeight:1.4}}>{t.desc}</div>
+                  <div style={{fontSize:14,fontWeight:700,color:'var(--text-primary)',marginBottom:4}}>{t.label}</div>
+                  <div style={{fontSize:11,color:'var(--text-muted)',lineHeight:1.4}}>{t.desc}</div>
                 </button>
               ))}
             </div>
@@ -64,38 +64,38 @@ export default function OnboardingPage({ user, onComplete }) {
 
           {step===2 && <>
             <div style={{textAlign:'center',marginBottom:28}}>
-              <div style={{fontSize:22,fontWeight:700,color:'#F1F5F9',marginBottom:8}}>What's your budget range?</div>
-              <div style={{fontSize:14,color:'#64748B'}}>We'll show you the most relevant transactions</div>
+              <div style={{fontSize:22,fontWeight:700,color:'var(--text-primary)',marginBottom:8}}>What's your budget range?</div>
+              <div style={{fontSize:14,color:'var(--text-muted)'}}>We'll show you the most relevant transactions</div>
             </div>
             <div style={{display:'flex',flexDirection:'column',gap:10,marginBottom:28}}>
               {BUDGETS.map(b=>(
                 <button key={b.id} onClick={()=>setBudget(b.id)} style={{padding:'14px 18px',borderRadius:12,cursor:'pointer',textAlign:'left',display:'flex',alignItems:'center',justifyContent:'space-between',background:budget===b.id?'rgba(59,130,246,0.15)':'rgba(59,130,246,0.04)',border:budget===b.id?'2px solid #38BDF8':'2px solid rgba(59,130,246,0.1)',transition:'all 0.15s',fontFamily:'system-ui'}}>
-                  <span style={{fontSize:14,fontWeight:600,color:'#F1F5F9'}}>{b.label}</span>
+                  <span style={{fontSize:14,fontWeight:600,color:'var(--text-primary)'}}>{b.label}</span>
                   {budget===b.id && <span style={{color:'#38BDF8',fontSize:18}}>✓</span>}
                 </button>
               ))}
             </div>
             <div style={{display:'flex',gap:10}}>
-              <button onClick={()=>setStep(1)} style={{flex:1,padding:'13px',borderRadius:12,border:'1px solid rgba(59,130,246,0.15)',background:'transparent',color:'#64748B',fontSize:13,fontWeight:600,cursor:'pointer',fontFamily:'system-ui'}}>← Back</button>
+              <button onClick={()=>setStep(1)} style={{flex:1,padding:'13px',borderRadius:12,border:'1px solid rgba(59,130,246,0.15)',background:'transparent',color:'var(--text-muted)',fontSize:13,fontWeight:600,cursor:'pointer',fontFamily:'system-ui'}}>← Back</button>
               <button onClick={()=>setStep(3)} disabled={!budget} style={{flex:2,padding:'13px',borderRadius:12,border:'none',cursor:'pointer',background:'linear-gradient(135deg,#1D4ED8,#38BDF8)',color:'#fff',fontSize:14,fontWeight:700,fontFamily:'system-ui',opacity:!budget?0.4:1}}>Continue →</button>
             </div>
           </>}
 
           {step===3 && <>
             <div style={{textAlign:'center',marginBottom:28}}>
-              <div style={{fontSize:22,fontWeight:700,color:'#F1F5F9',marginBottom:8}}>Preferred areas?</div>
-              <div style={{fontSize:14,color:'#64748B'}}>Select all that interest you (or skip)</div>
+              <div style={{fontSize:22,fontWeight:700,color:'var(--text-primary)',marginBottom:8}}>Preferred areas?</div>
+              <div style={{fontSize:14,color:'var(--text-muted)'}}>Select all that interest you (or skip)</div>
             </div>
             <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10,marginBottom:28}}>
               {AREAS.map(area=>(
                 <button key={area} onClick={()=>toggleArea(area)} style={{padding:'11px 14px',borderRadius:10,cursor:'pointer',textAlign:'left',display:'flex',alignItems:'center',justifyContent:'space-between',background:preferredAreas.includes(area)?'rgba(59,130,246,0.15)':'rgba(59,130,246,0.04)',border:preferredAreas.includes(area)?'2px solid #38BDF8':'2px solid rgba(59,130,246,0.1)',fontFamily:'system-ui',transition:'all 0.15s'}}>
-                  <span style={{fontSize:13,fontWeight:500,color:'#F1F5F9'}}>{area}</span>
+                  <span style={{fontSize:13,fontWeight:500,color:'var(--text-primary)'}}>{area}</span>
                   {preferredAreas.includes(area) && <span style={{color:'#38BDF8'}}>✓</span>}
                 </button>
               ))}
             </div>
             <div style={{display:'flex',gap:10}}>
-              <button onClick={()=>setStep(2)} style={{flex:1,padding:'13px',borderRadius:12,border:'1px solid rgba(59,130,246,0.15)',background:'transparent',color:'#64748B',fontSize:13,fontWeight:600,cursor:'pointer',fontFamily:'system-ui'}}>← Back</button>
+              <button onClick={()=>setStep(2)} style={{flex:1,padding:'13px',borderRadius:12,border:'1px solid rgba(59,130,246,0.15)',background:'transparent',color:'var(--text-muted)',fontSize:13,fontWeight:600,cursor:'pointer',fontFamily:'system-ui'}}>← Back</button>
               <button onClick={finish} disabled={saving} style={{flex:2,padding:'13px',borderRadius:12,border:'none',cursor:'pointer',background:'linear-gradient(135deg,#16A34A,#22C55E)',color:'#fff',fontSize:14,fontWeight:700,fontFamily:'system-ui'}}>{saving?'Setting up...':'🚀 Launch PropSight'}</button>
             </div>
             <button onClick={finish} style={{width:'100%',marginTop:10,background:'none',border:'none',cursor:'pointer',color:'#475569',fontSize:12,fontFamily:'system-ui'}}>Skip for now</button>

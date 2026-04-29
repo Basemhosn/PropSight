@@ -2,13 +2,13 @@ import { Search, SlidersHorizontal, X } from "lucide-react";
 
 const sel = {
   fontSize: 13, padding: "6px 10px", borderRadius: 8,
-  border: "1px solid #E8ECF2", background: "#0D1929", color: "#F1F5F9",
+  border: "1px solid #E8ECF2", background: "var(--surface)", color: "var(--text-primary)",
   outline: "none", cursor: "pointer",
 };
 
 const dateInput = {
   fontSize: 13, padding: "6px 10px", borderRadius: 8,
-  border: "1px solid #E8ECF2", background: "#0D1929", color: "#F1F5F9",
+  border: "1px solid #E8ECF2", background: "var(--surface)", color: "var(--text-primary)",
   outline: "none", cursor: "pointer",
 };
 
@@ -23,7 +23,7 @@ export default function FilterBar({ filters, setFilters, options, dateRange }) {
     <div style={{
       display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center",
       padding: "0.75rem 1rem",
-      background: "#0D1929", borderBottom: "1px solid #E8ECF2",
+      background: "var(--surface)", borderBottom: "1px solid #E8ECF2",
       overflowX: "auto",
     }}>
       <SlidersHorizontal size={14} color="#9AA0AE" />
@@ -31,12 +31,12 @@ export default function FilterBar({ filters, setFilters, options, dateRange }) {
       {/* Date range */}
       <div style={{ display: "flex", alignItems: "center", gap: 6,
         border: "1px solid #E8ECF2", borderRadius: 8, padding: "4px 10px",
-        background: hasDateFilter ? "rgba(59,130,246,0.1)" : "#0D1929" }}>
+        background: hasDateFilter ? "rgba(59,130,246,0.1)" : "var(--surface)" }}>
         <span style={{ fontSize: 11, color: "#9AA0AE", whiteSpace: "nowrap" }}>From</span>
         <input
           type="date"
           style={{ ...dateInput, border: "none", padding: "2px 4px",
-            background: "transparent", color: hasDateFilter ? "#38BDF8" : "#F1F5F9" }}
+            background: "transparent", color: hasDateFilter ? "#38BDF8" : "var(--text-primary)" }}
           value={filters.dateFrom}
           min={dateRange.min}
           max={dateRange.max}
@@ -46,7 +46,7 @@ export default function FilterBar({ filters, setFilters, options, dateRange }) {
         <input
           type="date"
           style={{ ...dateInput, border: "none", padding: "2px 4px",
-            background: "transparent", color: hasDateFilter ? "#38BDF8" : "#F1F5F9" }}
+            background: "transparent", color: hasDateFilter ? "#38BDF8" : "var(--text-primary)" }}
           value={filters.dateTo}
           min={dateRange.min}
           max={dateRange.max}
@@ -85,14 +85,14 @@ export default function FilterBar({ filters, setFilters, options, dateRange }) {
 
       <div style={{ display: "flex", alignItems: "center", gap: 6,
         border: "1px solid #E8ECF2", borderRadius: 8, padding: "6px 10px",
-        background: "#0D1929", flex: 1, minWidth: 160 }}>
+        background: "var(--surface)", flex: 1, minWidth: 160 }}>
         <Search size={13} color="#9AA0AE" />
         <input
           type="text"
           placeholder="Search area..."
           value={filters.area}
           onChange={set("area")}
-          style={{ border: "none", outline: "none", fontSize: 13, color: "#F1F5F9", width: "100%", background: "transparent" }}
+          style={{ border: "none", outline: "none", fontSize: 13, color: "var(--text-primary)", width: "100%", background: "transparent" }}
         />
       </div>
     </div>

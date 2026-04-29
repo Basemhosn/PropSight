@@ -8,11 +8,11 @@ const AREA_NAMES = {'Al Barsha South Fourth':'JVC','Burj Khalifa':'Downtown Duba
 const niceArea = a => AREA_NAMES[a] || a;
 const COLORS = ['#38BDF8','#22C55E','#F59E0B','#A78BFA','#F87171','#34D399'];
 
-function StatCard({ label, value, sub, subColor='#64748B', accent }) {
+function StatCard({ label, value, sub, subColor='var(--text-muted)', accent }) {
   return (
-    <div style={{background:'#0D1929',border:`1px solid ${accent||'rgba(255,255,255,0.06)'}`,borderRadius:12,padding:'18px 20px',flex:1,minWidth:0}}>
-      <div style={{fontSize:11,color:'#64748B',fontWeight:500,marginBottom:8,textTransform:'uppercase',letterSpacing:'0.06em'}}>{label}</div>
-      <div style={{fontSize:22,fontWeight:700,color:'#F1F5F9',letterSpacing:'-0.5px',marginBottom:4}}>{value}</div>
+    <div style={{background:'var(--surface)',border:`1px solid ${accent||'rgba(255,255,255,0.06)'}`,borderRadius:12,padding:'18px 20px',flex:1,minWidth:0}}>
+      <div style={{fontSize:11,color:'var(--text-muted)',fontWeight:500,marginBottom:8,textTransform:'uppercase',letterSpacing:'0.06em'}}>{label}</div>
+      <div style={{fontSize:22,fontWeight:700,color:'var(--text-primary)',letterSpacing:'-0.5px',marginBottom:4}}>{value}</div>
       {sub && <div style={{fontSize:12,color:subColor,fontWeight:500}}>{sub}</div>}
     </div>
   );
@@ -85,19 +85,19 @@ export default function PortfolioTracker({ areaData }) {
   const inp = (f,v) => setForm(x=>({...x,[f]:v}));
   const areas = areaData ? Object.keys(areaData).map(k=>({key:k,label:niceArea(k)})) : [];
   const filteredAreas = areas.filter(a=>a.label.toLowerCase().includes(areaSearch.toLowerCase())).slice(0,6);
-  const inputStyle = {width:'100%',padding:'10px 12px',borderRadius:8,boxSizing:'border-box',background:'#070E1B',border:'1px solid rgba(59,130,246,0.15)',color:'#F1F5F9',fontSize:13,outline:'none',fontFamily:'system-ui'};
-  const lbl = {fontSize:12,color:'#64748B',marginBottom:5,display:'block',fontWeight:500};
+  const inputStyle = {width:'100%',padding:'10px 12px',borderRadius:8,boxSizing:'border-box',background:'var(--bg-alt)',border:'1px solid rgba(59,130,246,0.15)',color:'var(--text-primary)',fontSize:13,outline:'none',fontFamily:'system-ui'};
+  const lbl = {fontSize:12,color:'var(--text-muted)',marginBottom:5,display:'block',fontWeight:500};
 
   if (!isLite) return (
-    <div style={{flex:1,display:'flex',alignItems:'center',justifyContent:'center',background:'#060E1A',fontFamily:'system-ui',padding:24}}>
+    <div style={{flex:1,display:'flex',alignItems:'center',justifyContent:'center',background:'var(--bg)',fontFamily:'system-ui',padding:24}}>
       <div style={{textAlign:'center',maxWidth:380}}>
         <div style={{fontSize:48,marginBottom:16}}>🏢</div>
-        <div style={{fontSize:22,fontWeight:700,color:'#F1F5F9',marginBottom:8}}>Portfolio Tracker</div>
-        <div style={{fontSize:14,color:'#64748B',marginBottom:24,lineHeight:1.6}}>Track all your Dubai investments. Monitor capital gain, rental yield and portfolio value in real time.</div>
-        <div style={{background:'#0D1929',border:'1px solid rgba(59,130,246,0.2)',borderRadius:12,padding:20,marginBottom:20}}>
+        <div style={{fontSize:22,fontWeight:700,color:'var(--text-primary)',marginBottom:8}}>Portfolio Tracker</div>
+        <div style={{fontSize:14,color:'var(--text-muted)',marginBottom:24,lineHeight:1.6}}>Track all your Dubai investments. Monitor capital gain, rental yield and portfolio value in real time.</div>
+        <div style={{background:'var(--surface)',border:'1px solid rgba(59,130,246,0.2)',borderRadius:12,padding:20,marginBottom:20}}>
           {['Track unlimited properties','Real-time market valuations','Capital gain calculator','Rental yield tracking','Portfolio breakdown charts'].map((f,i)=>(
             <div key={i} style={{display:'flex',alignItems:'center',gap:10,padding:'8px 0',borderBottom:i<4?'1px solid rgba(255,255,255,0.04)':'none'}}>
-              <span style={{color:'#22C55E'}}>✓</span><span style={{fontSize:13,color:'#94A3B8'}}>{f}</span>
+              <span style={{color:'#22C55E'}}>✓</span><span style={{fontSize:13,color:'var(--text-secondary)'}}>{f}</span>
             </div>
           ))}
         </div>
@@ -107,10 +107,10 @@ export default function PortfolioTracker({ areaData }) {
   );
 
   return (
-    <div style={{flex:1,overflowY:'auto',background:'#060E1A',fontFamily:'system-ui',padding:'24px 28px'}}>
+    <div style={{flex:1,overflowY:'auto',background:'var(--bg)',fontFamily:'system-ui',padding:'24px 28px'}}>
       <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:24}}>
         <div>
-          <h1 style={{margin:0,fontSize:22,fontWeight:700,color:'#F1F5F9',marginBottom:4}}>My Portfolio</h1>
+          <h1 style={{margin:0,fontSize:22,fontWeight:700,color:'var(--text-primary)',marginBottom:4}}>My Portfolio</h1>
           <div style={{fontSize:13,color:'#475569'}}>{properties.length} {properties.length===1?'property':'properties'} tracked</div>
         </div>
         <button onClick={()=>setShowAdd(true)} style={{display:'flex',alignItems:'center',gap:8,padding:'10px 18px',borderRadius:10,border:'none',cursor:'pointer',background:'linear-gradient(135deg,#1D4ED8,#38BDF8)',color:'#fff',fontSize:13,fontWeight:600,fontFamily:'system-ui'}}>+ Add Property</button>
@@ -119,7 +119,7 @@ export default function PortfolioTracker({ areaData }) {
       {loading ? <div style={{textAlign:'center',padding:60,color:'#475569'}}>Loading...</div> : properties.length === 0 ? (
         <div style={{textAlign:'center',padding:60}}>
           <div style={{fontSize:48,marginBottom:16}}>🏢</div>
-          <div style={{fontSize:18,fontWeight:600,color:'#F1F5F9',marginBottom:8}}>No properties yet</div>
+          <div style={{fontSize:18,fontWeight:600,color:'var(--text-primary)',marginBottom:8}}>No properties yet</div>
           <div style={{fontSize:13,color:'#475569',marginBottom:24}}>Add your first property to start tracking</div>
           <button onClick={()=>setShowAdd(true)} style={{padding:'11px 24px',borderRadius:10,border:'none',cursor:'pointer',background:'linear-gradient(135deg,#1D4ED8,#38BDF8)',color:'#fff',fontSize:13,fontWeight:600,fontFamily:'system-ui'}}>+ Add Your First Property</button>
         </div>
@@ -133,26 +133,26 @@ export default function PortfolioTracker({ areaData }) {
           </div>
 
           {areaBreakdown.length > 1 && (
-            <div style={{background:'#0D1929',border:'1px solid rgba(255,255,255,0.06)',borderRadius:14,padding:20,marginBottom:24,display:'flex',alignItems:'center',gap:24}}>
-              <div style={{fontSize:14,fontWeight:600,color:'#F1F5F9',marginBottom:0,flexShrink:0}}>By Area</div>
+            <div style={{background:'var(--surface)',border:'1px solid rgba(255,255,255,0.06)',borderRadius:14,padding:20,marginBottom:24,display:'flex',alignItems:'center',gap:24}}>
+              <div style={{fontSize:14,fontWeight:600,color:'var(--text-primary)',marginBottom:0,flexShrink:0}}>By Area</div>
               <ResponsiveContainer width={140} height={140}>
                 <PieChart><Pie data={areaBreakdown} cx="50%" cy="50%" innerRadius={38} outerRadius={58} dataKey="value" strokeWidth={0}>
                   {areaBreakdown.map((_,i)=><Cell key={i} fill={COLORS[i%COLORS.length]}/>)}
-                </Pie><Tooltip formatter={v=>[fmtAED(v,true),'']} contentStyle={{background:'#0A1628',border:'1px solid rgba(59,130,246,0.2)',borderRadius:8,color:'#F1F5F9',fontSize:11}}/></PieChart>
+                </Pie><Tooltip formatter={v=>[fmtAED(v,true),'']} contentStyle={{background:'#0A1628',border:'1px solid rgba(59,130,246,0.2)',borderRadius:8,color:'var(--text-primary)',fontSize:11}}/></PieChart>
               </ResponsiveContainer>
               <div style={{flex:1,display:'flex',flexDirection:'column',gap:6}}>
                 {areaBreakdown.map((item,i)=>(
                   <div key={i} style={{display:'flex',justifyContent:'space-between',alignItems:'center'}}>
-                    <div style={{display:'flex',alignItems:'center',gap:8}}><div style={{width:8,height:8,borderRadius:2,background:COLORS[i%COLORS.length]}}/><span style={{fontSize:12,color:'#94A3B8'}}>{item.name}</span></div>
-                    <span style={{fontSize:12,fontWeight:600,color:'#F1F5F9'}}>{fmtAED(item.value,true)}</span>
+                    <div style={{display:'flex',alignItems:'center',gap:8}}><div style={{width:8,height:8,borderRadius:2,background:COLORS[i%COLORS.length]}}/><span style={{fontSize:12,color:'var(--text-secondary)'}}>{item.name}</span></div>
+                    <span style={{fontSize:12,fontWeight:600,color:'var(--text-primary)'}}>{fmtAED(item.value,true)}</span>
                   </div>
                 ))}
               </div>
             </div>
           )}
 
-          <div style={{background:'#0D1929',border:'1px solid rgba(255,255,255,0.06)',borderRadius:14,overflow:'hidden'}}>
-            <div style={{padding:'16px 20px',borderBottom:'1px solid rgba(255,255,255,0.06)'}}><div style={{fontSize:14,fontWeight:600,color:'#F1F5F9'}}>Properties</div></div>
+          <div style={{background:'var(--surface)',border:'1px solid rgba(255,255,255,0.06)',borderRadius:14,overflow:'hidden'}}>
+            <div style={{padding:'16px 20px',borderBottom:'1px solid rgba(255,255,255,0.06)'}}><div style={{fontSize:14,fontWeight:600,color:'var(--text-primary)'}}>Properties</div></div>
             {properties.map((prop,i)=>{
               const gain=(prop.current_value||prop.purchase_price)-prop.purchase_price;
               const gainPct=prop.purchase_price?(gain/prop.purchase_price*100).toFixed(1):0;
@@ -165,10 +165,10 @@ export default function PortfolioTracker({ areaData }) {
                     {prop.property_type==='Villa'?'🏡':'🏢'}
                   </div>
                   <div style={{flex:1,minWidth:0}}>
-                    <div style={{fontSize:14,fontWeight:700,color:'#F1F5F9',marginBottom:2,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{prop.name}</div>
+                    <div style={{fontSize:14,fontWeight:700,color:'var(--text-primary)',marginBottom:2,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{prop.name}</div>
                     <div style={{fontSize:12,color:'#475569',marginBottom:10}}>{prop.area_display||prop.area} · {prop.property_type}{prop.size_sqft?` · ${fmtNum(prop.size_sqft)} sqft`:''}</div>
                     <div style={{display:'flex',gap:16,flexWrap:'wrap'}}>
-                      {[['PURCHASED',fmtAED(prop.purchase_price,true),'#F1F5F9'],['CURRENT',fmtAED(prop.current_value||prop.purchase_price,true),'#F1F5F9'],['GAIN',`${gain>=0?'+':''}${fmtAED(Math.abs(gain),true)} (${gainPct}%)`,gain>=0?'#22C55E':'#F87171'],annYield?['YIELD',annYield+'%','#38BDF8']:null].filter(Boolean).map(([l,v,c],j)=>(
+                      {[['PURCHASED',fmtAED(prop.purchase_price,true),'var(--text-primary)'],['CURRENT',fmtAED(prop.current_value||prop.purchase_price,true),'var(--text-primary)'],['GAIN',`${gain>=0?'+':''}${fmtAED(Math.abs(gain),true)} (${gainPct}%)`,gain>=0?'#22C55E':'#F87171'],annYield?['YIELD',annYield+'%','#38BDF8']:null].filter(Boolean).map(([l,v,c],j)=>(
                         <div key={j}><div style={{fontSize:10,color:'#475569',marginBottom:2}}>{l}</div><div style={{fontSize:13,fontWeight:600,color:c}}>{v}</div></div>
                       ))}
                     </div>
@@ -185,10 +185,10 @@ export default function PortfolioTracker({ areaData }) {
 
       {showAdd && (
         <div style={{position:'fixed',inset:0,background:'rgba(0,0,0,0.7)',zIndex:2000,display:'flex',alignItems:'center',justifyContent:'center',padding:16}}>
-          <div style={{background:'#0D1929',border:'1px solid rgba(59,130,246,0.2)',borderRadius:16,padding:28,width:'100%',maxWidth:540,maxHeight:'90vh',overflowY:'auto',fontFamily:'system-ui'}}>
+          <div style={{background:'var(--surface)',border:'1px solid rgba(59,130,246,0.2)',borderRadius:16,padding:28,width:'100%',maxWidth:540,maxHeight:'90vh',overflowY:'auto',fontFamily:'system-ui'}}>
             <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:20}}>
-              <div style={{fontSize:18,fontWeight:700,color:'#F1F5F9'}}>Add Property</div>
-              <button onClick={()=>setShowAdd(false)} style={{background:'rgba(59,130,246,0.1)',border:'none',cursor:'pointer',color:'#64748B',padding:'4px 10px',borderRadius:8,fontSize:18}}>×</button>
+              <div style={{fontSize:18,fontWeight:700,color:'var(--text-primary)'}}>Add Property</div>
+              <button onClick={()=>setShowAdd(false)} style={{background:'rgba(59,130,246,0.1)',border:'none',cursor:'pointer',color:'var(--text-muted)',padding:'4px 10px',borderRadius:8,fontSize:18}}>×</button>
             </div>
             <div style={{marginBottom:14}}><label style={lbl}>Property Name *</label><input value={form.name} onChange={e=>inp('name',e.target.value)} placeholder="e.g. Burj Vista Tower 1, Unit 2504" style={inputStyle}/></div>
             <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12,marginBottom:14}}>
@@ -196,9 +196,9 @@ export default function PortfolioTracker({ areaData }) {
                 <label style={lbl}>Area</label>
                 <input value={areaSearch||form.area} onChange={e=>{setAreaSearch(e.target.value);inp('area',e.target.value);}} placeholder="Search area..." style={inputStyle}/>
                 {areaSearch && filteredAreas.length>0 && (
-                  <div style={{background:'#070E1B',border:'1px solid rgba(59,130,246,0.15)',borderRadius:8,marginTop:4}}>
+                  <div style={{background:'var(--bg-alt)',border:'1px solid rgba(59,130,246,0.15)',borderRadius:8,marginTop:4}}>
                     {filteredAreas.map(a=>(
-                      <button key={a.key} onClick={()=>{inp('area',a.key);setAreaSearch('');}} style={{display:'block',width:'100%',padding:'8px 12px',textAlign:'left',background:'none',border:'none',cursor:'pointer',color:'#94A3B8',fontSize:12,fontFamily:'system-ui'}}
+                      <button key={a.key} onClick={()=>{inp('area',a.key);setAreaSearch('');}} style={{display:'block',width:'100%',padding:'8px 12px',textAlign:'left',background:'none',border:'none',cursor:'pointer',color:'var(--text-secondary)',fontSize:12,fontFamily:'system-ui'}}
                         onMouseEnter={e=>e.currentTarget.style.background='rgba(59,130,246,0.1)'}
                         onMouseLeave={e=>e.currentTarget.style.background='none'}
                       >{a.label}</button>
@@ -220,13 +220,13 @@ export default function PortfolioTracker({ areaData }) {
               <label style={lbl}>Status</label>
               <div style={{display:'flex',gap:8}}>
                 {['Under Construction','Ready','Off-Plan'].map(s=>(
-                  <button key={s} onClick={()=>inp('status',s)} style={{flex:1,padding:'8px',borderRadius:8,border:'none',cursor:'pointer',fontSize:11,fontWeight:600,fontFamily:'system-ui',background:form.status===s?'rgba(59,130,246,0.2)':'rgba(59,130,246,0.06)',color:form.status===s?'#38BDF8':'#64748B'}}>{s}</button>
+                  <button key={s} onClick={()=>inp('status',s)} style={{flex:1,padding:'8px',borderRadius:8,border:'none',cursor:'pointer',fontSize:11,fontWeight:600,fontFamily:'system-ui',background:form.status===s?'var(--border-strong)':'rgba(59,130,246,0.06)',color:form.status===s?'#38BDF8':'var(--text-muted)'}}>{s}</button>
                 ))}
               </div>
             </div>
             <div style={{marginBottom:20}}><label style={lbl}>Notes</label><textarea value={form.notes} onChange={e=>inp('notes',e.target.value)} rows={2} placeholder="Any notes..." style={{...inputStyle,resize:'vertical'}}/></div>
             <div style={{display:'flex',gap:10}}>
-              <button onClick={()=>setShowAdd(false)} style={{flex:1,padding:'11px',borderRadius:10,border:'1px solid rgba(59,130,246,0.15)',background:'transparent',color:'#64748B',fontSize:13,fontWeight:600,cursor:'pointer',fontFamily:'system-ui'}}>Cancel</button>
+              <button onClick={()=>setShowAdd(false)} style={{flex:1,padding:'11px',borderRadius:10,border:'1px solid rgba(59,130,246,0.15)',background:'transparent',color:'var(--text-muted)',fontSize:13,fontWeight:600,cursor:'pointer',fontFamily:'system-ui'}}>Cancel</button>
               <button onClick={addProperty} disabled={saving||!form.name||!form.purchasePrice} style={{flex:2,padding:'11px',borderRadius:10,border:'none',cursor:'pointer',background:'linear-gradient(135deg,#1D4ED8,#38BDF8)',color:'#fff',fontSize:13,fontWeight:600,fontFamily:'system-ui',opacity:saving||!form.name||!form.purchasePrice?0.5:1}}>
                 {saving?'Adding...':'+ Add to Portfolio'}
               </button>

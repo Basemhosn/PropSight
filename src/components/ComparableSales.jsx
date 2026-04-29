@@ -50,41 +50,41 @@ export default function ComparableSales({ recentRaw }) {
   }, [comps]);
 
   const BEDROOMS = ['Studio','1 B/R','2 B/R','3 B/R','4 B/R','5 B/R'];
-  const inp = {background:'#070E1B',border:'1px solid rgba(59,130,246,0.15)',borderRadius:8,color:'#F1F5F9',fontSize:13,padding:'9px 12px',outline:'none',fontFamily:'system-ui',width:'100%',boxSizing:'border-box'};
+  const inp = {background:'var(--bg-alt)',border:'1px solid rgba(59,130,246,0.15)',borderRadius:8,color:'var(--text-primary)',fontSize:13,padding:'9px 12px',outline:'none',fontFamily:'system-ui',width:'100%',boxSizing:'border-box'};
 
   return (
-    <div style={{flex:1,overflowY:'auto',background:'#060E1A',fontFamily:'system-ui',padding:'24px 28px'}}>
+    <div style={{flex:1,overflowY:'auto',background:'var(--bg)',fontFamily:'system-ui',padding:'24px 28px'}}>
       <div style={{marginBottom:24}}>
-        <h1 style={{margin:0,fontSize:22,fontWeight:700,color:'#F1F5F9',marginBottom:4}}>Comparable Sales</h1>
+        <h1 style={{margin:0,fontSize:22,fontWeight:700,color:'var(--text-primary)',marginBottom:4}}>Comparable Sales</h1>
         <div style={{fontSize:13,color:'#475569'}}>Find similar recent transactions — filter by area, bedrooms, size and date</div>
       </div>
 
-      <div style={{background:'#0D1929',border:'1px solid rgba(255,255,255,0.06)',borderRadius:14,padding:20,marginBottom:24}}>
+      <div style={{background:'var(--surface)',border:'1px solid rgba(255,255,255,0.06)',borderRadius:14,padding:20,marginBottom:24}}>
         <div style={{display:'grid',gridTemplateColumns:'2fr 1fr 1fr 1fr 1fr 1fr',gap:12,marginBottom:12}}>
           <div>
-            <label style={{fontSize:11,color:'#64748B',marginBottom:5,display:'block',fontWeight:600,textTransform:'uppercase',letterSpacing:'0.05em'}}>Area *</label>
+            <label style={{fontSize:11,color:'var(--text-muted)',marginBottom:5,display:'block',fontWeight:600,textTransform:'uppercase',letterSpacing:'0.05em'}}>Area *</label>
             <select value={area} onChange={e=>setArea(e.target.value)} style={{...inp,cursor:'pointer'}}>
               <option value="">Select area...</option>
               {areas.map(a=><option key={a} value={a}>{niceArea(a)}</option>)}
             </select>
           </div>
           <div>
-            <label style={{fontSize:11,color:'#64748B',marginBottom:5,display:'block',fontWeight:600,textTransform:'uppercase',letterSpacing:'0.05em'}}>Bedrooms</label>
+            <label style={{fontSize:11,color:'var(--text-muted)',marginBottom:5,display:'block',fontWeight:600,textTransform:'uppercase',letterSpacing:'0.05em'}}>Bedrooms</label>
             <select value={bedrooms} onChange={e=>setBedrooms(e.target.value)} style={{...inp,cursor:'pointer'}}>
               <option value="">Any</option>
               {BEDROOMS.map(b=><option key={b} value={b}>{b}</option>)}
             </select>
           </div>
           <div>
-            <label style={{fontSize:11,color:'#64748B',marginBottom:5,display:'block',fontWeight:600,textTransform:'uppercase',letterSpacing:'0.05em'}}>Min Size (sqft)</label>
+            <label style={{fontSize:11,color:'var(--text-muted)',marginBottom:5,display:'block',fontWeight:600,textTransform:'uppercase',letterSpacing:'0.05em'}}>Min Size (sqft)</label>
             <input value={minSize} onChange={e=>setMinSize(e.target.value)} placeholder="e.g. 500" style={inp}/>
           </div>
           <div>
-            <label style={{fontSize:11,color:'#64748B',marginBottom:5,display:'block',fontWeight:600,textTransform:'uppercase',letterSpacing:'0.05em'}}>Max Size (sqft)</label>
+            <label style={{fontSize:11,color:'var(--text-muted)',marginBottom:5,display:'block',fontWeight:600,textTransform:'uppercase',letterSpacing:'0.05em'}}>Max Size (sqft)</label>
             <input value={maxSize} onChange={e=>setMaxSize(e.target.value)} placeholder="e.g. 2000" style={inp}/>
           </div>
           <div>
-            <label style={{fontSize:11,color:'#64748B',marginBottom:5,display:'block',fontWeight:600,textTransform:'uppercase',letterSpacing:'0.05em'}}>Registration</label>
+            <label style={{fontSize:11,color:'var(--text-muted)',marginBottom:5,display:'block',fontWeight:600,textTransform:'uppercase',letterSpacing:'0.05em'}}>Registration</label>
             <select value={regType} onChange={e=>setRegType(e.target.value)} style={{...inp,cursor:'pointer'}}>
               <option value="">Any</option>
               <option value="Off-Plan">Off-Plan</option>
@@ -92,7 +92,7 @@ export default function ComparableSales({ recentRaw }) {
             </select>
           </div>
           <div>
-            <label style={{fontSize:11,color:'#64748B',marginBottom:5,display:'block',fontWeight:600,textTransform:'uppercase',letterSpacing:'0.05em'}}>Period</label>
+            <label style={{fontSize:11,color:'var(--text-muted)',marginBottom:5,display:'block',fontWeight:600,textTransform:'uppercase',letterSpacing:'0.05em'}}>Period</label>
             <select value={months} onChange={e=>setMonths(e.target.value)} style={{...inp,cursor:'pointer'}}>
               <option value="3">Last 3 months</option>
               <option value="6">Last 6 months</option>
@@ -109,7 +109,7 @@ export default function ComparableSales({ recentRaw }) {
       {!area && (
         <div style={{textAlign:'center',padding:60,color:'#475569'}}>
           <div style={{fontSize:40,marginBottom:12}}>🔍</div>
-          <div style={{fontSize:16,fontWeight:600,color:'#F1F5F9',marginBottom:8}}>Select an area to find comparables</div>
+          <div style={{fontSize:16,fontWeight:600,color:'var(--text-primary)',marginBottom:8}}>Select an area to find comparables</div>
           <div style={{fontSize:13}}>Filter by bedrooms, size and date range</div>
         </div>
       )}
@@ -117,23 +117,23 @@ export default function ComparableSales({ recentRaw }) {
       {area && comps.length===0 && (
         <div style={{textAlign:'center',padding:60,color:'#475569'}}>
           <div style={{fontSize:40,marginBottom:12}}>📭</div>
-          <div style={{fontSize:16,color:'#F1F5F9',marginBottom:8}}>No transactions found</div>
+          <div style={{fontSize:16,color:'var(--text-primary)',marginBottom:8}}>No transactions found</div>
           <div style={{fontSize:13}}>Try widening your filters or extending the date range</div>
         </div>
       )}
 
       {stats && <>
         <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(130px,1fr))',gap:12,marginBottom:24}}>
-          {[['Comparables',fmtNum(stats.count),'#F1F5F9',''],['Avg Price',fmtAED(stats.avgValue,true),'#38BDF8','rgba(59,130,246,0.1)'],['Median',fmtAED(stats.medValue,true),'#F1F5F9',''],['Min',fmtAED(stats.minValue,true),'#22C55E','rgba(34,197,94,0.08)'],['Max',fmtAED(stats.maxValue,true),'#F87171','rgba(248,113,113,0.08)'],['Avg/sqft',stats.avgPsqft?'AED '+fmtNum(stats.avgPsqft):'N/A','#F59E0B','rgba(245,158,11,0.08)']].map(([l,v,c,bg],i)=>(
-            <div key={i} style={{background:bg||'#0D1929',border:'1px solid rgba(255,255,255,0.06)',borderRadius:12,padding:'14px 16px'}}>
-              <div style={{fontSize:10,color:'#64748B',marginBottom:5,textTransform:'uppercase',letterSpacing:'0.05em'}}>{l}</div>
+          {[['Comparables',fmtNum(stats.count),'var(--text-primary)',''],['Avg Price',fmtAED(stats.avgValue,true),'#38BDF8','rgba(59,130,246,0.1)'],['Median',fmtAED(stats.medValue,true),'var(--text-primary)',''],['Min',fmtAED(stats.minValue,true),'#22C55E','rgba(34,197,94,0.08)'],['Max',fmtAED(stats.maxValue,true),'#F87171','rgba(248,113,113,0.08)'],['Avg/sqft',stats.avgPsqft?'AED '+fmtNum(stats.avgPsqft):'N/A','#F59E0B','rgba(245,158,11,0.08)']].map(([l,v,c,bg],i)=>(
+            <div key={i} style={{background:bg||'var(--surface)',border:'1px solid rgba(255,255,255,0.06)',borderRadius:12,padding:'14px 16px'}}>
+              <div style={{fontSize:10,color:'var(--text-muted)',marginBottom:5,textTransform:'uppercase',letterSpacing:'0.05em'}}>{l}</div>
               <div style={{fontSize:16,fontWeight:700,color:c}}>{v}</div>
             </div>
           ))}
         </div>
-        <div style={{background:'#0D1929',border:'1px solid rgba(255,255,255,0.06)',borderRadius:14,overflow:'hidden'}}>
+        <div style={{background:'var(--surface)',border:'1px solid rgba(255,255,255,0.06)',borderRadius:14,overflow:'hidden'}}>
           <div style={{padding:'16px 20px',borderBottom:'1px solid rgba(255,255,255,0.06)',display:'flex',justifyContent:'space-between',alignItems:'center'}}>
-            <div><div style={{fontSize:14,fontWeight:600,color:'#F1F5F9'}}>Comparable Transactions</div><div style={{fontSize:12,color:'#475569'}}>{fmtNum(comps.length)} results in {niceArea(area)}</div></div>
+            <div><div style={{fontSize:14,fontWeight:600,color:'var(--text-primary)'}}>Comparable Transactions</div><div style={{fontSize:12,color:'#475569'}}>{fmtNum(comps.length)} results in {niceArea(area)}</div></div>
           </div>
           <div style={{display:'grid',gridTemplateColumns:'90px 90px 65px 65px 1fr 80px 80px',padding:'10px 20px',borderBottom:'1px solid rgba(255,255,255,0.06)',background:'rgba(59,130,246,0.04)'}}>
             {['Date','Value','Reg','BR','Project','Size','Price/sqft'].map((h,i)=><div key={i} style={{fontSize:10,color:'#475569',fontWeight:600,textTransform:'uppercase',letterSpacing:'0.05em'}}>{h}</div>)}
@@ -145,12 +145,12 @@ export default function ComparableSales({ recentRaw }) {
               <div key={i} style={{display:'grid',gridTemplateColumns:'90px 90px 65px 65px 1fr 80px 80px',padding:'11px 20px',borderBottom:i<comps.length-1?'1px solid rgba(255,255,255,0.03)':'none'}}
                 onMouseEnter={e=>e.currentTarget.style.background='rgba(59,130,246,0.04)'}
                 onMouseLeave={e=>e.currentTarget.style.background='transparent'}>
-                <div style={{fontSize:11,color:'#64748B'}}>{t.d||'—'}</div>
-                <div style={{fontSize:12,fontWeight:600,color:'#F1F5F9'}}>{t.v?fmtAED(t.v,true):'—'}</div>
+                <div style={{fontSize:11,color:'var(--text-muted)'}}>{t.d||'—'}</div>
+                <div style={{fontSize:12,fontWeight:600,color:'var(--text-primary)'}}>{t.v?fmtAED(t.v,true):'—'}</div>
                 <div><span style={{fontSize:9,fontWeight:600,padding:'2px 5px',borderRadius:20,background:t.r==='Off'?'rgba(59,130,246,0.1)':'rgba(34,197,94,0.1)',color:t.r==='Off'?'#38BDF8':'#22C55E'}}>{t.r==='Off'?'Off-Plan':'Ready'}</span></div>
-                <div style={{fontSize:11,color:'#94A3B8'}}>{t.b||'—'}</div>
-                <div style={{fontSize:11,color:'#64748B',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{t.j||'—'}</div>
-                <div style={{fontSize:11,color:'#64748B'}}>{t.s?fmtNum(Math.round(t.s*10.764))+' sqft':'—'}</div>
+                <div style={{fontSize:11,color:'var(--text-secondary)'}}>{t.b||'—'}</div>
+                <div style={{fontSize:11,color:'var(--text-muted)',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{t.j||'—'}</div>
+                <div style={{fontSize:11,color:'var(--text-muted)'}}>{t.s?fmtNum(Math.round(t.s*10.764))+' sqft':'—'}</div>
                 <div style={{fontSize:11,fontWeight:600,color:isAbove?'#F87171':'#22C55E'}}>{ppsqft?'AED '+fmtNum(ppsqft):'—'}</div>
               </div>
             );

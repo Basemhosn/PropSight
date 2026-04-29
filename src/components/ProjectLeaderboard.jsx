@@ -10,7 +10,7 @@ const TYPE_COLOR = {
   Sale:     { bg: "rgba(59,130,246,0.1)", color: "#38BDF8", bar: "#38BDF8" },
   Mortgage: { bg: "rgba(34,197,94,0.1)", color: "#22C55E", bar: "#22C55E" },
   Gift:     { bg: "#FAEEDA", color: "#854F0B", bar: "#D85A30" },
-  Other:    { bg: "rgba(100,116,139,0.15)", color: "#94A3B8", bar: "#64748B" },
+  Other:    { bg: "rgba(100,116,139,0.15)", color: "var(--text-secondary)", bar: "var(--text-muted)" },
 };
 
 export default function ProjectLeaderboard({ rows, allAreas }) {
@@ -57,14 +57,14 @@ export default function ProjectLeaderboard({ rows, allAreas }) {
     : [...new Set(rows.map(r => r.area))].filter(Boolean).sort();
 
   return (
-    <div style={{ background: "#0D1929", border: "1px solid #E8ECF2", borderRadius: 12, padding: "1.25rem" }}>
+    <div style={{ background: "var(--surface)", border: "1px solid #E8ECF2", borderRadius: 12, padding: "1.25rem" }}>
       {/* Header */}
       <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between",
         marginBottom: "1rem", flexWrap: "wrap", gap: 8 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
           <Trophy size={16} color="#BA7517" />
           <div>
-            <div style={{ fontSize: 13, fontWeight: 600, color: "#F1F5F9" }}>
+            <div style={{ fontSize: 13, fontWeight: 600, color: "var(--text-primary)" }}>
               {view === "project" ? "Top projects" : "Top areas"} leaderboard
             </div>
             <div style={{ fontSize: 11, color: "#9AA0AE", marginTop: 2 }}>
@@ -83,8 +83,8 @@ export default function ProjectLeaderboard({ rows, allAreas }) {
               <button key={t.k} onClick={() => { setView(t.k); setAreaSearch(""); }} style={{
                 fontSize: 11, padding: "4px 10px", borderRadius: 6, cursor: "pointer", fontWeight: 500,
                 border: view === t.k ? "1px solid #0A1628" : "1px solid #E8ECF2",
-                background: view === t.k ? "#F1F5F9" : "#0D1929",
-                color: view === t.k ? "#0D1929" : "#7A8499",
+                background: view === t.k ? "var(--text-primary)" : "var(--surface)",
+                color: view === t.k ? "var(--surface)" : "#7A8499",
               }}>{t.l}</button>
             ))}
           </div>
@@ -95,7 +95,7 @@ export default function ProjectLeaderboard({ rows, allAreas }) {
               <button key={t.k} onClick={() => setMetric(t.k)} style={{
                 fontSize: 11, padding: "4px 10px", borderRadius: 6, cursor: "pointer", fontWeight: 500,
                 border: metric === t.k ? `1px solid ${TAB_COLOR[t.k]}` : "1px solid #E8ECF2",
-                background: metric === t.k ? TAB_COLOR[t.k] + "18" : "#0D1929",
+                background: metric === t.k ? TAB_COLOR[t.k] + "18" : "var(--surface)",
                 color: metric === t.k ? TAB_COLOR[t.k] : "#7A8499",
               }}>{t.l}</button>
             ))}
@@ -108,7 +108,7 @@ export default function ProjectLeaderboard({ rows, allAreas }) {
         <div style={{ marginBottom: "1rem", position: "relative" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 6,
             border: "1px solid #E8ECF2", borderRadius: 8, padding: "6px 10px",
-            background: areaSearch ? "rgba(59,130,246,0.1)" : "#0D1929" }}>
+            background: areaSearch ? "rgba(59,130,246,0.1)" : "var(--surface)" }}>
             <Search size={13} color={areaSearch ? "#38BDF8" : "#9AA0AE"} />
             <select
               value={areaSearch}
@@ -154,7 +154,7 @@ export default function ProjectLeaderboard({ rows, allAreas }) {
                 <div style={{ display: "flex", justifyContent: "space-between",
                   alignItems: "baseline", marginBottom: 4, gap: 8 }}>
                   <div style={{
-                    fontSize: 12, fontWeight: i < 3 ? 600 : 500, color: "#F1F5F9",
+                    fontSize: 12, fontWeight: i < 3 ? 600 : 500, color: "var(--text-primary)",
                     whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", maxWidth: "65%"
                   }} title={item.name}>
                     {item.name}
@@ -185,7 +185,7 @@ export default function ProjectLeaderboard({ rows, allAreas }) {
 
       <button onClick={() => setShowAll(s => !s)} style={{
         width: "100%", marginTop: "0.875rem", padding: "7px",
-        background: "#060E1A", border: "none", borderRadius: 8,
+        background: "var(--bg)", border: "none", borderRadius: 8,
         fontSize: 12, color: "#7A8499", cursor: "pointer", fontWeight: 500,
       }}>
         {showAll ? "Show less ↑" : "Show more — top 50 ↓"}

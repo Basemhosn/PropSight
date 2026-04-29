@@ -230,19 +230,19 @@ export default function MapView({ onAreaClick, onProjectClick, projectsData }) {
         borderBottom:'1px solid rgba(255,255,255,0.08)', flexShrink:0, flexWrap:'wrap' }}>
         <div style={{ fontSize:14, fontWeight:700, color:'#fff', marginRight:4 }}>Dubai RE Map</div>
         <button onClick={toggle3D} style={{ padding:'4px 12px', borderRadius:8, border:'none', cursor:'pointer',
-          fontSize:11, fontWeight:600, background:is3D?'#185FA5':'rgba(255,255,255,0.08)', color:'#fff' }}>
+          fontSize:11, fontWeight:600, background:is3D?'#185FA5':'var(--border)', color:'#fff' }}>
           {is3D ? '3D View' : '2D View'}
         </button>
         {METRICS.map(met => (
           <button key={met.id} onClick={() => setMetric(met.id)} style={{
             padding:'4px 11px', borderRadius:20, border:'none', cursor:'pointer', fontSize:11, fontWeight:600,
-            background: metric===met.id ? met.colors[1] : 'rgba(255,255,255,0.08)',
+            background: metric===met.id ? met.colors[1] : 'var(--border)',
             color:      metric===met.id ? '#fff' : 'rgba(255,255,255,0.5)',
           }}>{met.label}</button>
         ))}
         <button onClick={() => setShowProjects(p => !p)} style={{ marginLeft:'auto', padding:'4px 12px',
           borderRadius:20, border:'none', cursor:'pointer', fontSize:11, fontWeight:600,
-          background: showProjects ? 'rgba(216,90,48,0.25)' : 'rgba(255,255,255,0.08)',
+          background: showProjects ? 'rgba(216,90,48,0.25)' : 'var(--border)',
           color:      showProjects ? '#D85A30' : 'rgba(255,255,255,0.4)' }}>
           🔴 Projects {showProjects ? 'ON' : 'OFF'}
         </button>

@@ -24,11 +24,11 @@ const RENTAL_DATA = {
   'Al Barsha':          {studio:35000,'1br':55000,'2br':82000,'3br':120000,'4br':170000,yield:7.9,trend:5.5},
 };
 
-function Card({label,value,sub,subColor='#64748B',accent}) {
+function Card({label,value,sub,subColor='var(--text-muted)',accent}) {
   return (
-    <div style={{background:'#0D1929',border:`1px solid ${accent||'rgba(255,255,255,0.06)'}`,borderRadius:12,padding:'16px 18px',flex:1,minWidth:0}}>
-      <div style={{fontSize:11,color:'#64748B',fontWeight:500,marginBottom:6,textTransform:'uppercase',letterSpacing:'0.06em'}}>{label}</div>
-      <div style={{fontSize:22,fontWeight:700,color:'#F1F5F9',marginBottom:4}}>{value}</div>
+    <div style={{background:'var(--surface)',border:`1px solid ${accent||'rgba(255,255,255,0.06)'}`,borderRadius:12,padding:'16px 18px',flex:1,minWidth:0}}>
+      <div style={{fontSize:11,color:'var(--text-muted)',fontWeight:500,marginBottom:6,textTransform:'uppercase',letterSpacing:'0.06em'}}>{label}</div>
+      <div style={{fontSize:22,fontWeight:700,color:'var(--text-primary)',marginBottom:4}}>{value}</div>
       {sub && <div style={{fontSize:12,color:subColor,fontWeight:500}}>{sub}</div>}
     </div>
   );
@@ -61,19 +61,19 @@ export default function RentalIndex({ areaData }) {
   const gYield = cValue&&cAnnual ? (cAnnual/cValue*100).toFixed(2) : cd.yield;
   const nYield = gYield ? (parseFloat(gYield)*0.78).toFixed(2) : 0;
 
-  const inp = {background:'#070E1B',border:'1px solid rgba(59,130,246,0.15)',borderRadius:8,color:'#F1F5F9',fontSize:13,padding:'9px 12px',outline:'none',fontFamily:'system-ui',width:'100%',boxSizing:'border-box'};
-  const tt = {contentStyle:{background:'#0A1628',border:'1px solid rgba(59,130,246,0.2)',borderRadius:8,color:'#F1F5F9',fontSize:11}};
+  const inp = {background:'var(--bg-alt)',border:'1px solid rgba(59,130,246,0.15)',borderRadius:8,color:'var(--text-primary)',fontSize:13,padding:'9px 12px',outline:'none',fontFamily:'system-ui',width:'100%',boxSizing:'border-box'};
+  const tt = {contentStyle:{background:'#0A1628',border:'1px solid rgba(59,130,246,0.2)',borderRadius:8,color:'var(--text-primary)',fontSize:11}};
 
   return (
-    <div style={{flex:1,overflowY:'auto',background:'#060E1A',fontFamily:'system-ui',padding:'24px 28px'}}>
+    <div style={{flex:1,overflowY:'auto',background:'var(--bg)',fontFamily:'system-ui',padding:'24px 28px'}}>
       <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:24}}>
         <div>
-          <h1 style={{margin:0,fontSize:22,fontWeight:700,color:'#F1F5F9',marginBottom:4}}>Rental Index</h1>
+          <h1 style={{margin:0,fontSize:22,fontWeight:700,color:'var(--text-primary)',marginBottom:4}}>Rental Index</h1>
           <div style={{fontSize:13,color:'#475569'}}>Dubai rental market — rates, yields and trends by area</div>
         </div>
-        <div style={{display:'flex',gap:6,background:'#0D1929',border:'1px solid rgba(59,130,246,0.15)',borderRadius:10,padding:4}}>
+        <div style={{display:'flex',gap:6,background:'var(--surface)',border:'1px solid rgba(59,130,246,0.15)',borderRadius:10,padding:4}}>
           {[['overview','Overview'],['calculator','Yield Calculator']].map(([m,l])=>(
-            <button key={m} onClick={()=>setViewMode(m)} style={{padding:'8px 18px',borderRadius:8,border:'none',cursor:'pointer',fontSize:13,fontFamily:'system-ui',fontWeight:viewMode===m?600:400,background:viewMode===m?'linear-gradient(135deg,#1D4ED8,#38BDF8)':'transparent',color:viewMode===m?'#fff':'#64748B'}}>{l}</button>
+            <button key={m} onClick={()=>setViewMode(m)} style={{padding:'8px 18px',borderRadius:8,border:'none',cursor:'pointer',fontSize:13,fontFamily:'system-ui',fontWeight:viewMode===m?600:400,background:viewMode===m?'linear-gradient(135deg,#1D4ED8,#38BDF8)':'transparent',color:viewMode===m?'#fff':'var(--text-muted)'}}>{l}</button>
           ))}
         </div>
       </div>
@@ -81,16 +81,16 @@ export default function RentalIndex({ areaData }) {
       {viewMode==='overview' && <>
         <div style={{display:'flex',gap:10,marginBottom:20,flexWrap:'wrap',alignItems:'flex-end'}}>
           <div>
-            <div style={{fontSize:11,color:'#64748B',marginBottom:6,fontWeight:600}}>AREA</div>
+            <div style={{fontSize:11,color:'var(--text-muted)',marginBottom:6,fontWeight:600}}>AREA</div>
             <select value={selectedArea} onChange={e=>setSelectedArea(e.target.value)} style={{...inp,width:'auto',cursor:'pointer'}}>
               {AREAS.map(a=><option key={a}>{a}</option>)}
             </select>
           </div>
           <div>
-            <div style={{fontSize:11,color:'#64748B',marginBottom:6,fontWeight:600}}>BEDROOMS</div>
+            <div style={{fontSize:11,color:'var(--text-muted)',marginBottom:6,fontWeight:600}}>BEDROOMS</div>
             <div style={{display:'flex',gap:6}}>
               {BEDROOMS.map(br=>(
-                <button key={br} onClick={()=>setSelectedBR(br)} style={{padding:'8px 14px',borderRadius:8,border:'none',cursor:'pointer',fontSize:12,fontFamily:'system-ui',fontWeight:selectedBR===br?600:400,background:selectedBR===br?'linear-gradient(135deg,#1D4ED8,#38BDF8)':'rgba(59,130,246,0.06)',color:selectedBR===br?'#fff':'#64748B'}}>{br}</button>
+                <button key={br} onClick={()=>setSelectedBR(br)} style={{padding:'8px 14px',borderRadius:8,border:'none',cursor:'pointer',fontSize:12,fontFamily:'system-ui',fontWeight:selectedBR===br?600:400,background:selectedBR===br?'linear-gradient(135deg,#1D4ED8,#38BDF8)':'rgba(59,130,246,0.06)',color:selectedBR===br?'#fff':'var(--text-muted)'}}>{br}</button>
               ))}
             </div>
           </div>
@@ -103,8 +103,8 @@ export default function RentalIndex({ areaData }) {
           <Card label="Quarterly" value={annualRent?fmtAED(Math.round(annualRent/4),true):'N/A'} sub="Per cheque"/>
         </div>
         <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16,marginBottom:24}}>
-          <div style={{background:'#0D1929',border:'1px solid rgba(255,255,255,0.06)',borderRadius:14,padding:20}}>
-            <div style={{fontSize:13,fontWeight:600,color:'#F1F5F9',marginBottom:14}}>Annual Rent by Area — {selectedBR}</div>
+          <div style={{background:'var(--surface)',border:'1px solid rgba(255,255,255,0.06)',borderRadius:14,padding:20}}>
+            <div style={{fontSize:13,fontWeight:600,color:'var(--text-primary)',marginBottom:14}}>Annual Rent by Area — {selectedBR}</div>
             <ResponsiveContainer width="100%" height={200}>
               <BarChart data={compData.slice(0,10)} margin={{top:4,right:4,left:0,bottom:0}}>
                 <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)"/>
@@ -115,8 +115,8 @@ export default function RentalIndex({ areaData }) {
               </BarChart>
             </ResponsiveContainer>
           </div>
-          <div style={{background:'#0D1929',border:'1px solid rgba(255,255,255,0.06)',borderRadius:14,padding:20}}>
-            <div style={{fontSize:13,fontWeight:600,color:'#F1F5F9',marginBottom:14}}>Gross Rental Yield by Area</div>
+          <div style={{background:'var(--surface)',border:'1px solid rgba(255,255,255,0.06)',borderRadius:14,padding:20}}>
+            <div style={{fontSize:13,fontWeight:600,color:'var(--text-primary)',marginBottom:14}}>Gross Rental Yield by Area</div>
             <ResponsiveContainer width="100%" height={200}>
               <BarChart data={yieldData.slice(0,10)} margin={{top:4,right:4,left:0,bottom:0}}>
                 <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)"/>
@@ -128,9 +128,9 @@ export default function RentalIndex({ areaData }) {
             </ResponsiveContainer>
           </div>
         </div>
-        <div style={{background:'#0D1929',border:'1px solid rgba(255,255,255,0.06)',borderRadius:14,overflow:'hidden'}}>
+        <div style={{background:'var(--surface)',border:'1px solid rgba(255,255,255,0.06)',borderRadius:14,overflow:'hidden'}}>
           <div style={{padding:'16px 20px',borderBottom:'1px solid rgba(255,255,255,0.06)'}}>
-            <div style={{fontSize:14,fontWeight:600,color:'#F1F5F9'}}>Rental Rates by Area</div>
+            <div style={{fontSize:14,fontWeight:600,color:'var(--text-primary)'}}>Rental Rates by Area</div>
             <div style={{fontSize:12,color:'#475569'}}>Annual asking rents in AED</div>
           </div>
           <div style={{display:'grid',gridTemplateColumns:'1.5fr 1fr 1fr 1fr 1fr 1fr 0.8fr 0.8fr',padding:'10px 20px',borderBottom:'1px solid rgba(255,255,255,0.06)',background:'rgba(59,130,246,0.04)'}}>
@@ -142,8 +142,8 @@ export default function RentalIndex({ areaData }) {
               <div key={area} onClick={()=>setSelectedArea(area)} style={{display:'grid',gridTemplateColumns:'1.5fr 1fr 1fr 1fr 1fr 1fr 0.8fr 0.8fr',padding:'13px 20px',borderBottom:i<AREAS.length-1?'1px solid rgba(255,255,255,0.03)':'none',cursor:'pointer',background:selectedArea===area?'rgba(59,130,246,0.08)':'transparent'}}
                 onMouseEnter={e=>e.currentTarget.style.background='rgba(59,130,246,0.05)'}
                 onMouseLeave={e=>e.currentTarget.style.background=selectedArea===area?'rgba(59,130,246,0.08)':'transparent'}>
-                <div style={{fontSize:13,fontWeight:600,color:'#F1F5F9'}}>{area}</div>
-                {['studio','1br','2br','3br','4br'].map(k=><div key={k} style={{fontSize:12,color:'#94A3B8'}}>{rd[k]?fmtAED(rd[k],true):'—'}</div>)}
+                <div style={{fontSize:13,fontWeight:600,color:'var(--text-primary)'}}>{area}</div>
+                {['studio','1br','2br','3br','4br'].map(k=><div key={k} style={{fontSize:12,color:'var(--text-secondary)'}}>{rd[k]?fmtAED(rd[k],true):'—'}</div>)}
                 <div style={{fontSize:12,fontWeight:600,color:'#22C55E'}}>{rd.yield?rd.yield+'%':'—'}</div>
                 <div style={{fontSize:12,fontWeight:600,color:'#38BDF8'}}>{rd.trend?'+'+rd.trend+'%':'—'}</div>
               </div>
@@ -154,25 +154,25 @@ export default function RentalIndex({ areaData }) {
 
       {viewMode==='calculator' && (
         <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:20}}>
-          <div style={{background:'#0D1929',border:'1px solid rgba(255,255,255,0.06)',borderRadius:14,padding:24}}>
-            <div style={{fontSize:15,fontWeight:700,color:'#F1F5F9',marginBottom:20}}>Yield Calculator</div>
+          <div style={{background:'var(--surface)',border:'1px solid rgba(255,255,255,0.06)',borderRadius:14,padding:24}}>
+            <div style={{fontSize:15,fontWeight:700,color:'var(--text-primary)',marginBottom:20}}>Yield Calculator</div>
             <div style={{marginBottom:14}}>
-              <label style={{fontSize:12,color:'#64748B',marginBottom:5,display:'block',fontWeight:500}}>Area</label>
+              <label style={{fontSize:12,color:'var(--text-muted)',marginBottom:5,display:'block',fontWeight:500}}>Area</label>
               <select value={calcArea} onChange={e=>setCalcArea(e.target.value)} style={{...inp,cursor:'pointer'}}>
                 {AREAS.map(a=><option key={a}>{a}</option>)}
               </select>
             </div>
             <div style={{marginBottom:14}}>
-              <label style={{fontSize:12,color:'#64748B',marginBottom:5,display:'block',fontWeight:500}}>Bedrooms</label>
+              <label style={{fontSize:12,color:'var(--text-muted)',marginBottom:5,display:'block',fontWeight:500}}>Bedrooms</label>
               <div style={{display:'flex',gap:6,flexWrap:'wrap'}}>
-                {BEDROOMS.map(br=><button key={br} onClick={()=>setCalcBR(br)} style={{padding:'7px 12px',borderRadius:8,border:'none',cursor:'pointer',fontSize:11,fontFamily:'system-ui',fontWeight:calcBR===br?600:400,background:calcBR===br?'rgba(59,130,246,0.2)':'rgba(59,130,246,0.06)',color:calcBR===br?'#38BDF8':'#64748B'}}>{br}</button>)}
+                {BEDROOMS.map(br=><button key={br} onClick={()=>setCalcBR(br)} style={{padding:'7px 12px',borderRadius:8,border:'none',cursor:'pointer',fontSize:11,fontFamily:'system-ui',fontWeight:calcBR===br?600:400,background:calcBR===br?'var(--border-strong)':'rgba(59,130,246,0.06)',color:calcBR===br?'#38BDF8':'var(--text-muted)'}}>{br}</button>)}
               </div>
             </div>
             <div style={{marginBottom:20}}>
               <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:5}}>
-                <label style={{fontSize:12,color:'#64748B',fontWeight:500}}>Property Size</label>
+                <label style={{fontSize:12,color:'var(--text-muted)',fontWeight:500}}>Property Size</label>
                 <div style={{display:'flex',gap:4}}>
-                  {['sqft','sqm'].map(u=><button key={u} onClick={()=>setCalcUnit(u)} style={{padding:'3px 8px',borderRadius:20,border:'none',cursor:'pointer',fontSize:10,fontWeight:calcUnit===u?700:400,fontFamily:'system-ui',background:calcUnit===u?'rgba(59,130,246,0.2)':'rgba(59,130,246,0.06)',color:calcUnit===u?'#38BDF8':'#64748B'}}>{u}</button>)}
+                  {['sqft','sqm'].map(u=><button key={u} onClick={()=>setCalcUnit(u)} style={{padding:'3px 8px',borderRadius:20,border:'none',cursor:'pointer',fontSize:10,fontWeight:calcUnit===u?700:400,fontFamily:'system-ui',background:calcUnit===u?'var(--border-strong)':'rgba(59,130,246,0.06)',color:calcUnit===u?'#38BDF8':'var(--text-muted)'}}>{u}</button>)}
                 </div>
               </div>
               <input value={calcSize} onChange={e=>setCalcSize(e.target.value)} placeholder={calcUnit==='sqft'?'e.g. 1200':'e.g. 111'} style={inp}/>
@@ -180,37 +180,37 @@ export default function RentalIndex({ areaData }) {
             </div>
             {cAnnual>0 && (
               <div style={{background:'rgba(59,130,246,0.06)',border:'1px solid rgba(59,130,246,0.1)',borderRadius:10,padding:14}}>
-                <div style={{fontSize:11,color:'#64748B',marginBottom:8,fontWeight:600,textTransform:'uppercase',letterSpacing:'0.05em'}}>Market Rent — {calcArea}</div>
+                <div style={{fontSize:11,color:'var(--text-muted)',marginBottom:8,fontWeight:600,textTransform:'uppercase',letterSpacing:'0.05em'}}>Market Rent — {calcArea}</div>
                 <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8}}>
-                  {[['Annual',fmtAED(cAnnual,true),'#F1F5F9'],['Monthly',fmtAED(Math.round(cAnnual/12),true),'#F1F5F9'],['Market Yield',cd.yield+'%','#22C55E'],['YoY Growth','+'+cd.trend+'%','#38BDF8']].map(([l,v,c],i)=>(
+                  {[['Annual',fmtAED(cAnnual,true),'var(--text-primary)'],['Monthly',fmtAED(Math.round(cAnnual/12),true),'var(--text-primary)'],['Market Yield',cd.yield+'%','#22C55E'],['YoY Growth','+'+cd.trend+'%','#38BDF8']].map(([l,v,c],i)=>(
                     <div key={i}><div style={{fontSize:10,color:'#475569'}}>{l}</div><div style={{fontSize:14,fontWeight:700,color:c}}>{v}</div></div>
                   ))}
                 </div>
               </div>
             )}
           </div>
-          <div style={{background:'#0D1929',border:'1px solid rgba(255,255,255,0.06)',borderRadius:14,padding:24}}>
-            <div style={{fontSize:15,fontWeight:700,color:'#F1F5F9',marginBottom:20}}>Yield Analysis</div>
+          <div style={{background:'var(--surface)',border:'1px solid rgba(255,255,255,0.06)',borderRadius:14,padding:24}}>
+            <div style={{fontSize:15,fontWeight:700,color:'var(--text-primary)',marginBottom:20}}>Yield Analysis</div>
             {!cAnnual ? <div style={{textAlign:'center',padding:40,color:'#475569'}}><div style={{fontSize:32,marginBottom:12}}>📊</div><div>Select area and bedrooms</div></div> : <>
               <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12,marginBottom:16}}>
-                {[['Annual Rent',fmtAED(cAnnual,true),'#F1F5F9','rgba(59,130,246,0.1)'],['Monthly',fmtAED(Math.round(cAnnual/12),true),'#38BDF8','rgba(59,130,246,0.08)'],['Gross Yield',gYield+'%','#22C55E','rgba(34,197,94,0.1)'],['Net Yield',nYield+'%','#22C55E','rgba(34,197,94,0.08)']].map(([l,v,c,bg],i)=>(
+                {[['Annual Rent',fmtAED(cAnnual,true),'var(--text-primary)','rgba(59,130,246,0.1)'],['Monthly',fmtAED(Math.round(cAnnual/12),true),'#38BDF8','rgba(59,130,246,0.08)'],['Gross Yield',gYield+'%','#22C55E','rgba(34,197,94,0.1)'],['Net Yield',nYield+'%','#22C55E','rgba(34,197,94,0.08)']].map(([l,v,c,bg],i)=>(
                   <div key={i} style={{background:bg,border:'1px solid rgba(59,130,246,0.1)',borderRadius:10,padding:14}}>
-                    <div style={{fontSize:10,color:'#64748B',marginBottom:6,textTransform:'uppercase',letterSpacing:'0.05em'}}>{l}</div>
+                    <div style={{fontSize:10,color:'var(--text-muted)',marginBottom:6,textTransform:'uppercase',letterSpacing:'0.05em'}}>{l}</div>
                     <div style={{fontSize:18,fontWeight:700,color:c}}>{v}</div>
                   </div>
                 ))}
               </div>
               {cValue>0 && <div style={{background:'rgba(245,158,11,0.06)',border:'1px solid rgba(245,158,11,0.15)',borderRadius:10,padding:14,marginBottom:14}}>
                 <div style={{fontSize:11,color:'#F59E0B',fontWeight:600,marginBottom:6}}>PROPERTY VALUE (estimated)</div>
-                <div style={{fontSize:20,fontWeight:700,color:'#F1F5F9'}}>{fmtAED(cValue,true)}</div>
-                <div style={{fontSize:11,color:'#64748B',marginTop:2}}>Based on {calcArea} DLD market data</div>
+                <div style={{fontSize:20,fontWeight:700,color:'var(--text-primary)'}}>{fmtAED(cValue,true)}</div>
+                <div style={{fontSize:11,color:'var(--text-muted)',marginTop:2}}>Based on {calcArea} DLD market data</div>
               </div>}
               <div style={{background:'rgba(59,130,246,0.04)',border:'1px solid rgba(59,130,246,0.08)',borderRadius:10,padding:14}}>
-                <div style={{fontSize:11,color:'#64748B',fontWeight:600,marginBottom:10}}>PAYMENT SCHEDULE</div>
+                <div style={{fontSize:11,color:'var(--text-muted)',fontWeight:600,marginBottom:10}}>PAYMENT SCHEDULE</div>
                 {[['Annual (1 cheque)',cAnnual],['Semi-annual',Math.round(cAnnual/2)],['Quarterly',Math.round(cAnnual/4)],['Monthly',Math.round(cAnnual/12)]].map(([l,v],i)=>(
                   <div key={i} style={{display:'flex',justifyContent:'space-between',padding:'6px 0',borderBottom:i<3?'1px solid rgba(255,255,255,0.04)':'none'}}>
-                    <span style={{fontSize:12,color:'#94A3B8'}}>{l}</span>
-                    <span style={{fontSize:12,fontWeight:600,color:'#F1F5F9'}}>{fmtAED(v,true)}</span>
+                    <span style={{fontSize:12,color:'var(--text-secondary)'}}>{l}</span>
+                    <span style={{fontSize:12,fontWeight:600,color:'var(--text-primary)'}}>{fmtAED(v,true)}</span>
                   </div>
                 ))}
               </div>

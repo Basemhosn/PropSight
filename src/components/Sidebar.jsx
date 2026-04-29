@@ -79,7 +79,7 @@ export default function Sidebar({ page, setPage }) {
     <div style={{ display:'flex', flexDirection:'column', height:'100%' }}>
       <div style={{ padding:'16px', borderBottom:'1px solid rgba(59,130,246,0.08)', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
         <PropSightLogo size="sm" />
-        {isMobile && <button onClick={() => setOpen(false)} style={{ background:'none', border:'none', cursor:'pointer', color:'#64748B', padding:4 }}><Icon name="close" size={20}/></button>}
+        {isMobile && <button onClick={() => setOpen(false)} style={{ background:'none', border:'none', cursor:'pointer', color:'var(--text-muted)', padding:4 }}><Icon name="close" size={20}/></button>}
       </div>
       <div style={{ flex:1, padding:'12px 8px', overflowY:'auto' }}>
       {/* Portal Badge */}
@@ -94,7 +94,7 @@ export default function Sidebar({ page, setPage }) {
       </div>
         {NAV_SECTIONS.map((section, si) => (
           <div key={si} style={{ marginBottom:8 }}>
-            {section.label && <div style={{ fontSize:10, fontWeight:600, color:'#1E3A5F', letterSpacing:'0.12em', padding:'8px 8px 4px' }}>{section.label}</div>}
+            {section.label && <div style={{ fontSize:10, fontWeight:600, color:'var(--text-faint)', letterSpacing:'0.12em', padding:'8px 8px 4px' }}>{section.label}</div>}
             {section.items.map(item => {
               const active = page === item.id;
               const locked = (item.pro && !isPro) || (item.lite && !isLite);
@@ -104,7 +104,7 @@ export default function Sidebar({ page, setPage }) {
                   padding:'10px', borderRadius:8, border:'none', marginBottom:2,
                   cursor:locked?'default':'pointer',
                   background:active?'rgba(59,130,246,0.12)':'transparent',
-                  color:active?'#38BDF8':locked?'#1E3A5F':'#64748B',
+                  color:active?'#38BDF8':locked?'var(--text-faint)':'var(--text-muted)',
                   fontFamily:'system-ui', position:'relative', textAlign:'left',
                 }}>
                   {active && <div style={{ position:'absolute', left:0, top:'50%', transform:'translateY(-50%)', width:3, height:20, borderRadius:2, background:'linear-gradient(180deg,#1D4ED8,#38BDF8)' }}/>}
@@ -121,7 +121,7 @@ export default function Sidebar({ page, setPage }) {
         <div style={{ margin:'8px', borderRadius:10, background:'linear-gradient(135deg,rgba(139,92,246,0.2),rgba(192,132,252,0.1))', border:'1px solid rgba(139,92,246,0.3)', padding:'12px' }}>
           <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:8 }}>
             <div style={{ width:28, height:28, borderRadius:8, background:'linear-gradient(135deg,#7C3AED,#A78BFA)', display:'flex', alignItems:'center', justifyContent:'center' }}><Icon name="upgrade" size={14}/></div>
-            <div><div style={{ fontSize:12, fontWeight:700, color:'#F1F5F9' }}>Upgrade to Lite</div><div style={{ fontSize:10, color:'#94A3B8' }}>AED 99/mo · Unlock more features</div></div>
+            <div><div style={{ fontSize:12, fontWeight:700, color:'var(--text-primary)' }}>Upgrade to Lite</div><div style={{ fontSize:10, color:'var(--text-secondary)' }}>AED 99/mo · Unlock more features</div></div>
           </div>
           <button onClick={() => nav('upgrade')} style={{ width:'100%', padding:'8px', borderRadius:8, border:'none', background:'linear-gradient(135deg,#7C3AED,#A78BFA)', color:'#fff', fontSize:13, fontWeight:600, cursor:'pointer', fontFamily:'system-ui' }}>Upgrade to Lite →</button>
         </div>
@@ -130,7 +130,7 @@ export default function Sidebar({ page, setPage }) {
         <div style={{ margin:'8px', borderRadius:10, background:'linear-gradient(135deg,rgba(245,158,11,0.2),rgba(251,191,36,0.1))', border:'1px solid rgba(245,158,11,0.3)', padding:'12px' }}>
           <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:8 }}>
             <div style={{ width:28, height:28, borderRadius:8, background:'linear-gradient(135deg,#B45309,#F59E0B)', display:'flex', alignItems:'center', justifyContent:'center' }}><Icon name="upgrade" size={14}/></div>
-            <div><div style={{ fontSize:12, fontWeight:700, color:'#F1F5F9' }}>Upgrade to Pro</div><div style={{ fontSize:10, color:'#94A3B8' }}>AED 299/mo · Unlock everything</div></div>
+            <div><div style={{ fontSize:12, fontWeight:700, color:'var(--text-primary)' }}>Upgrade to Pro</div><div style={{ fontSize:10, color:'var(--text-secondary)' }}>AED 299/mo · Unlock everything</div></div>
           </div>
           <button onClick={() => nav('upgrade')} style={{ width:'100%', padding:'8px', borderRadius:8, border:'none', background:'linear-gradient(135deg,#B45309,#F59E0B)', color:'#fff', fontSize:13, fontWeight:600, cursor:'pointer', fontFamily:'system-ui' }}>Upgrade to Pro →</button>
         </div>
@@ -141,11 +141,11 @@ export default function Sidebar({ page, setPage }) {
           : <div style={{ width:32, height:32, borderRadius:'50%', flexShrink:0, background:'linear-gradient(135deg,#1D4ED8,#38BDF8)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:13, fontWeight:700, color:'#fff' }}>{(profile?.full_name?.[0]||user?.email?.[0]||'U').toUpperCase()}</div>
         }
         <div style={{ flex:1, minWidth:0 }}>
-          <div style={{ fontSize:12, fontWeight:600, color:'#94A3B8', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{profile?.full_name?.split(' ')[0] || user?.email?.split('@')[0] || 'User'}</div>
-          <div style={{ fontSize:10, color:'#1E3A5F' }}>{isPro?<span style={{color:'#F59E0B',fontWeight:700}}>⭐ Pro</span>:isLite?<span style={{color:'#A78BFA',fontWeight:700}}>✦ Lite</span>:'Free plan'}</div>
+          <div style={{ fontSize:12, fontWeight:600, color:'var(--text-secondary)', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{profile?.full_name?.split(' ')[0] || user?.email?.split('@')[0] || 'User'}</div>
+          <div style={{ fontSize:10, color:'var(--text-faint)' }}>{isPro?<span style={{color:'#F59E0B',fontWeight:700}}>⭐ Pro</span>:isLite?<span style={{color:'#A78BFA',fontWeight:700}}>✦ Lite</span>:'Free plan'}</div>
         </div>
-        <button onClick={() => { const c=document.documentElement.getAttribute('data-theme')||'dark'; const n=c==='dark'?'light':'dark'; document.documentElement.setAttribute('data-theme',n); localStorage.setItem('theme',n); setThemeMode(n); }} style={{ background:'none', border:'none', cursor:'pointer', color:'#64748B', padding:4, fontSize:13 }}>{themeMode==='dark'?'☀️':'🌙'}</button>
-        <button onClick={signOut} style={{ background:'none', border:'none', cursor:'pointer', color:'#1E3A5F', padding:4 }}><Icon name="logout" size={14}/></button>
+        <button onClick={() => { const c=document.documentElement.getAttribute('data-theme')||'dark'; const n=c==='dark'?'light':'dark'; document.documentElement.setAttribute('data-theme',n); localStorage.setItem('theme',n); setThemeMode(n); }} style={{ background:'none', border:'none', cursor:'pointer', color:'var(--text-muted)', padding:4, fontSize:13 }}>{themeMode==='dark'?'☀️':'🌙'}</button>
+        <button onClick={signOut} style={{ background:'none', border:'none', cursor:'pointer', color:'var(--text-faint)', padding:4 }}><Icon name="logout" size={14}/></button>
       </div>
     </div>
   );
@@ -153,23 +153,23 @@ export default function Sidebar({ page, setPage }) {
   if (isMobile) {
     return (
       <>
-        <div style={{ position:'fixed', top:0, left:0, right:0, zIndex:1000, height:56, background:'#070E1B', borderBottom:'1px solid rgba(59,130,246,0.1)', display:'flex', alignItems:'center', justifyContent:'space-between', padding:'0 16px' }}>
+        <div style={{ position:'fixed', top:0, left:0, right:0, zIndex:1000, height:56, background:'var(--bg-alt)', borderBottom:'1px solid rgba(59,130,246,0.1)', display:'flex', alignItems:'center', justifyContent:'space-between', padding:'0 16px' }}>
           <PropSightLogo size="sm" />
-          <button onClick={() => setOpen(true)} style={{ background:'rgba(59,130,246,0.1)', border:'1px solid rgba(59,130,246,0.2)', borderRadius:8, cursor:'pointer', color:'#94A3B8', padding:'6px 10px', display:'flex', alignItems:'center' }}>
+          <button onClick={() => setOpen(true)} style={{ background:'rgba(59,130,246,0.1)', border:'1px solid rgba(59,130,246,0.2)', borderRadius:8, cursor:'pointer', color:'var(--text-secondary)', padding:'6px 10px', display:'flex', alignItems:'center' }}>
             <Icon name="menu" size={20}/>
           </button>
         </div>
         <div style={{ height:56 }} />
         {open && <>
           <div onClick={() => setOpen(false)} style={{ position:'fixed', inset:0, background:'rgba(0,0,0,0.7)', zIndex:1001 }}/>
-          <div style={{ position:'fixed', left:0, top:0, bottom:0, width:280, background:'#070E1B', zIndex:1002, overflowY:'auto', boxShadow:'4px 0 24px rgba(0,0,0,0.5)' }}>{navItems}</div>
+          <div style={{ position:'fixed', left:0, top:0, bottom:0, width:280, background:'var(--bg-alt)', zIndex:1002, overflowY:'auto', boxShadow:'4px 0 24px rgba(0,0,0,0.5)' }}>{navItems}</div>
         </>}
       </>
     );
   }
 
   return (
-    <div style={{ width:220, flexShrink:0, background:'#070E1B', borderRight:'1px solid rgba(59,130,246,0.08)', height:'100vh', position:'sticky', top:0, overflowY:'auto', fontFamily:'system-ui' }}>
+    <div style={{ width:220, flexShrink:0, background:'var(--bg-alt)', borderRight:'1px solid rgba(59,130,246,0.08)', height:'100vh', position:'sticky', top:0, overflowY:'auto', fontFamily:'system-ui' }}>
       {navItems}
     </div>
   );

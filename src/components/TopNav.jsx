@@ -64,7 +64,7 @@ export default function TopNav({ datasetMeta, filteredCount }) {
             {(profile?.full_name?.[0] || user?.email?.[0] || 'U').toUpperCase()}
           </div>
         )}
-        <span style={{ fontSize:12, fontWeight:500, color:'#94A3B8' }}>
+        <span style={{ fontSize:12, fontWeight:500, color:'var(--text-secondary)' }}>
           {profile?.full_name?.split(' ')[0] || user?.email?.split('@')[0] || 'User'}
         </span>
         <button onClick={signOut} style={{
@@ -75,7 +75,7 @@ export default function TopNav({ datasetMeta, filteredCount }) {
           cursor:'pointer', fontWeight:500,
           transition:'all 0.15s', fontFamily:'system-ui,sans-serif',
         }}
-        onMouseEnter={e=>{ e.currentTarget.style.borderColor='rgba(59,130,246,0.3)'; e.currentTarget.style.color='#94A3B8'; }}
+        onMouseEnter={e=>{ e.currentTarget.style.borderColor='rgba(59,130,246,0.3)'; e.currentTarget.style.color='var(--text-secondary)'; }}
         onMouseLeave={e=>{ e.currentTarget.style.borderColor='rgba(59,130,246,0.15)'; e.currentTarget.style.color='#475569'; }}>
           Sign out
         </button>

@@ -24,7 +24,7 @@ export default function UploadZone({ onFile, onDemo }) {
         }}>
           <span style={{ fontSize: 28 }}>🏙️</span>
         </div>
-        <h1 style={{ fontSize: 26, fontWeight: 700, color: "#F1F5F9", marginBottom: 8 }}>
+        <h1 style={{ fontSize: 26, fontWeight: 700, color: "var(--text-primary)", marginBottom: 8 }}>
           Dubai Real Estate Dashboard
         </h1>
         <p style={{ fontSize: 14, color: "#7A8499", lineHeight: 1.6 }}>
@@ -50,7 +50,7 @@ export default function UploadZone({ onFile, onDemo }) {
         }}
       >
         <Upload size={32} color={dragging ? "#38BDF8" : "#C5CAD6"} style={{ margin: "0 auto 1rem" }} />
-        <div style={{ fontSize: 15, fontWeight: 600, color: "#F1F5F9", marginBottom: 6 }}>
+        <div style={{ fontSize: 15, fontWeight: 600, color: "var(--text-primary)", marginBottom: 6 }}>
           Drop your DLD transactions CSV here
         </div>
         <div style={{ fontSize: 13, color: "#7A8499", marginBottom: 16 }}>
@@ -71,7 +71,7 @@ export default function UploadZone({ onFile, onDemo }) {
       {/* Demo mode */}
       <div style={{ textAlign: "center", marginBottom: "2rem" }}>
         <button onClick={onDemo} style={{
-          background: "#F1F5F9", color: "#0D1929", border: "none", borderRadius: 8,
+          background: "var(--text-primary)", color: "var(--surface)", border: "none", borderRadius: 8,
           padding: "10px 24px", fontSize: 13, fontWeight: 600, cursor: "pointer",
         }}>
           Preview with sample data
@@ -83,9 +83,9 @@ export default function UploadZone({ onFile, onDemo }) {
 
       {/* How to get data */}
       <div style={{
-        background: "#0D1929", border: "1px solid #E8ECF2", borderRadius: 12, padding: "1.25rem",
+        background: "var(--surface)", border: "1px solid #E8ECF2", borderRadius: 12, padding: "1.25rem",
       }}>
-        <div style={{ fontSize: 12, fontWeight: 600, color: "#F1F5F9", marginBottom: "1rem", display: "flex", alignItems: "center", gap: 6 }}>
+        <div style={{ fontSize: 12, fontWeight: 600, color: "var(--text-primary)", marginBottom: "1rem", display: "flex", alignItems: "center", gap: 6 }}>
           <FileText size={14} /> How to get free DLD data
         </div>
         {[
@@ -97,7 +97,7 @@ export default function UploadZone({ onFile, onDemo }) {
           <div key={n} style={{ display: "flex", gap: 10, marginBottom: 10, alignItems: "flex-start" }}>
             <div style={{
               width: 22, height: 22, borderRadius: "50%", background: "#38BDF8",
-              color: "#0D1929", fontSize: 11, fontWeight: 600, flexShrink: 0,
+              color: "var(--surface)", fontSize: 11, fontWeight: 600, flexShrink: 0,
               display: "flex", alignItems: "center", justifyContent: "center",
             }}>{n}</div>
             <div style={{ fontSize: 13, color: "#4A5568", lineHeight: 1.55, paddingTop: 2 }}>{text}</div>

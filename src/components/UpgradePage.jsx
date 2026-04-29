@@ -3,7 +3,7 @@ import { useAuth } from '../context/AuthContext';
 
 const PLANS = [
   {
-    id:'free', name:'Free', price:0, currency:'', color:'#64748B', accent:'rgba(100,116,139,0.15)', border:'rgba(100,116,139,0.2)',
+    id:'free', name:'Free', price:0, currency:'', color:'var(--text-muted)', accent:'rgba(100,116,139,0.15)', border:'rgba(100,116,139,0.2)',
     tag:'What you get for free',
     features:[
       'Home dashboard & KPIs',
@@ -71,17 +71,17 @@ export default function UpgradePage() {
   };
 
   return (
-    <div style={{flex:1,overflowY:'auto',background:'#060E1A',fontFamily:'system-ui',padding:'40px 28px'}}>
+    <div style={{flex:1,overflowY:'auto',background:'var(--bg)',fontFamily:'system-ui',padding:'40px 28px'}}>
       <div style={{textAlign:'center',marginBottom:48}}>
         <div style={{display:'inline-flex',alignItems:'center',gap:8,background:'rgba(245,158,11,0.1)',border:'1px solid rgba(245,158,11,0.2)',borderRadius:20,padding:'6px 16px',marginBottom:16}}>
           <span style={{fontSize:14}}>⚡</span>
           <span style={{fontSize:12,fontWeight:600,color:'#F59E0B'}}>CHOOSE YOUR PLAN</span>
         </div>
-        <h1 style={{margin:0,fontSize:34,fontWeight:800,color:'#F1F5F9',marginBottom:12}}>
+        <h1 style={{margin:0,fontSize:34,fontWeight:800,color:'var(--text-primary)',marginBottom:12}}>
           Simple, transparent{' '}
           <span style={{background:'linear-gradient(135deg,#38BDF8,#1D4ED8)',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent'}}>pricing</span>
         </h1>
-        <p style={{fontSize:15,color:'#64748B',margin:0}}>All prices in AED · Cancel anytime · No hidden fees</p>
+        <p style={{fontSize:15,color:'var(--text-muted)',margin:0}}>All prices in AED · Cancel anytime · No hidden fees</p>
       </div>
 
       <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:20,maxWidth:920,margin:'0 auto 40px'}}>
@@ -90,7 +90,7 @@ export default function UpgradePage() {
           const isDowngrade = (plan.id==='free') || (plan.id==='lite' && currentPlan==='pro');
           return (
             <div key={plan.id} style={{
-              background: plan.popular ? 'linear-gradient(135deg,#0D1929,#0D2040)' : '#0D1929',
+              background: plan.popular ? 'linear-gradient(135deg,#0D1929,#0D2040)' : 'var(--surface)',
               border: `2px solid ${isCurrent ? plan.color : plan.border}`,
               borderRadius: 20, padding: 28, position:'relative',
               transform: plan.popular ? 'scale(1.03)' : 'none',
@@ -113,8 +113,8 @@ export default function UpgradePage() {
               {/* Price */}
               <div style={{display:'flex',alignItems:'baseline',gap:4,marginBottom:8}}>
                 {plan.price===0
-                  ? <span style={{fontSize:36,fontWeight:800,color:'#F1F5F9'}}>Free</span>
-                  : <><span style={{fontSize:36,fontWeight:800,color:'#F1F5F9'}}>{plan.currency} {plan.price}</span><span style={{fontSize:13,color:'#64748B'}}>/mo</span></>
+                  ? <span style={{fontSize:36,fontWeight:800,color:'var(--text-primary)'}}>Free</span>
+                  : <><span style={{fontSize:36,fontWeight:800,color:'var(--text-primary)'}}>{plan.currency} {plan.price}</span><span style={{fontSize:13,color:'var(--text-muted)'}}>/mo</span></>
                 }
               </div>
 
@@ -131,7 +131,7 @@ export default function UpgradePage() {
                   cursor: isCurrent||plan.price===0||isDowngrade ? 'default' : 'pointer',
                   marginBottom:24, fontSize:13, fontWeight:600, fontFamily:'system-ui',
                   background: isCurrent ? plan.accent : plan.price===0||isDowngrade ? 'rgba(100,116,139,0.1)' : BTN_BG[plan.id],
-                  color: isCurrent ? plan.color : plan.price===0||isDowngrade ? '#64748B' : '#fff',
+                  color: isCurrent ? plan.color : plan.price===0||isDowngrade ? 'var(--text-muted)' : '#fff',
                   opacity: loading===plan.id ? 0.7 : 1,
                 }}>
                 {loading===plan.id ? 'Redirecting...'
@@ -146,7 +146,7 @@ export default function UpgradePage() {
                 {plan.features.map((f,i)=>(
                   <div key={i} style={{display:'flex',alignItems:'flex-start',gap:8}}>
                     <span style={{fontSize:13,color:plan.color,flexShrink:0,marginTop:1}}>✓</span>
-                    <span style={{fontSize:12,color:'#94A3B8',lineHeight:1.4}}>{f}</span>
+                    <span style={{fontSize:12,color:'var(--text-secondary)',lineHeight:1.4}}>{f}</span>
                   </div>
                 ))}
               </div>
@@ -158,7 +158,7 @@ export default function UpgradePage() {
       {error && <div style={{textAlign:'center',fontSize:13,color:'#F87171',marginBottom:20}}>{error}</div>}
 
       <div style={{maxWidth:920,margin:'0 auto',background:'rgba(59,130,246,0.05)',border:'1px solid rgba(59,130,246,0.1)',borderRadius:14,padding:20,textAlign:'center'}}>
-        <div style={{fontSize:13,color:'#64748B'}}>
+        <div style={{fontSize:13,color:'var(--text-muted)'}}>
           Secure payment via Stripe · Access on any device · Cancel anytime · Data from Dubai Land Department
         </div>
       </div>

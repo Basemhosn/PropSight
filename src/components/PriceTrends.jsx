@@ -9,11 +9,11 @@ const COLORS = ["#38BDF8","#22C55E","#D85A30","#BA7517","#993556","#534AB7","#3b
 
 const CustomTooltip = ({ active, payload, label }) => {
   return (
-    <div style={{ background:"#F1F5F9", color:"#0D1929", borderRadius:8, padding:"10px 14px", fontSize:12, minWidth:200 }}>
+    <div style={{ background:"var(--text-primary)", color:"var(--surface)", borderRadius:8, padding:"10px 14px", fontSize:12, minWidth:200 }}>
       <div style={{ fontWeight:600, marginBottom:6 }}>{label}</div>
       {payload.map((p,i) => (
         <div key={i} style={{ color:p.color, marginBottom:3 }}>
-          {p.name}: <span style={{ color:"#0D1929", fontWeight:600 }}>{fmtAED(p.value, true)}/m²</span>
+          {p.name}: <span style={{ color:"var(--surface)", fontWeight:600 }}>{fmtAED(p.value, true)}/m²</span>
         </div>
       ))}
     </div>
@@ -85,10 +85,10 @@ export default function PriceTrends({ rows, priceTrend }) {
   };
 
   return (
-    <div style={{ background:"#0D1929", border:"1px solid #E8ECF2", borderRadius:12, padding:"1.25rem" }}>
+    <div style={{ background:"var(--surface)", border:"1px solid #E8ECF2", borderRadius:12, padding:"1.25rem" }}>
       <div style={{ display:"flex", alignItems:"flex-start", justifyContent:"space-between", marginBottom:"1rem", flexWrap:"wrap", gap:8 }}>
         <div>
-          <div style={{ fontSize:13, fontWeight:600, color:"#F1F5F9" }}>Price per m² trends</div>
+          <div style={{ fontSize:13, fontWeight:600, color:"var(--text-primary)" }}>Price per m² trends</div>
           <div style={{ fontSize:11, color:"#9AA0AE", marginTop:2 }}>Historical price/sqm over time</div>
         </div>
         <div style={{ display:"flex", gap:4 }}>
@@ -96,7 +96,7 @@ export default function PriceTrends({ rows, priceTrend }) {
             <button key={t.k} onClick={() => setMode(t.k)} style={{
               fontSize:11, padding:"4px 10px", borderRadius:6, cursor:"pointer", fontWeight:500,
               border: mode===t.k ? "1px solid #185FA5" : "1px solid #E8ECF2",
-              background: mode===t.k ? "rgba(59,130,246,0.1)" : "#0D1929",
+              background: mode===t.k ? "rgba(59,130,246,0.1)" : "var(--surface)",
               color: mode===t.k ? "#38BDF8" : "#7A8499",
             }}>{t.l}</button>
           ))}
@@ -111,7 +111,7 @@ export default function PriceTrends({ rows, priceTrend }) {
               <button key={a} onClick={() => toggleArea(a)} style={{
                 fontSize:11, padding:"3px 10px", borderRadius:20, cursor:"pointer",
                 border: sel ? `1px solid ${COLORS[i%COLORS.length]}` : "1px solid #E8ECF2",
-                background: sel ? COLORS[i%COLORS.length]+"18" : "#0D1929",
+                background: sel ? COLORS[i%COLORS.length]+"18" : "var(--surface)",
                 color: sel ? COLORS[i%COLORS.length] : "#9AA0AE", fontWeight: sel ? 600 : 400,
               }}>{a}</button>
             );

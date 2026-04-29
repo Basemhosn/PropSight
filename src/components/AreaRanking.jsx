@@ -77,10 +77,10 @@ export default function AreaRanking({ rows, areas }) {
   };
 
   return (
-    <div style={{ background:"#0D1929", border:"1px solid #E8ECF2", borderRadius:12, padding:"1.25rem" }}>
+    <div style={{ background:"var(--surface)", border:"1px solid #E8ECF2", borderRadius:12, padding:"1.25rem" }}>
       <div style={{ display:"flex", alignItems:"flex-start", justifyContent:"space-between", marginBottom:"1rem", flexWrap:"wrap", gap:8 }}>
         <div>
-          <div style={{ fontSize:13, fontWeight:600, color:"#F1F5F9" }}>Top performing areas</div>
+          <div style={{ fontSize:13, fontWeight:600, color:"var(--text-primary)" }}>Top performing areas</div>
           <div style={{ fontSize:11, color:"#9AA0AE", marginTop:2 }}>Ranked by {METRICS.find(m=>m.key===metric)?.label.toLowerCase()}</div>
         </div>
         <div style={{ display:"flex", gap:4, flexWrap:"wrap" }}>
@@ -88,7 +88,7 @@ export default function AreaRanking({ rows, areas }) {
             <button key={m.key} onClick={() => setMetric(m.key)} style={{
               fontSize:11, padding:"4px 10px", borderRadius:6, cursor:"pointer", fontWeight:500,
               border: metric===m.key ? "1px solid #185FA5" : "1px solid #E8ECF2",
-              background: metric===m.key ? "rgba(59,130,246,0.1)" : "#0D1929",
+              background: metric===m.key ? "rgba(59,130,246,0.1)" : "var(--surface)",
               color: metric===m.key ? "#38BDF8" : "#7A8499",
             }}>{m.label}</button>
           ))}
@@ -101,8 +101,8 @@ export default function AreaRanking({ rows, areas }) {
           <button key={p} onClick={() => setPropType(p)} style={{
             fontSize:11, padding:"3px 10px", borderRadius:20, cursor:"pointer",
             border: propType===p ? "1px solid #0A1628" : "1px solid #E8ECF2",
-            background: propType===p ? "#F1F5F9" : "#0D1929",
-            color: propType===p ? "#0D1929" : "#9AA0AE",
+            background: propType===p ? "var(--text-primary)" : "var(--surface)",
+            color: propType===p ? "var(--surface)" : "#9AA0AE",
           }}>{p === "all" ? "All types" : p}</button>
         ))}
       </div>
@@ -119,15 +119,15 @@ export default function AreaRanking({ rows, areas }) {
                 {i+1}
               </div>
               {/* Area name */}
-              <div style={{ width:148, fontSize:12, color:"#F1F5F9", flexShrink:0, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>
+              <div style={{ width:148, fontSize:12, color:"var(--text-primary)", flexShrink:0, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>
                 {a.area}
               </div>
               {/* Bar */}
-              <div style={{ flex:1, height:8, background:"#060E1A", borderRadius:4, overflow:"hidden" }}>
+              <div style={{ flex:1, height:8, background:"var(--bg)", borderRadius:4, overflow:"hidden" }}>
                 <div style={{ width:`${barW}%`, height:"100%", background:getColor(a,i), borderRadius:4, transition:"width 0.3s" }} />
               </div>
               {/* Value */}
-              <div style={{ width:90, fontSize:12, fontWeight:600, color: metric==="growth" && a.growth !== null ? (a.growth>=0 ? "#22C55E":"#A32D2D") : "#F1F5F9", textAlign:"right", flexShrink:0 }}>
+              <div style={{ width:90, fontSize:12, fontWeight:600, color: metric==="growth" && a.growth !== null ? (a.growth>=0 ? "#22C55E":"#A32D2D") : "var(--text-primary)", textAlign:"right", flexShrink:0 }}>
                 {fmtVal(a)}
               </div>
             </div>

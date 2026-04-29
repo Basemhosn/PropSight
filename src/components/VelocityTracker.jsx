@@ -34,12 +34,12 @@ function formatDateLabel(d) {
 const CustomTooltip = ({ active, payload, label, selectedAreas }) => {
   if (!active || !payload?.length) return null;
   return (
-    <div style={{ background: "#F1F5F9", color: "#0D1929", borderRadius: 8,
+    <div style={{ background: "var(--text-primary)", color: "var(--surface)", borderRadius: 8,
       padding: "10px 14px", fontSize: 12, minWidth: 180 }}>
       <div style={{ fontWeight: 600, marginBottom: 6 }}>{formatDateLabel(label)}</div>
       {payload.map(p => (
         <div key={p.dataKey} style={{ color: p.color, marginBottom: 2 }}>
-          {p.name}: <span style={{ color: "#0D1929", fontWeight: 600 }}>{fmtNum(p.value)} deals/day</span>
+          {p.name}: <span style={{ color: "var(--surface)", fontWeight: 600 }}>{fmtNum(p.value)} deals/day</span>
         </div>
       ))}
     </div>
@@ -116,12 +116,12 @@ export default function VelocityTracker({ rows, areas }) {
   };
 
   return (
-    <div style={{ background: "#0D1929", border: "1px solid #E8ECF2", borderRadius: 12, padding: "1.25rem" }}>
+    <div style={{ background: "var(--surface)", border: "1px solid #E8ECF2", borderRadius: 12, padding: "1.25rem" }}>
       {/* Header */}
       <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between",
         marginBottom: "1rem", flexWrap: "wrap", gap: 8 }}>
         <div>
-          <div style={{ fontSize: 13, fontWeight: 600, color: "#F1F5F9" }}>Transaction velocity</div>
+          <div style={{ fontSize: 13, fontWeight: 600, color: "var(--text-primary)" }}>Transaction velocity</div>
           <div style={{ fontSize: 11, color: "#9AA0AE", marginTop: 2 }}>
             Rolling average deals per day — shows market momentum
           </div>
@@ -131,8 +131,8 @@ export default function VelocityTracker({ rows, areas }) {
             <button key={t.k} onClick={() => setView(t.k)} style={{
               fontSize: 11, padding: "4px 10px", borderRadius: 6, cursor: "pointer", fontWeight: 500,
               border: view === t.k ? "1px solid #0A1628" : "1px solid #E8ECF2",
-              background: view === t.k ? "#F1F5F9" : "#0D1929",
-              color: view === t.k ? "#0D1929" : "#7A8499",
+              background: view === t.k ? "var(--text-primary)" : "var(--surface)",
+              color: view === t.k ? "var(--surface)" : "#7A8499",
             }}>{t.l}</button>
           ))}
           <div style={{ width: 1, background: "rgba(59,130,246,0.12)", margin: "0 2px" }} />
@@ -140,7 +140,7 @@ export default function VelocityTracker({ rows, areas }) {
             <button key={days} onClick={() => setWindow(days)} style={{
               fontSize: 11, padding: "4px 10px", borderRadius: 6, cursor: "pointer", fontWeight: 500,
               border: window === days ? "1px solid #185FA5" : "1px solid #E8ECF2",
-              background: window === days ? "rgba(59,130,246,0.1)" : "#0D1929",
+              background: window === days ? "rgba(59,130,246,0.1)" : "var(--surface)",
               color: window === days ? "#38BDF8" : "#7A8499",
             }}>{label}</button>
           ))}
@@ -151,12 +151,12 @@ export default function VelocityTracker({ rows, areas }) {
       <div style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0,1fr))", gap: 8, marginBottom: "1rem" }}>
         {momentum && (
           <>
-            <div style={{ background: "#060E1A", borderRadius: 8, padding: "0.75rem" }}>
+            <div style={{ background: "var(--bg)", borderRadius: 8, padding: "0.75rem" }}>
               <div style={{ fontSize: 10, color: "#9AA0AE", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 4 }}>Last 7 days avg</div>
-              <div style={{ fontSize: 18, fontWeight: 700, color: "#F1F5F9" }}>{fmtNum(momentum.recent)}</div>
+              <div style={{ fontSize: 18, fontWeight: 700, color: "var(--text-primary)" }}>{fmtNum(momentum.recent)}</div>
               <div style={{ fontSize: 10, color: "#9AA0AE" }}>deals / day</div>
             </div>
-            <div style={{ background: "#060E1A", borderRadius: 8, padding: "0.75rem" }}>
+            <div style={{ background: "var(--bg)", borderRadius: 8, padding: "0.75rem" }}>
               <div style={{ fontSize: 10, color: "#9AA0AE", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 4 }}>Momentum</div>
               <div style={{ fontSize: 18, fontWeight: 700, color: parseFloat(momentum.pct) >= 0 ? "#22C55E" : "#E24B4A" }}>
                 {parseFloat(momentum.pct) >= 0 ? "▲" : "▼"} {Math.abs(momentum.pct)}%
@@ -166,9 +166,9 @@ export default function VelocityTracker({ rows, areas }) {
           </>
         )}
         {peakDay && (
-          <div style={{ background: "#060E1A", borderRadius: 8, padding: "0.75rem" }}>
+          <div style={{ background: "var(--bg)", borderRadius: 8, padding: "0.75rem" }}>
             <div style={{ fontSize: 10, color: "#9AA0AE", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 4 }}>Peak day</div>
-            <div style={{ fontSize: 16, fontWeight: 700, color: "#F1F5F9" }}>{fmtNum(peakDay.count)}</div>
+            <div style={{ fontSize: 16, fontWeight: 700, color: "var(--text-primary)" }}>{fmtNum(peakDay.count)}</div>
             <div style={{ fontSize: 10, color: "#9AA0AE" }}>{peakDay.date}</div>
           </div>
         )}
@@ -182,7 +182,7 @@ export default function VelocityTracker({ rows, areas }) {
               fontSize: 10, padding: "3px 8px", borderRadius: 20, cursor: "pointer",
               fontWeight: selectedAreas.includes(area) ? 600 : 400,
               border: selectedAreas.includes(area) ? `1px solid ${AREA_COLORS[i % AREA_COLORS.length]}` : "1px solid #E8ECF2",
-              background: selectedAreas.includes(area) ? AREA_COLORS[i % AREA_COLORS.length] + "18" : "#0D1929",
+              background: selectedAreas.includes(area) ? AREA_COLORS[i % AREA_COLORS.length] + "18" : "var(--surface)",
               color: selectedAreas.includes(area) ? AREA_COLORS[i % AREA_COLORS.length] : "#7A8499",
               whiteSpace: "nowrap",
             }}>

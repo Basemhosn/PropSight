@@ -36,15 +36,15 @@ export default function LiveFeed({ recentRaw }) {
     };
   }, [rows]);
 
-  const inp = {background:'#070E1B',border:'1px solid rgba(59,130,246,0.15)',borderRadius:8,color:'#F1F5F9',fontSize:12,padding:'7px 10px',outline:'none',fontFamily:'system-ui'};
+  const inp = {background:'var(--bg-alt)',border:'1px solid rgba(59,130,246,0.15)',borderRadius:8,color:'var(--text-primary)',fontSize:12,padding:'7px 10px',outline:'none',fontFamily:'system-ui'};
 
   return (
-    <div style={{flex:1,display:'flex',flexDirection:'column',background:'#060E1A',fontFamily:'system-ui'}}>
+    <div style={{flex:1,display:'flex',flexDirection:'column',background:'var(--bg)',fontFamily:'system-ui'}}>
       <div style={{padding:'20px 28px',borderBottom:'1px solid rgba(59,130,246,0.08)'}}>
         <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:16}}>
           <div>
             <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:4}}>
-              <h1 style={{margin:0,fontSize:22,fontWeight:700,color:'#F1F5F9'}}>Live DLD Feed</h1>
+              <h1 style={{margin:0,fontSize:22,fontWeight:700,color:'var(--text-primary)'}}>Live DLD Feed</h1>
               <div style={{display:'flex',alignItems:'center',gap:6,background:'rgba(34,197,94,0.08)',border:'1px solid rgba(34,197,94,0.15)',borderRadius:20,padding:'4px 12px'}}>
                 <div style={{width:6,height:6,borderRadius:'50%',background:'#22C55E',boxShadow:'0 0 6px #22C55E'}}/>
                 <span style={{fontSize:11,fontWeight:600,color:'#22C55E'}}>LIVE</span>
@@ -55,9 +55,9 @@ export default function LiveFeed({ recentRaw }) {
         </div>
         {stats && (
           <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:12,marginBottom:16}}>
-            {[["Today's Txns",fmtNum(stats.todayCount),'#F1F5F9'],["Today's Value",fmtAED(stats.todayValue,true),'#38BDF8'],['Feed Value',fmtAED(stats.totalShown,true),'#F1F5F9'],['Avg Deal',fmtAED(stats.avg,true),'#22C55E']].map(([l,v,c],i)=>(
-              <div key={i} style={{background:'#0D1929',border:'1px solid rgba(255,255,255,0.06)',borderRadius:10,padding:'10px 14px'}}>
-                <div style={{fontSize:10,color:'#64748B',marginBottom:4,textTransform:'uppercase',letterSpacing:'0.05em'}}>{l}</div>
+            {[["Today's Txns",fmtNum(stats.todayCount),'var(--text-primary)'],["Today's Value",fmtAED(stats.todayValue,true),'#38BDF8'],['Feed Value',fmtAED(stats.totalShown,true),'var(--text-primary)'],['Avg Deal',fmtAED(stats.avg,true),'#22C55E']].map(([l,v,c],i)=>(
+              <div key={i} style={{background:'var(--surface)',border:'1px solid rgba(255,255,255,0.06)',borderRadius:10,padding:'10px 14px'}}>
+                <div style={{fontSize:10,color:'var(--text-muted)',marginBottom:4,textTransform:'uppercase',letterSpacing:'0.05em'}}>{l}</div>
                 <div style={{fontSize:15,fontWeight:700,color:c}}>{v}</div>
               </div>
             ))}
@@ -66,7 +66,7 @@ export default function LiveFeed({ recentRaw }) {
         <div style={{display:'flex',gap:8,flexWrap:'wrap',alignItems:'center'}}>
           <div style={{display:'flex',gap:6}}>
             {['all','Sale','Mortgage','Gift'].map(f=>(
-              <button key={f} onClick={()=>setFilter(f)} style={{padding:'6px 14px',borderRadius:20,border:'none',cursor:'pointer',fontSize:11,fontWeight:filter===f?600:400,fontFamily:'system-ui',background:filter===f?'linear-gradient(135deg,#1D4ED8,#38BDF8)':'rgba(59,130,246,0.06)',color:filter===f?'#fff':'#64748B'}}>{f==='all'?'All':f}</button>
+              <button key={f} onClick={()=>setFilter(f)} style={{padding:'6px 14px',borderRadius:20,border:'none',cursor:'pointer',fontSize:11,fontWeight:filter===f?600:400,fontFamily:'system-ui',background:filter===f?'linear-gradient(135deg,#1D4ED8,#38BDF8)':'rgba(59,130,246,0.06)',color:filter===f?'#fff':'var(--text-muted)'}}>{f==='all'?'All':f}</button>
             ))}
           </div>
           <select value={areaFilter} onChange={e=>setAreaFilter(e.target.value)} style={{...inp,cursor:'pointer'}}>
@@ -91,24 +91,24 @@ export default function LiveFeed({ recentRaw }) {
               <div key={r.n||i} style={{display:'grid',gridTemplateColumns:'90px 1fr 90px 70px 70px 80px 75px',padding:'11px 28px',borderBottom:'1px solid rgba(255,255,255,0.03)',background:isNew?'rgba(59,130,246,0.03)':'transparent'}}
                 onMouseEnter={e=>e.currentTarget.style.background='rgba(59,130,246,0.05)'}
                 onMouseLeave={e=>e.currentTarget.style.background=isNew?'rgba(59,130,246,0.03)':'transparent'}>
-                <div style={{fontSize:11,color:'#64748B',display:'flex',alignItems:'center',gap:5}}>
+                <div style={{fontSize:11,color:'var(--text-muted)',display:'flex',alignItems:'center',gap:5}}>
                   {isNew&&<div style={{width:5,height:5,borderRadius:'50%',background:'#22C55E',flexShrink:0}}/>}{r.d||'—'}
                 </div>
                 <div style={{minWidth:0,paddingRight:8}}>
-                  <div style={{fontSize:12,fontWeight:600,color:'#F1F5F9',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{r.j||'—'}</div>
+                  <div style={{fontSize:12,fontWeight:600,color:'var(--text-primary)',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{r.j||'—'}</div>
                   <div style={{fontSize:10,color:'#475569'}}>{niceArea(r.a||'')} {r.b?'· '+r.b:''}</div>
                 </div>
-                <div style={{fontSize:12,fontWeight:700,color:'#F1F5F9'}}>{r.v?fmtAED(r.v,true):'—'}</div>
+                <div style={{fontSize:12,fontWeight:700,color:'var(--text-primary)'}}>{r.v?fmtAED(r.v,true):'—'}</div>
                 <div><span style={{fontSize:9,fontWeight:600,padding:'2px 5px',borderRadius:20,background:r.r==='Off'?'rgba(59,130,246,0.1)':'rgba(34,197,94,0.1)',color:r.r==='Off'?'#38BDF8':'#22C55E'}}>{r.r==='Off'?'Off-Plan':'Ready'}</span></div>
                 <div><span style={{fontSize:9,fontWeight:600,padding:'2px 5px',borderRadius:20,background:tc.bg,color:tc.color}}>{r.t||'Sale'}</span></div>
-                <div style={{fontSize:11,color:'#64748B'}}>{r.s?fmtNum(Math.round(r.s*10.764))+' sqft':'—'}</div>
+                <div style={{fontSize:11,color:'var(--text-muted)'}}>{r.s?fmtNum(Math.round(r.s*10.764))+' sqft':'—'}</div>
                 <div style={{fontSize:11,color:'#38BDF8'}}>{ppsqft?'AED '+fmtNum(ppsqft):'—'}</div>
               </div>
             );
           })}
           {visibleCount<rows.length && (
             <div style={{textAlign:'center',padding:20}}>
-              <button onClick={()=>setVisibleCount(c=>c+50)} style={{padding:'10px 24px',borderRadius:10,border:'1px solid rgba(59,130,246,0.2)',background:'rgba(59,130,246,0.06)',color:'#64748B',cursor:'pointer',fontSize:13,fontFamily:'system-ui'}}>Load more ({fmtNum(rows.length-visibleCount)} remaining)</button>
+              <button onClick={()=>setVisibleCount(c=>c+50)} style={{padding:'10px 24px',borderRadius:10,border:'1px solid rgba(59,130,246,0.2)',background:'rgba(59,130,246,0.06)',color:'var(--text-muted)',cursor:'pointer',fontSize:13,fontFamily:'system-ui'}}>Load more ({fmtNum(rows.length-visibleCount)} remaining)</button>
             </div>
           )}
         </>}

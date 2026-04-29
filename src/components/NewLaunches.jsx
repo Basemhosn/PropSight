@@ -34,7 +34,7 @@ function inferStatus(regSplit) {
 
 const STATUS_COLOR = {
   'Ready':{ bg:'rgba(34,197,94,0.2)', color:'#22C55E', border:'rgba(34,197,94,0.4)' },
-  'Under Construction':{ bg:'rgba(59,130,246,0.15)', color:'#94A3B8', border:'rgba(59,130,246,0.2)' },
+  'Under Construction':{ bg:'rgba(59,130,246,0.15)', color:'var(--text-secondary)', border:'var(--border-strong)' },
   'Initial Stage':{ bg:'rgba(245,158,11,0.15)', color:'#F59E0B', border:'rgba(245,158,11,0.2)' },
 };
 
@@ -76,38 +76,38 @@ export default function NewLaunches({ projectsData }) {
     return true;
   }), [projects, search, selectedDev, selectedStatus]);
 
-  if (!projectsData) return <div style={{flex:1,display:'flex',alignItems:'center',justifyContent:'center',background:'#060E1A',color:'#64748B',fontFamily:'system-ui'}}>Loading...</div>;
+  if (!projectsData) return <div style={{flex:1,display:'flex',alignItems:'center',justifyContent:'center',background:'var(--bg)',color:'var(--text-muted)',fontFamily:'system-ui'}}>Loading...</div>;
 
   return (
-    <div style={{flex:1,overflowY:'auto',background:'#060E1A',fontFamily:'system-ui'}}>
+    <div style={{flex:1,overflowY:'auto',background:'var(--bg)',fontFamily:'system-ui'}}>
 
       <div style={{padding:'32px 28px 0',textAlign:'center',marginBottom:28}}>
-        <h1 style={{margin:0,fontSize:36,fontWeight:800,color:'#F1F5F9',marginBottom:8}}>
+        <h1 style={{margin:0,fontSize:36,fontWeight:800,color:'var(--text-primary)',marginBottom:8}}>
           New <span style={{background:'linear-gradient(135deg,#22C55E,#38BDF8)',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent'}}>Launches</span>
         </h1>
-        <p style={{fontSize:14,color:'#64748B',margin:0}}>100 curated projects from Dubai's top developers — updated daily from DLD data.</p>
+        <p style={{fontSize:14,color:'var(--text-muted)',margin:0}}>100 curated projects from Dubai's top developers — updated daily from DLD data.</p>
       </div>
 
       <div style={{padding:'0 28px 20px'}}>
         <div style={{display:'flex',gap:10,marginBottom:14}}>
-          <div style={{flex:1,display:'flex',alignItems:'center',gap:10,background:'#0D1929',border:'1px solid rgba(59,130,246,0.15)',borderRadius:10,padding:'10px 16px'}}>
+          <div style={{flex:1,display:'flex',alignItems:'center',gap:10,background:'var(--surface)',border:'1px solid rgba(59,130,246,0.15)',borderRadius:10,padding:'10px 16px'}}>
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#475569" strokeWidth="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
             <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search projects or areas..."
-              style={{background:'none',border:'none',outline:'none',color:'#94A3B8',fontSize:14,flex:1,fontFamily:'system-ui'}}/>
+              style={{background:'none',border:'none',outline:'none',color:'var(--text-secondary)',fontSize:14,flex:1,fontFamily:'system-ui'}}/>
           </div>
         </div>
         <div style={{display:'flex',gap:8,flexWrap:'wrap',alignItems:'center',marginBottom:10}}>
           <span style={{fontSize:11,color:'#475569'}}>Developer:</span>
           {developers.slice(0,9).map(dev=>(
-            <button key={dev} onClick={()=>setSelectedDev(dev)} style={{padding:'5px 14px',borderRadius:20,border:'none',cursor:'pointer',fontSize:11,fontWeight:selectedDev===dev?600:400,fontFamily:'system-ui',background:selectedDev===dev?'linear-gradient(135deg,#16A34A,#22C55E)':'rgba(59,130,246,0.06)',color:selectedDev===dev?'#fff':'#64748B'}}>{dev}</button>
+            <button key={dev} onClick={()=>setSelectedDev(dev)} style={{padding:'5px 14px',borderRadius:20,border:'none',cursor:'pointer',fontSize:11,fontWeight:selectedDev===dev?600:400,fontFamily:'system-ui',background:selectedDev===dev?'linear-gradient(135deg,#16A34A,#22C55E)':'rgba(59,130,246,0.06)',color:selectedDev===dev?'#fff':'var(--text-muted)'}}>{dev}</button>
           ))}
         </div>
         <div style={{display:'flex',gap:8,flexWrap:'wrap',alignItems:'center'}}>
           <span style={{fontSize:11,color:'#475569'}}>Status:</span>
           {['All','Ready','Under Construction','Initial Stage'].map(s=>(
-            <button key={s} onClick={()=>setSelectedStatus(s)} style={{padding:'5px 14px',borderRadius:20,cursor:'pointer',fontSize:11,fontWeight:selectedStatus===s?600:400,fontFamily:'system-ui',background:selectedStatus===s?'rgba(59,130,246,0.2)':'rgba(59,130,246,0.06)',color:selectedStatus===s?'#38BDF8':'#64748B',border:selectedStatus===s?'1px solid rgba(59,130,246,0.3)':'1px solid rgba(59,130,246,0.1)'}}>{s}</button>
+            <button key={s} onClick={()=>setSelectedStatus(s)} style={{padding:'5px 14px',borderRadius:20,cursor:'pointer',fontSize:11,fontWeight:selectedStatus===s?600:400,fontFamily:'system-ui',background:selectedStatus===s?'var(--border-strong)':'rgba(59,130,246,0.06)',color:selectedStatus===s?'#38BDF8':'var(--text-muted)',border:selectedStatus===s?'1px solid rgba(59,130,246,0.3)':'1px solid rgba(59,130,246,0.1)'}}>{s}</button>
           ))}
-          <span style={{fontSize:11,color:'#1E3A5F',marginLeft:8}}>{filtered.length} projects</span>
+          <span style={{fontSize:11,color:'var(--text-faint)',marginLeft:8}}>{filtered.length} projects</span>
         </div>
       </div>
 
@@ -115,7 +115,7 @@ export default function NewLaunches({ projectsData }) {
         {filtered.map(project => {
           const sc = STATUS_COLOR[project.status]||STATUS_COLOR['Initial Stage'];
           return (
-            <div key={project.key} onClick={()=>setSelected(project)} style={{background:'#0D1929',border:'1px solid rgba(255,255,255,0.06)',borderRadius:16,overflow:'hidden',cursor:'pointer',transition:'all 0.2s'}}
+            <div key={project.key} onClick={()=>setSelected(project)} style={{background:'var(--surface)',border:'1px solid rgba(255,255,255,0.06)',borderRadius:16,overflow:'hidden',cursor:'pointer',transition:'all 0.2s'}}
               onMouseEnter={e=>{e.currentTarget.style.transform='translateY(-4px)';e.currentTarget.style.border='1px solid rgba(59,130,246,0.3)';e.currentTarget.style.boxShadow='0 8px 32px rgba(0,0,0,0.3)';}}
               onMouseLeave={e=>{e.currentTarget.style.transform='translateY(0)';e.currentTarget.style.border='1px solid rgba(255,255,255,0.06)';e.currentTarget.style.boxShadow='none';}}>
               <div style={{position:'relative',height:190,overflow:'hidden'}}>
@@ -132,9 +132,9 @@ export default function NewLaunches({ projectsData }) {
               </div>
               <div style={{padding:'14px 16px'}}>
                 <div style={{fontSize:10,fontWeight:700,color:'#22C55E',textTransform:'uppercase',letterSpacing:'0.06em',marginBottom:4}}>{project.developer}</div>
-                <div style={{fontSize:14,fontWeight:700,color:'#F1F5F9',marginBottom:6,lineHeight:1.3}}>{project.name.length>42?project.name.slice(0,42)+'…':project.name}</div>
+                <div style={{fontSize:14,fontWeight:700,color:'var(--text-primary)',marginBottom:6,lineHeight:1.3}}>{project.name.length>42?project.name.slice(0,42)+'…':project.name}</div>
                 <div style={{display:'flex',justifyContent:'space-between',alignItems:'center'}}>
-                  <div style={{display:'flex',alignItems:'center',gap:4,fontSize:12,color:'#64748B'}}>
+                  <div style={{display:'flex',alignItems:'center',gap:4,fontSize:12,color:'var(--text-muted)'}}>
                     <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
                     {project.areaDisplay}
                   </div>
@@ -148,7 +148,7 @@ export default function NewLaunches({ projectsData }) {
 
       {selected && (
         <div style={{position:'fixed',inset:0,background:'rgba(0,0,0,0.75)',zIndex:2000,display:'flex',alignItems:'center',justifyContent:'center',padding:16}} onClick={()=>setSelected(null)}>
-          <div style={{background:'#0D1929',border:'1px solid rgba(59,130,246,0.2)',borderRadius:20,width:'100%',maxWidth:520,maxHeight:'85vh',overflow:'hidden',display:'flex',flexDirection:'column'}} onClick={e=>e.stopPropagation()}>
+          <div style={{background:'var(--surface)',border:'1px solid rgba(59,130,246,0.2)',borderRadius:20,width:'100%',maxWidth:520,maxHeight:'85vh',overflow:'hidden',display:'flex',flexDirection:'column'}} onClick={e=>e.stopPropagation()}>
             <div style={{position:'relative',height:220,flexShrink:0}}>
               <img src={selected.image} alt={selected.name} style={{width:'100%',height:'100%',objectFit:'cover'}}
                 onError={e=>{e.target.src='https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=800&q=80';}}/>
@@ -160,14 +160,14 @@ export default function NewLaunches({ projectsData }) {
               </div>
             </div>
             <div style={{padding:24,overflowY:'auto'}}>
-              <div style={{display:'flex',alignItems:'center',gap:6,fontSize:13,color:'#64748B',marginBottom:20}}>
+              <div style={{display:'flex',alignItems:'center',gap:6,fontSize:13,color:'var(--text-muted)',marginBottom:20}}>
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
                 {selected.areaDisplay}, Dubai, UAE
               </div>
               <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10,marginBottom:20}}>
-                {[['Starting Price',selected.minPrice?fmtAED(selected.minPrice,true):'On Request','#F1F5F9'],['Max Price',fmtAED(selected.maxPrice,true),'#F1F5F9'],['Avg Deal',fmtAED(selected.avgPrice,true),'#38BDF8'],['Completion',selected.completion,'#22C55E'],['Status',selected.status,STATUS_COLOR[selected.status]?.color||'#94A3B8'],['Transactions',fmtNum(selected.count),'#F1F5F9']].map(([l,v,c],i)=>(
+                {[['Starting Price',selected.minPrice?fmtAED(selected.minPrice,true):'On Request','var(--text-primary)'],['Max Price',fmtAED(selected.maxPrice,true),'var(--text-primary)'],['Avg Deal',fmtAED(selected.avgPrice,true),'#38BDF8'],['Completion',selected.completion,'#22C55E'],['Status',selected.status,STATUS_COLOR[selected.status]?.color||'var(--text-secondary)'],['Transactions',fmtNum(selected.count),'var(--text-primary)']].map(([l,v,c],i)=>(
                   <div key={i} style={{background:'rgba(59,130,246,0.06)',border:'1px solid rgba(59,130,246,0.1)',borderRadius:10,padding:'12px'}}>
-                    <div style={{fontSize:10,color:'#64748B',marginBottom:4,textTransform:'uppercase',letterSpacing:'0.05em'}}>{l}</div>
+                    <div style={{fontSize:10,color:'var(--text-muted)',marginBottom:4,textTransform:'uppercase',letterSpacing:'0.05em'}}>{l}</div>
                     <div style={{fontSize:14,fontWeight:700,color:c}}>{v}</div>
                   </div>
                 ))}

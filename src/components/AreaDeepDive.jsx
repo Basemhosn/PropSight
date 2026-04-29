@@ -21,9 +21,9 @@ function expandRow(r) {
 
 const COLORS = ["#38BDF8","#22C55E","#D85A30","#BA7517","#993556","#534AB7"];
 
-function KPI({ label, value, sub, color="#F1F5F9" }) {
+function KPI({ label, value, sub, color="var(--text-primary)" }) {
   return (
-    <div style={{ background:"#0D1929", borderRadius:8, padding:"0.75rem 1rem" }}>
+    <div style={{ background:"var(--surface)", borderRadius:8, padding:"0.75rem 1rem" }}>
       <div style={{ fontSize:11, color:"#9AA0AE", marginBottom:4 }}>{label}</div>
       <div style={{ fontSize:20, fontWeight:700, color }}>{value}</div>
       {sub && <div style={{ fontSize:11, color:"#9AA0AE", marginTop:2 }}>{sub}</div>}
@@ -72,10 +72,10 @@ export default function AreaDeepDive({ areaData, areaList }) {
 
       {/* Area selector */}
       <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:"1.5rem", flexWrap:"wrap" }}>
-        <div style={{ fontSize:20, fontWeight:700, color:"#F1F5F9" }}>Area deep-dive</div>
+        <div style={{ fontSize:20, fontWeight:700, color:"var(--text-primary)" }}>Area deep-dive</div>
         <select value={selected} onChange={e => { setSelected(e.target.value); setTxnPage(0); }}
           style={{ fontSize:14, fontWeight:600, padding:"8px 14px", borderRadius:8,
-            border:"1px solid #E8ECF2", background:"#0D1929", color:"#F1F5F9", cursor:"pointer", minWidth:220 }}>
+            border:"1px solid #E8ECF2", background:"var(--surface)", color:"var(--text-primary)", cursor:"pointer", minWidth:220 }}>
           {areaList.map(a => <option key={a} value={a}>{a}</option>)}
         </select>
         <div style={{ fontSize:12, color:"#9AA0AE" }}>2020–2026 data</div>
@@ -100,7 +100,7 @@ export default function AreaDeepDive({ areaData, areaList }) {
               <XAxis dataKey="month" tick={{fontSize:10,fill:"#9AA0AE"}} axisLine={false} tickLine={false}
                 tickFormatter={m => { const [y,mo]=m.split('-'); return `${['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][+mo-1]}'${y.slice(2)}`; }} />
               <YAxis tick={{fontSize:10,fill:"#9AA0AE"}} axisLine={false} tickLine={false} tickFormatter={v=>fmtNum(v)} width={50}/>
-              <Tooltip formatter={(v,n)=>[fmtNum(v),'Transactions']} labelFormatter={l=>l} contentStyle={{background:"#F1F5F9",border:"none",borderRadius:8,color:"#0D1929",fontSize:12}} />
+              <Tooltip formatter={(v,n)=>[fmtNum(v),'Transactions']} labelFormatter={l=>l} contentStyle={{background:"var(--text-primary)",border:"none",borderRadius:8,color:"var(--surface)",fontSize:12}} />
               <Bar dataKey="count" fill="#38BDF8" radius={[3,3,0,0]} maxBarSize={20} />
             </BarChart>
           </ResponsiveContainer>
@@ -112,7 +112,7 @@ export default function AreaDeepDive({ areaData, areaList }) {
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(59,130,246,0.08)" />
               <XAxis dataKey="year" tick={{fontSize:11,fill:"#9AA0AE"}} axisLine={false} tickLine={false} />
               <YAxis tick={{fontSize:10,fill:"#9AA0AE"}} axisLine={false} tickLine={false} tickFormatter={v=>fmtAED(v,true)} width={72} />
-              <Tooltip formatter={(v)=>[fmtAED(v,true)+'/m²','Price']} contentStyle={{background:"#F1F5F9",border:"none",borderRadius:8,color:"#0D1929",fontSize:12}} />
+              <Tooltip formatter={(v)=>[fmtAED(v,true)+'/m²','Price']} contentStyle={{background:"var(--text-primary)",border:"none",borderRadius:8,color:"var(--surface)",fontSize:12}} />
               <Line type="monotone" dataKey="ppsqm" stroke="#22C55E" strokeWidth={2.5} dot={{r:4,fill:"#22C55E"}} activeDot={{r:6}} />
             </LineChart>
           </ResponsiveContainer>
@@ -127,8 +127,8 @@ export default function AreaDeepDive({ areaData, areaList }) {
               <Pie data={typeData} dataKey="value" nameKey="name" cx="50%" cy="45%" outerRadius={55} labelLine={false} fontSize={10}>
                 {typeData.map((_,i) => <Cell key={i} fill={COLORS[i%COLORS.length]} />)}
               </Pie>
-              <Tooltip formatter={(v)=>[fmtNum(v),'Deals']} contentStyle={{background:"#0A1628",border:"1px solid rgba(59,130,246,0.2)",borderRadius:8,color:"#F1F5F9",fontSize:11}} />
-              <Legend iconSize={8} iconType="circle" formatter={(value)=>value} wrapperStyle={{fontSize:11,color:'#94A3B8'}}/>
+              <Tooltip formatter={(v)=>[fmtNum(v),'Deals']} contentStyle={{background:"#0A1628",border:"1px solid rgba(59,130,246,0.2)",borderRadius:8,color:"var(--text-primary)",fontSize:11}} />
+              <Legend iconSize={8} iconType="circle" formatter={(value)=>value} wrapperStyle={{fontSize:11,color:'var(--text-secondary)'}}/>
             </PieChart>
           </ResponsiveContainer>
         </ChartCard>
@@ -150,7 +150,7 @@ export default function AreaDeepDive({ areaData, areaList }) {
             <BarChart data={regData} layout="vertical">
               <XAxis type="number" hide />
               <YAxis type="category" dataKey="name" tick={{fontSize:11,fill:"#4A5568"}} axisLine={false} tickLine={false} width={70} />
-              <Tooltip formatter={(v)=>[fmtNum(v),'Deals']} contentStyle={{background:"#F1F5F9",border:"none",borderRadius:8,color:"#0D1929",fontSize:12}} />
+              <Tooltip formatter={(v)=>[fmtNum(v),'Deals']} contentStyle={{background:"var(--text-primary)",border:"none",borderRadius:8,color:"var(--surface)",fontSize:12}} />
               <Bar dataKey="value" radius={[0,4,4,0]} maxBarSize={14}>
                 {regData.map((e,i)=><Cell key={i} fill={i===0?"#38BDF8":"#22C55E"} />)}
               </Bar>
@@ -163,7 +163,7 @@ export default function AreaDeepDive({ areaData, areaList }) {
             <BarChart data={d.rooms?.slice(0,6)||[]} layout="vertical" margin={{left:0,right:50,top:0,bottom:0}}>
               <XAxis type="number" hide />
               <YAxis type="category" dataKey="rooms" tick={{fontSize:11,fill:"#4A5568"}} axisLine={false} tickLine={false} width={60} />
-              <Tooltip formatter={(v,n)=>n==="count"?[fmtNum(v),'Deals']:[fmtAED(v,true),'Avg price']} contentStyle={{background:"#F1F5F9",border:"none",borderRadius:8,color:"#0D1929",fontSize:12}} />
+              <Tooltip formatter={(v,n)=>n==="count"?[fmtNum(v),'Deals']:[fmtAED(v,true),'Avg price']} contentStyle={{background:"var(--text-primary)",border:"none",borderRadius:8,color:"var(--surface)",fontSize:12}} />
               <Bar dataKey="count" fill="#534AB7" radius={[0,4,4,0]} maxBarSize={14}
                 label={{position:"right",fontSize:10,fill:"#7A8499",formatter:v=>fmtNum(v)}} />
             </BarChart>
@@ -184,9 +184,9 @@ export default function AreaDeepDive({ areaData, areaList }) {
             </thead>
             <tbody>
               {(d.projects||[]).slice(0,10).map((p,i) => (
-                <tr key={i} style={{ borderBottom:"1px solid #F4F6FA", background: i%2===0?"#0D1929":"rgba(59,130,246,0.06)" }}>
+                <tr key={i} style={{ borderBottom:"1px solid #F4F6FA", background: i%2===0?"var(--surface)":"rgba(59,130,246,0.06)" }}>
                   <td style={{ padding:"7px 8px", color:"#C5CAD6", fontWeight:700 }}>{i+1}</td>
-                  <td style={{ padding:"7px 8px", color:"#F1F5F9", fontWeight:500 }}>{p.project}</td>
+                  <td style={{ padding:"7px 8px", color:"var(--text-primary)", fontWeight:500 }}>{p.project}</td>
                   <td style={{ padding:"7px 8px", color:"#4A5568" }}>{fmtNum(p.count)}</td>
                   <td style={{ padding:"7px 8px", color:"#38BDF8", fontWeight:600 }}>{fmtAED(p.total,true)}</td>
                   <td style={{ padding:"7px 8px", color:"#4A5568" }}>{fmtAED(p.avg,true)}</td>
@@ -198,15 +198,15 @@ export default function AreaDeepDive({ areaData, areaList }) {
       </ChartCard>
 
       {/* Recent transactions */}
-      <div style={{ marginTop:"1.25rem", background:"#0D1929", border:"1px solid #E8ECF2", borderRadius:12, padding:"1.25rem" }}>
+      <div style={{ marginTop:"1.25rem", background:"var(--surface)", border:"1px solid #E8ECF2", borderRadius:12, padding:"1.25rem" }}>
         <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:"1rem", flexWrap:"wrap", gap:8 }}>
           <div>
-            <div style={{ fontSize:13, fontWeight:600, color:"#F1F5F9" }}>Recent transactions</div>
+            <div style={{ fontSize:13, fontWeight:600, color:"var(--text-primary)" }}>Recent transactions</div>
             <div style={{ fontSize:11, color:"#9AA0AE", marginTop:2 }}>{fmtNum(filteredTxns.length)} records</div>
           </div>
           <input value={txnSearch} onChange={e=>{setTxnSearch(e.target.value);setTxnPage(0);}}
             placeholder="Search project, rooms…"
-            style={{ fontSize:12, padding:"7px 12px", borderRadius:8, border:"1px solid #E8ECF2", width:220, color:"#F1F5F9", background:"#0D1929", outline:"none" }} />
+            style={{ fontSize:12, padding:"7px 12px", borderRadius:8, border:"1px solid #E8ECF2", width:220, color:"var(--text-primary)", background:"var(--surface)", outline:"none" }} />
         </div>
         <div style={{ overflowX:"auto" }}>
           <table style={{ width:"100%", borderCollapse:"collapse", fontSize:12 }}>
@@ -220,7 +220,7 @@ export default function AreaDeepDive({ areaData, areaList }) {
             <tbody>
               {pageTxns.map((r,i) => (
                 <tr key={i} onClick={()=>setDetailRow(r)} style={{ borderBottom:"1px solid #F4F6FA", cursor:"pointer",
-                  background: detailRow===r?"rgba(59,130,246,0.1)":i%2===0?"#0D1929":"rgba(59,130,246,0.06)" }}>
+                  background: detailRow===r?"rgba(59,130,246,0.1)":i%2===0?"var(--surface)":"rgba(59,130,246,0.06)" }}>
                   <td style={{ padding:"7px 8px", color:"#7A8499", whiteSpace:"nowrap" }}>
                     {r.dateObj ? r.dateObj.toLocaleDateString("en-AE",{day:"2-digit",month:"short",year:"numeric"}) : r.date}
                   </td>
@@ -232,7 +232,7 @@ export default function AreaDeepDive({ areaData, areaList }) {
                     </span>
                   </td>
                   <td style={{ padding:"7px 8px", color:"#4A5568" }}>{r.prop_type||"—"}</td>
-                  <td style={{ padding:"7px 8px", color:"#F1F5F9", fontWeight:600 }}>{fmtAED(r.amount,true)}</td>
+                  <td style={{ padding:"7px 8px", color:"var(--text-primary)", fontWeight:600 }}>{fmtAED(r.amount,true)}</td>
                   <td style={{ padding:"7px 8px", color:"#7A8499" }}>{r.txn_size>0?fmtNum(r.txn_size)+"m²":"—"}</td>
                   <td style={{ padding:"7px 8px", color:"#7A8499" }}>{r.rooms||"—"}</td>
                   <td style={{ padding:"7px 8px" }}>
@@ -259,7 +259,7 @@ export default function AreaDeepDive({ areaData, areaList }) {
                               i===2?()=>setTxnPage(p=>Math.min(totalPages-1,p+1)):()=>setTxnPage(totalPages-1);
               return <button key={label} onClick={onClick} disabled={disabled} style={{
                 fontSize:11,padding:"4px 10px",borderRadius:6,border:"1px solid #E8ECF2",
-                background:disabled?"#060E1A":"#0D1929",color:disabled?"#C5CAD6":"#4A5568",cursor:disabled?"default":"pointer"
+                background:disabled?"var(--bg)":"var(--surface)",color:disabled?"#C5CAD6":"#4A5568",cursor:disabled?"default":"pointer"
               }}>{label}</button>;
             })}
           </div>
@@ -268,10 +268,10 @@ export default function AreaDeepDive({ areaData, areaList }) {
 
       {/* Detail drawer */}
       {detailRow && (
-        <div style={{ position:"fixed",right:0,top:0,bottom:0,width:340,background:"#0D1929",
+        <div style={{ position:"fixed",right:0,top:0,bottom:0,width:340,background:"var(--surface)",
           boxShadow:"-4px 0 24px rgba(0,0,0,0.12)",zIndex:200,overflowY:"auto",padding:"1.5rem" }}>
           <div style={{ display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"1.5rem" }}>
-            <div style={{ fontSize:14,fontWeight:700,color:"#F1F5F9" }}>Transaction detail</div>
+            <div style={{ fontSize:14,fontWeight:700,color:"var(--text-primary)" }}>Transaction detail</div>
             <button onClick={()=>setDetailRow(null)} style={{ background:"none",border:"none",fontSize:20,cursor:"pointer",color:"#7A8499" }}>×</button>
           </div>
           {[
@@ -290,7 +290,7 @@ export default function AreaDeepDive({ areaData, areaList }) {
           ].map(([label,value])=>(
             <div key={label} style={{ display:"flex",justifyContent:"space-between",padding:"10px 0",borderBottom:"1px solid #F4F6FA",gap:16 }}>
               <div style={{ fontSize:12,color:"#7A8499",flexShrink:0 }}>{label}</div>
-              <div style={{ fontSize:12,color:"#F1F5F9",fontWeight:500,textAlign:"right" }}>{value}</div>
+              <div style={{ fontSize:12,color:"var(--text-primary)",fontWeight:500,textAlign:"right" }}>{value}</div>
             </div>
           ))}
         </div>

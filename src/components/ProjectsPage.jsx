@@ -54,27 +54,27 @@ export default function ProjectsPage({ projectsData, onProjectClick }) {
       {/* Header + filters */}
       <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:"1.5rem", flexWrap:"wrap" }}>
         <div style={{ flex:1, minWidth:200 }}>
-          <div style={{ fontSize:20, fontWeight:700, color:"#F1F5F9" }}>Projects</div>
+          <div style={{ fontSize:20, fontWeight:700, color:"var(--text-primary)" }}>Projects</div>
           <div style={{ fontSize:12, color:"#9AA0AE", marginTop:2 }}>
             {projects.length} of 100 top projects · 2020–2026
           </div>
         </div>
 
         {/* Search */}
-        <div style={{ display:"flex", alignItems:"center", gap:8, background:"#0D1929",
+        <div style={{ display:"flex", alignItems:"center", gap:8, background:"var(--surface)",
           border:"1px solid #E8ECF2", borderRadius:8, padding:"6px 12px", minWidth:240 }}>
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9AA0AE" strokeWidth="2">
             <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
           </svg>
           <input value={search} onChange={e=>setSearch(e.target.value)}
             placeholder="Search project or area…"
-            style={{ border:"none", outline:"none", fontSize:13, color:"#F1F5F9", background:"transparent", width:"100%" }} />
+            style={{ border:"none", outline:"none", fontSize:13, color:"var(--text-primary)", background:"transparent", width:"100%" }} />
           {search && <button onClick={()=>setSearch("")} style={{ background:"none",border:"none",cursor:"pointer",color:"#9AA0AE",fontSize:16,lineHeight:1 }}>×</button>}
         </div>
 
         {/* Reg filter */}
         <select value={filterReg} onChange={e=>setFilterReg(e.target.value)}
-          style={{ fontSize:12, padding:"7px 10px", borderRadius:8, border:"1px solid #E8ECF2", background:"#0D1929", color:"#F1F5F9" }}>
+          style={{ fontSize:12, padding:"7px 10px", borderRadius:8, border:"1px solid #E8ECF2", background:"var(--surface)", color:"var(--text-primary)" }}>
           <option value="">All projects</option>
           <option value="offplan">Mostly off-plan</option>
           <option value="ready">Mostly ready</option>
@@ -82,7 +82,7 @@ export default function ProjectsPage({ projectsData, onProjectClick }) {
 
         {/* Sort */}
         <select value={sortBy} onChange={e=>setSortBy(e.target.value)}
-          style={{ fontSize:12, padding:"7px 10px", borderRadius:8, border:"1px solid #E8ECF2", background:"#0D1929", color:"#F1F5F9" }}>
+          style={{ fontSize:12, padding:"7px 10px", borderRadius:8, border:"1px solid #E8ECF2", background:"var(--surface)", color:"var(--text-primary)" }}>
           <option value="total">Sort: Total value</option>
           <option value="count">Sort: Transactions</option>
           <option value="avg">Sort: Avg deal</option>

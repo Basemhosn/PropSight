@@ -25,8 +25,8 @@ export default function DealAnalyzer({ areaData, projectsData }) {
   const [error, setError] = useState('');
 
   const areas = areaData ? Object.keys(areaData).map(k=>({key:k,label:niceArea(k)})) : [];
-  const inp = {width:'100%',padding:'10px 12px',borderRadius:8,boxSizing:'border-box',background:'#070E1B',border:'1px solid rgba(59,130,246,0.15)',color:'#F1F5F9',fontSize:13,outline:'none',fontFamily:'system-ui'};
-  const lbl = {fontSize:12,color:'#64748B',marginBottom:5,display:'block',fontWeight:500};
+  const inp = {width:'100%',padding:'10px 12px',borderRadius:8,boxSizing:'border-box',background:'var(--bg-alt)',border:'1px solid rgba(59,130,246,0.15)',color:'var(--text-primary)',fontSize:13,outline:'none',fontFamily:'system-ui'};
+  const lbl = {fontSize:12,color:'var(--text-muted)',marginBottom:5,display:'block',fontWeight:500};
 
   const analyze = async () => {
     setLoading(true); setError(''); setResult(null);
@@ -100,26 +100,26 @@ ${mode==='buy'?
   };
 
   return (
-    <div style={{flex:1,overflowY:'auto',background:'#060E1A',fontFamily:'system-ui',padding:'24px 28px'}}>
+    <div style={{flex:1,overflowY:'auto',background:'var(--bg)',fontFamily:'system-ui',padding:'24px 28px'}}>
       <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:24}}>
         <div>
-          <h1 style={{margin:0,fontSize:22,fontWeight:700,color:'#F1F5F9',marginBottom:4}}>Deal Analyzer</h1>
+          <h1 style={{margin:0,fontSize:22,fontWeight:700,color:'var(--text-primary)',marginBottom:4}}>Deal Analyzer</h1>
           <div style={{fontSize:13,color:'#475569'}}>AI-powered analysis using live DLD market data</div>
         </div>
-        <div style={{display:'flex',gap:0,background:'#0D1929',border:'1px solid rgba(59,130,246,0.15)',borderRadius:12,padding:4}}>
+        <div style={{display:'flex',gap:0,background:'var(--surface)',border:'1px solid rgba(59,130,246,0.15)',borderRadius:12,padding:4}}>
           {[['buy','🔍 Buying'],['sell','💰 Selling']].map(([m,label])=>(
-            <button key={m} onClick={()=>{setMode(m);setResult(null);}} style={{padding:'9px 22px',borderRadius:9,border:'none',cursor:'pointer',fontSize:13,fontWeight:mode===m?700:400,fontFamily:'system-ui',background:mode===m?m==='buy'?'linear-gradient(135deg,#1D4ED8,#38BDF8)':'linear-gradient(135deg,#16A34A,#22C55E)':'transparent',color:mode===m?'#fff':'#64748B',transition:'all 0.2s'}}>{label}</button>
+            <button key={m} onClick={()=>{setMode(m);setResult(null);}} style={{padding:'9px 22px',borderRadius:9,border:'none',cursor:'pointer',fontSize:13,fontWeight:mode===m?700:400,fontFamily:'system-ui',background:mode===m?m==='buy'?'linear-gradient(135deg,#1D4ED8,#38BDF8)':'linear-gradient(135deg,#16A34A,#22C55E)':'transparent',color:mode===m?'#fff':'var(--text-muted)',transition:'all 0.2s'}}>{label}</button>
           ))}
         </div>
       </div>
 
       <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:20}}>
-        <div style={{background:'#0D1929',border:'1px solid rgba(255,255,255,0.06)',borderRadius:14,padding:24}}>
-          <div style={{fontSize:14,fontWeight:600,color:'#F1F5F9',marginBottom:16}}>Property Details</div>
+        <div style={{background:'var(--surface)',border:'1px solid rgba(255,255,255,0.06)',borderRadius:14,padding:24}}>
+          <div style={{fontSize:14,fontWeight:600,color:'var(--text-primary)',marginBottom:16}}>Property Details</div>
 
-          <div style={{display:'flex',gap:6,marginBottom:16,background:'#070E1B',borderRadius:10,padding:4,width:'fit-content'}}>
+          <div style={{display:'flex',gap:6,marginBottom:16,background:'var(--bg-alt)',borderRadius:10,padding:4,width:'fit-content'}}>
             {[['manual','Enter Details'],['url','Paste URL']].map(([id,label])=>(
-              <button key={id} onClick={()=>setTab(id)} style={{padding:'7px 16px',borderRadius:8,border:'none',cursor:'pointer',fontSize:12,fontFamily:'system-ui',fontWeight:tab===id?600:400,background:tab===id?'linear-gradient(135deg,#1D4ED8,#38BDF8)':'transparent',color:tab===id?'#fff':'#64748B'}}>{label}</button>
+              <button key={id} onClick={()=>setTab(id)} style={{padding:'7px 16px',borderRadius:8,border:'none',cursor:'pointer',fontSize:12,fontFamily:'system-ui',fontWeight:tab===id?600:400,background:tab===id?'linear-gradient(135deg,#1D4ED8,#38BDF8)':'transparent',color:tab===id?'#fff':'var(--text-muted)'}}>{label}</button>
             ))}
           </div>
 
@@ -177,7 +177,7 @@ ${mode==='buy'?
                 <label style={{...lbl,marginBottom:0}}>Size</label>
                 <div style={{display:'flex',gap:4}}>
                   {['sqft','sqm'].map(u=>(
-                    <button key={u} onClick={()=>setUnit(u)} style={{padding:'2px 8px',borderRadius:20,border:'none',cursor:'pointer',fontSize:10,fontWeight:unit===u?700:400,fontFamily:'system-ui',background:unit===u?'rgba(59,130,246,0.2)':'rgba(59,130,246,0.06)',color:unit===u?'#38BDF8':'#64748B'}}>{u}</button>
+                    <button key={u} onClick={()=>setUnit(u)} style={{padding:'2px 8px',borderRadius:20,border:'none',cursor:'pointer',fontSize:10,fontWeight:unit===u?700:400,fontFamily:'system-ui',background:unit===u?'var(--border-strong)':'rgba(59,130,246,0.06)',color:unit===u?'#38BDF8':'var(--text-muted)'}}>{u}</button>
                   ))}
                 </div>
               </div>
@@ -197,13 +197,13 @@ ${mode==='buy'?
 
           {form.area && areaData?.[form.area] && (
             <div style={{marginTop:16,padding:14,background:'rgba(59,130,246,0.06)',border:'1px solid rgba(59,130,246,0.1)',borderRadius:10}}>
-              <div style={{fontSize:11,color:'#64748B',fontWeight:600,marginBottom:10,textTransform:'uppercase',letterSpacing:'0.05em'}}>Market — {niceArea(form.area)}</div>
+              <div style={{fontSize:11,color:'var(--text-muted)',fontWeight:600,marginBottom:10,textTransform:'uppercase',letterSpacing:'0.05em'}}>Market — {niceArea(form.area)}</div>
               <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8}}>
                 {[
-                  ['Avg Deal',fmtAED(areaData[form.area].kpis?.avg||0,true),'#F1F5F9'],
+                  ['Avg Deal',fmtAED(areaData[form.area].kpis?.avg||0,true),'var(--text-primary)'],
                   ['Price/sqft','AED '+fmtNum(Math.round((areaData[form.area].kpis?.ppsqm||0)/10.764)),'#38BDF8'],
                   ['Price/sqm','AED '+fmtNum(areaData[form.area].kpis?.ppsqm||0),'#38BDF8'],
-                  ['Transactions',fmtNum(areaData[form.area].kpis?.count||0),'#94A3B8'],
+                  ['Transactions',fmtNum(areaData[form.area].kpis?.count||0),'var(--text-secondary)'],
                 ].map(([l,v,c],i)=>(
                   <div key={i}><div style={{fontSize:10,color:'#475569'}}>{l}</div><div style={{fontSize:13,fontWeight:600,color:c}}>{v}</div></div>
                 ))}
@@ -214,56 +214,56 @@ ${mode==='buy'?
 
         <div>
           {!result&&!loading && (
-            <div style={{background:'#0D1929',border:'1px solid rgba(255,255,255,0.06)',borderRadius:14,padding:40,textAlign:'center',height:'100%',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center'}}>
+            <div style={{background:'var(--surface)',border:'1px solid rgba(255,255,255,0.06)',borderRadius:14,padding:40,textAlign:'center',height:'100%',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center'}}>
               <div style={{fontSize:48,marginBottom:16}}>🤖</div>
-              <div style={{fontSize:16,fontWeight:600,color:'#F1F5F9',marginBottom:8}}>AI Deal Verdict</div>
+              <div style={{fontSize:16,fontWeight:600,color:'var(--text-primary)',marginBottom:8}}>AI Deal Verdict</div>
               <div style={{fontSize:13,color:'#475569',lineHeight:1.6}}>Enter property details and click Analyze to get an AI-powered investment verdict using live Dubai market data.</div>
             </div>
           )}
           {loading && (
-            <div style={{background:'#0D1929',border:'1px solid rgba(59,130,246,0.2)',borderRadius:14,padding:40,textAlign:'center',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',height:'100%'}}>
+            <div style={{background:'var(--surface)',border:'1px solid rgba(59,130,246,0.2)',borderRadius:14,padding:40,textAlign:'center',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',height:'100%'}}>
               <div style={{width:48,height:48,border:'3px solid rgba(59,130,246,0.2)',borderTopColor:'#38BDF8',borderRadius:'50%',animation:'spin 0.8s linear infinite',marginBottom:16}}/>
-              <div style={{fontSize:14,color:'#94A3B8'}}>Analyzing with AI...</div>
+              <div style={{fontSize:14,color:'var(--text-secondary)'}}>Analyzing with AI...</div>
               <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
             </div>
           )}
           {result && (()=>{
             const vs=VS[result.verdict]||VS.HOLD;
             return (
-              <div style={{background:'#0D1929',border:'1px solid rgba(255,255,255,0.06)',borderRadius:14,padding:24,display:'flex',flexDirection:'column',gap:14}}>
+              <div style={{background:'var(--surface)',border:'1px solid rgba(255,255,255,0.06)',borderRadius:14,padding:24,display:'flex',flexDirection:'column',gap:14}}>
                 <div style={{background:vs.bg,border:`1px solid ${vs.border}`,borderRadius:12,padding:20,textAlign:'center'}}>
                   <div style={{fontSize:36,marginBottom:6}}>{vs.icon}</div>
                   <div style={{fontSize:28,fontWeight:800,color:vs.color,marginBottom:4}}>{result.verdict}</div>
-                {mode==='sell' && result.recommendedAsk && <div style={{fontSize:13,color:'#94A3B8',marginTop:4}}>Recommended Ask: <span style={{color:'#22C55E',fontWeight:700}}>{fmtAED(result.recommendedAsk,true)}</span></div>}
-                  <div style={{fontSize:13,color:'#94A3B8',lineHeight:1.5}}>{result.summary}</div>
+                {mode==='sell' && result.recommendedAsk && <div style={{fontSize:13,color:'var(--text-secondary)',marginTop:4}}>Recommended Ask: <span style={{color:'#22C55E',fontWeight:700}}>{fmtAED(result.recommendedAsk,true)}</span></div>}
+                  <div style={{fontSize:13,color:'var(--text-secondary)',lineHeight:1.5}}>{result.summary}</div>
                 </div>
                 <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:10}}>
                   {(mode==='buy'?[['Score',`${result.score}/10`,result.score>=7?'#22C55E':result.score>=5?'#F59E0B':'#F87171'],['Est. Yield',`${result.rentalYield||'—'}%`,'#38BDF8'],['vs Market',`${result.priceVsMarket>0?'+':''}${result.priceVsMarket}%`,result.priceVsMarket<=0?'#22C55E':'#F87171']]:[['Market Score',`${result.score}/10`,result.score>=7?'#22C55E':result.score>=5?'#F59E0B':'#F87171'],['Negotiation Room',`${result.negotiationRoom||3}%`,'#F59E0B'],['Est. Days to Sell',`${result.daysToSell||30}`,'#38BDF8']]).map(([l,v,c],i)=>(
                     <div key={i} style={{background:'rgba(59,130,246,0.06)',border:'1px solid rgba(59,130,246,0.1)',borderRadius:10,padding:'12px',textAlign:'center'}}>
-                      <div style={{fontSize:10,color:'#64748B',marginBottom:4}}>{l}</div>
+                      <div style={{fontSize:10,color:'var(--text-muted)',marginBottom:4}}>{l}</div>
                       <div style={{fontSize:18,fontWeight:700,color:c}}>{v}</div>
                     </div>
                   ))}
                 </div>
                 <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10}}>
                   <div style={{background:'rgba(59,130,246,0.06)',border:'1px solid rgba(59,130,246,0.1)',borderRadius:10,padding:14}}>
-                    <div style={{fontSize:10,color:'#64748B',marginBottom:4}}>FAIR VALUE</div>
-                    <div style={{fontSize:18,fontWeight:700,color:'#F1F5F9'}}>{fmtAED(result.fairValue,true)}</div>
+                    <div style={{fontSize:10,color:'var(--text-muted)',marginBottom:4}}>FAIR VALUE</div>
+                    <div style={{fontSize:18,fontWeight:700,color:'var(--text-primary)'}}>{fmtAED(result.fairValue,true)}</div>
                   </div>
                   <div style={{background:'rgba(59,130,246,0.06)',border:'1px solid rgba(59,130,246,0.1)',borderRadius:10,padding:14}}>
-                    <div style={{fontSize:10,color:'#64748B',marginBottom:4}}>YOUR PRICE/SQFT</div>
-                    <div style={{fontSize:15,fontWeight:700,color:'#F1F5F9'}}>AED {fmtNum(result.ppsqft)}<span style={{fontSize:11,color:'#475569'}}> vs mkt AED {fmtNum(result.marketPpsqft)}</span></div>
+                    <div style={{fontSize:10,color:'var(--text-muted)',marginBottom:4}}>YOUR PRICE/SQFT</div>
+                    <div style={{fontSize:15,fontWeight:700,color:'var(--text-primary)'}}>AED {fmtNum(result.ppsqft)}<span style={{fontSize:11,color:'#475569'}}> vs mkt AED {fmtNum(result.marketPpsqft)}</span></div>
                     <div style={{fontSize:12,color:'#475569',marginTop:2}}>AED {fmtNum(result.ppsqm)}/sqm vs mkt AED {fmtNum(result.marketPpsqm)}/sqm</div>
                   </div>
                 </div>
                 <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12}}>
                   <div style={{background:'rgba(34,197,94,0.06)',border:'1px solid rgba(34,197,94,0.15)',borderRadius:10,padding:14}}>
                     <div style={{fontSize:11,fontWeight:600,color:'#22C55E',marginBottom:10}}>PROS</div>
-                    {result.pros?.map((p,i)=><div key={i} style={{fontSize:12,color:'#94A3B8',marginBottom:6,display:'flex',gap:6}}><span style={{color:'#22C55E',flexShrink:0}}>✓</span>{p}</div>)}
+                    {result.pros?.map((p,i)=><div key={i} style={{fontSize:12,color:'var(--text-secondary)',marginBottom:6,display:'flex',gap:6}}><span style={{color:'#22C55E',flexShrink:0}}>✓</span>{p}</div>)}
                   </div>
                   <div style={{background:'rgba(248,113,113,0.06)',border:'1px solid rgba(248,113,113,0.15)',borderRadius:10,padding:14}}>
                     <div style={{fontSize:11,fontWeight:600,color:'#F87171',marginBottom:10}}>CONS</div>
-                    {result.cons?.map((c,i)=><div key={i} style={{fontSize:12,color:'#94A3B8',marginBottom:6,display:'flex',gap:6}}><span style={{color:'#F87171',flexShrink:0}}>✗</span>{c}</div>)}
+                    {result.cons?.map((c,i)=><div key={i} style={{fontSize:12,color:'var(--text-secondary)',marginBottom:6,display:'flex',gap:6}}><span style={{color:'#F87171',flexShrink:0}}>✗</span>{c}</div>)}
                   </div>
                 </div>
               </div>
