@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { AuthProvider } from "./context/AuthContext";
 import "./index.css";
+import "./styles/theme.css";
 import App from "./App";
 
 class ErrorBoundary extends React.Component {
@@ -20,6 +21,10 @@ class ErrorBoundary extends React.Component {
     return this.props.children;
   }
 }
+
+// Initialize theme from localStorage before render
+const savedTheme = localStorage.getItem('theme') || 'dark';
+document.documentElement.setAttribute('data-theme', savedTheme);
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
