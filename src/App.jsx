@@ -74,7 +74,7 @@ function useMobile() {
 }
 
 export default function App() {
-  const { user, profile, loading, theme, lang, isPro, isLite, colors } = useAuth();
+  const { user, profile, loading, theme, lang, isPro, isLite } = useAuth();
   const [core, setCore] = useState(null);
   const [areaData, setAreaData] = useState(null);
   const [recentRaw, setRecentRaw] = useState([]);
@@ -126,7 +126,7 @@ export default function App() {
   }
   if (!core) {
     return (
-      <div style={{height:"100vh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:16,background:colors.bg}}>
+      <div style={{height:"100vh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:16,background:"#060E1A"}}>
         {dataError ? <><div style={{fontSize:14,color:"#F87171"}}>{dataError}</div><button onClick={()=>window.location.reload()} style={{padding:"6px 16px",borderRadius:8,background:"#0D1929",color:"#F1F5F9",border:"1px solid rgba(59,130,246,0.2)",cursor:"pointer",fontSize:13}}>Retry</button></> : <><div style={{width:44,height:44,border:"3px solid rgba(59,130,246,0.2)",borderTopColor:"#38BDF8",borderRadius:"50%",animation:"spin 0.7s linear infinite"}}/><div style={{fontSize:14,color:"#64748B",fontWeight:600}}>Loading PropSight…</div></>}
         <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
       </div>
@@ -135,13 +135,13 @@ export default function App() {
 
 
   return (
-    <div style={{display:"flex",minHeight:"100vh",background:colors.bg,flexDirection:isMobile?"column":"row"}} dir={lang==="ar"?"rtl":"ltr"}>
+    <div style={{display:"flex",minHeight:"100vh",background:theme==="light"?"#F8FAFC":"#060E1A",flexDirection:isMobile?"column":"row"}} dir={lang==="ar"?"rtl":"ltr"}>
       <Sidebar page={page} setPage={setPage} />
       <div style={{flex:1,display:"flex",flexDirection:"column",overflow:"hidden",paddingTop:isMobile?56:0,minWidth:0}}>
         {page === "home" && <HomePage core={core} areaData={areaData} recentRaw={recentRaw} onNavigate={setPage} isPro={isPro} isLite={isLite} />}
         {page === "overview" && <FilterBar filters={filters} setFilters={setFilters} options={options} dateRange={dateRange} showRegFilter={true} />}
         {page === "overview" && (
-          <div style={{flex:1,overflowY:"auto",padding:"1.25rem",background:colors.bg}}>
+          <div style={{flex:1,overflowY:"auto",padding:"1.25rem",background:"#060E1A"}}>
             <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:"1rem",marginBottom:"1.25rem"}}>
               <KpiCard label="Transactions" value={fmtNum(kpis.count)} sub={"Data as of "+(core?.meta?.lastUpdated||"")}/>
               <KpiCard label="Total value" value={fmtAED(kpis.total,true)} />

@@ -61,7 +61,7 @@ function Icon({ name, size=15 }) {
 }
 
 export default function Sidebar({ page, setPage }) {
-  const { user, profile, signOut, isPro, isLite, theme, toggleTheme, colors } = useAuth();
+  const { user, profile, signOut, isPro, isLite, theme, toggleTheme, lang, toggleLang } = useAuth();
   const [open, setOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(true);
 
@@ -76,7 +76,7 @@ export default function Sidebar({ page, setPage }) {
 
   const navItems = (
     <div style={{ display:'flex', flexDirection:'column', height:'100%' }}>
-      <div style={{ padding:'16px', borderBottom:`1px solid ${colors.border}`, display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+      <div style={{ padding:'16px', borderBottom:'1px solid rgba(59,130,246,0.08)', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
         <PropSightLogo size="sm" />
         {isMobile && <button onClick={() => setOpen(false)} style={{ background:'none', border:'none', cursor:'pointer', color:'#64748B', padding:4 }}><Icon name="close" size={20}/></button>}
       </div>
@@ -93,7 +93,7 @@ export default function Sidebar({ page, setPage }) {
       </div>
         {NAV_SECTIONS.map((section, si) => (
           <div key={si} style={{ marginBottom:8 }}>
-            {section.label && <div style={{ fontSize:10, fontWeight:600, color:colors.textFaint, letterSpacing:'0.12em', padding:'8px 8px 4px' }}>{section.label}</div>}
+            {section.label && <div style={{ fontSize:10, fontWeight:600, color:'#1E3A5F', letterSpacing:'0.12em', padding:'8px 8px 4px' }}>{section.label}</div>}
             {section.items.map(item => {
               const active = page === item.id;
               const locked = (item.pro && !isPro) || (item.lite && !isLite);
@@ -134,24 +134,16 @@ export default function Sidebar({ page, setPage }) {
           <button onClick={() => nav('upgrade')} style={{ width:'100%', padding:'8px', borderRadius:8, border:'none', background:'linear-gradient(135deg,#B45309,#F59E0B)', color:'#fff', fontSize:13, fontWeight:600, cursor:'pointer', fontFamily:'system-ui' }}>Upgrade to Pro →</button>
         </div>
       )}
-
-      {/* Theme toggle */}
-      <div style={{ padding:'8px 12px', borderTop:`1px solid ${colors.border}`, display:'flex', alignItems:'center', justifyContent:'space-between' }}>
-        <span style={{ fontSize:11, color:colors.textMuted, fontWeight:500 }}>Theme</span>
-        <button onClick={toggleTheme} style={{ background:'none', border:`1px solid ${colors.border}`, borderRadius:6, padding:'4px 10px', fontSize:11, color:colors.textSecondary, cursor:'pointer', fontFamily:'inherit' }}>
-          {theme === 'dark' ? '☀️ Light' : '🌙 Dark'}
-        </button>
-      </div>
-      <div style={{ padding:'12px', borderTop:`1px solid ${colors.border}`, display:'flex', alignItems:'center', gap:10 }}>
+      <div style={{ padding:'12px', borderTop:'1px solid rgba(59,130,246,0.08)', display:'flex', alignItems:'center', gap:10 }}>
         {profile?.avatar_url
           ? <img src={profile.avatar_url} alt="avatar" style={{ width:32, height:32, borderRadius:'50%', objectFit:'cover', border:'1px solid rgba(59,130,246,0.3)', flexShrink:0 }}/>
           : <div style={{ width:32, height:32, borderRadius:'50%', flexShrink:0, background:'linear-gradient(135deg,#1D4ED8,#38BDF8)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:13, fontWeight:700, color:'#fff' }}>{(profile?.full_name?.[0]||user?.email?.[0]||'U').toUpperCase()}</div>
         }
         <div style={{ flex:1, minWidth:0 }}>
           <div style={{ fontSize:12, fontWeight:600, color:'#94A3B8', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{profile?.full_name?.split(' ')[0] || user?.email?.split('@')[0] || 'User'}</div>
-          <div style={{ fontSize:10, color:colors.textFaint }}>{isPro?<span style={{color:'#F59E0B',fontWeight:700}}>⭐ Pro</span>:isLite?<span style={{color:'#A78BFA',fontWeight:700}}>✦ Lite</span>:'Free plan'}</div>
+          <div style={{ fontSize:10, color:'#1E3A5F' }}>{isPro?<span style={{color:'#F59E0B',fontWeight:700}}>⭐ Pro</span>:isLite?<span style={{color:'#A78BFA',fontWeight:700}}>✦ Lite</span>:'Free plan'}</div>
         </div>
-        <button onClick={signOut} style={{ background:'none', border:'none', cursor:'pointer', color:colors.textFaint, padding:4 }}><Icon name="logout" size={14}/></button>
+        <button onClick={signOut} style={{ background:'none', border:'none', cursor:'pointer', color:'#1E3A5F', padding:4 }}><Icon name="logout" size={14}/></button>
       </div>
     </div>
   );
@@ -159,7 +151,7 @@ export default function Sidebar({ page, setPage }) {
   if (isMobile) {
     return (
       <>
-        <div style={{ position:'fixed', top:0, left:0, right:0, zIndex:1000, height:56, background:colors.bgAlt, borderBottom:`1px solid ${colors.border}`, display:'flex', alignItems:'center', justifyContent:'space-between', padding:'0 16px' }}>
+        <div style={{ position:'fixed', top:0, left:0, right:0, zIndex:1000, height:56, background:'#070E1B', borderBottom:'1px solid rgba(59,130,246,0.1)', display:'flex', alignItems:'center', justifyContent:'space-between', padding:'0 16px' }}>
           <PropSightLogo size="sm" />
           <button onClick={() => setOpen(true)} style={{ background:'rgba(59,130,246,0.1)', border:'1px solid rgba(59,130,246,0.2)', borderRadius:8, cursor:'pointer', color:'#94A3B8', padding:'6px 10px', display:'flex', alignItems:'center' }}>
             <Icon name="menu" size={20}/>
@@ -168,14 +160,14 @@ export default function Sidebar({ page, setPage }) {
         <div style={{ height:56 }} />
         {open && <>
           <div onClick={() => setOpen(false)} style={{ position:'fixed', inset:0, background:'rgba(0,0,0,0.7)', zIndex:1001 }}/>
-          <div style={{ position:'fixed', left:0, top:0, bottom:0, width:280, background:colors.bgAlt, zIndex:1002, overflowY:'auto', boxShadow:'4px 0 24px rgba(0,0,0,0.5)' }}>{navItems}</div>
+          <div style={{ position:'fixed', left:0, top:0, bottom:0, width:280, background:'#070E1B', zIndex:1002, overflowY:'auto', boxShadow:'4px 0 24px rgba(0,0,0,0.5)' }}>{navItems}</div>
         </>}
       </>
     );
   }
 
   return (
-    <div style={{ width:220, flexShrink:0, background:colors.bgAlt, borderRight:`1px solid ${colors.border}`, height:'100vh', position:'sticky', top:0, overflowY:'auto', fontFamily:'system-ui' }}>
+    <div style={{ width:220, flexShrink:0, background:'#070E1B', borderRight:'1px solid rgba(59,130,246,0.08)', height:'100vh', position:'sticky', top:0, overflowY:'auto', fontFamily:'system-ui' }}>
       {navItems}
     </div>
   );
