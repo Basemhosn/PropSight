@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react';
 import { useAuth } from '../context/AuthContext';
+import MapView from './MapView';
 import { fmtAED, fmtNum } from '../utils/format';
 
 const AREA_NICE = {
@@ -132,7 +133,7 @@ Respond ONLY with valid JSON (no markdown):
         </div>
 
         <div style={{display:'flex',gap:2,background:'rgba(255,255,255,0.04)',borderRadius:10,padding:3}}>
-          {[['discover','🔍 Discover'],['deal','⚡ Deal Check'],['feed','📋 Recent Sales']].map(([id,lbl])=>(
+          {[['discover','🔍 Discover'],['map','🗺️ Map'],['deal','⚡ Deal Check'],['feed','📋 Recent Sales']].map(([id,lbl])=>(
             <button key={id} onClick={()=>setActiveTab(id)} className="inv-tab-btn" style={{padding:'6px 14px',borderRadius:8,fontSize:13,fontWeight:activeTab===id?600:400,background:activeTab===id?'var(--surface)':'transparent',color:activeTab===id?'var(--text-primary)':'var(--text-muted)',boxShadow:activeTab===id?'0 1px 4px rgba(0,0,0,0.3)':'none'}}>
               {lbl}
             </button>
@@ -229,6 +230,25 @@ Respond ONLY with valid JSON (no markdown):
                   </div>
                 ))}
               </div>
+              {/* Price trend sparkline */}
+              {areaData && areaData[selectedArea.key]?.priceTrend?.length > 1 && (
+                <div style={{marginBottom:16}}>
+                  <div style={{fontSize:11,color:'var(--text-muted)',marginBottom:8,textTransform:'uppercase',letterSpacing:'0.05em',fontWeight:600}}>Price Trend (AED/sqft)</div>
+                  <div style={{display:'flex',alignItems:'flex-end',gap:3,height:40}}>
+                    {areaData[selectedArea.key].priceTrend.slice(-12).map((p,i,arr)=>{
+                      const vals=arr.map(x=>Math.round((x.ppsqm||0)/10.764));
+                      const min=Math.min(...vals),max=Math.max(...vals);
+                      const h=max===min?100:Math.round(((vals[i]-min)/(max-min))*80)+20;
+                      const isLast=i===arr.length-1;
+                      return <div key={i} style={{flex:1,height:h+'%',borderRadius:'3px 3px 0 0',background:isLast?'#38BDF8':'rgba(56,189,248,0.3)',transition:'height 0.3s'}} title={`AED ${fmtNum(vals[i])}/sqft`}/>;
+                    })}
+                  </div>
+                  <div style={{display:'flex',justifyContent:'space-between',marginTop:4}}>
+                    <span style={{fontSize:10,color:'var(--text-muted)'}}>{areaData[selectedArea.key].priceTrend.slice(-12)[0]?.month||''}</span>
+                    <span style={{fontSize:10,color:'#38BDF8',fontWeight:600}}>AED {fmtNum(selectedArea.ppsqft)}/sqft</span>
+                  </div>
+                </div>
+              )}
               <div style={{display:'flex',gap:10}}>
                 <button onClick={()=>setActiveTab('deal')} style={{flex:1,padding:'11px',borderRadius:11,border:'none',cursor:'pointer',background:'linear-gradient(135deg,#1D4ED8,#38BDF8)',color:'#fff',fontSize:14,fontWeight:600,fontFamily:'inherit'}}>⚡ Check a deal here</button>
                 <button onClick={()=>setActiveTab('feed')} style={{flex:1,padding:'11px',borderRadius:11,border:'1px solid rgba(255,255,255,0.08)',cursor:'pointer',background:'rgba(255,255,255,0.04)',color:'var(--text-secondary)',fontSize:14,fontFamily:'inherit'}}>📋 Recent sales</button>
@@ -236,6 +256,18 @@ Respond ONLY with valid JSON (no markdown):
             </div>
           )}
 
+          {!search && (
+            <div onClick={()=>setActiveTab('map')} style={{display:'flex',alignItems:'center',gap:16,background:'linear-gradient(135deg,rgba(29,78,216,0.12),rgba(56,189,248,0.08))',border:'1px solid rgba(56,189,248,0.2)',borderRadius:16,padding:'16px 20px',marginBottom:20,cursor:'pointer',transition:'all 0.2s'}}
+              onMouseEnter={e=>e.currentTarget.style.borderColor='rgba(56,189,248,0.4)'}
+              onMouseLeave={e=>e.currentTarget.style.borderColor='rgba(56,189,248,0.2)'}>
+              <div style={{width:44,height:44,borderRadius:12,background:'linear-gradient(135deg,#1D4ED8,#38BDF8)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:22,flexShrink:0}}>🗺️</div>
+              <div style={{flex:1}}>
+                <div style={{fontSize:15,fontWeight:700,color:'var(--text-primary)',marginBottom:3}}>Explore Dubai on the Map</div>
+                <div style={{fontSize:13,color:'var(--text-secondary)'}}>Browse areas visually — see price heatmap, click any area to explore</div>
+              </div>
+              <div style={{fontSize:20,color:'var(--text-muted)'}}>→</div>
+            </div>
+          )}
           <div style={{fontSize:12,fontWeight:600,color:'var(--text-secondary)',marginBottom:12,textTransform:'uppercase',letterSpacing:'0.07em'}}>{search.length>1?`${suggestions.length} results`:'Popular areas'}</div>
           <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(190px,1fr))',gap:12}}>
             {displayAreas.map((a,i)=>(
@@ -292,6 +324,18 @@ Respond ONLY with valid JSON (no markdown):
                     <div style={{fontSize:15,fontWeight:600,color:'var(--text-primary)',marginBottom:8}}>{dealResult.headline}</div>
                     <div style={{fontSize:13,color:'var(--text-secondary)',lineHeight:1.65}}>{dealResult.insight}</div>
                   </div>
+                  {/* PropSight Estimate Badge */}
+                  <div style={{display:'flex',alignItems:'center',justifyContent:'center',gap:10,background:'rgba(56,189,248,0.06)',border:'1px solid rgba(56,189,248,0.15)',borderRadius:14,padding:'12px 18px',marginBottom:14}}>
+                    <div style={{width:32,height:32,borderRadius:8,background:'linear-gradient(135deg,#1D4ED8,#38BDF8)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:14,flexShrink:0}}>🏙️</div>
+                    <div style={{flex:1}}>
+                      <div style={{fontSize:10,color:'#38BDF8',fontWeight:700,textTransform:'uppercase',letterSpacing:'0.08em',marginBottom:2}}>PropSight Estimate</div>
+                      <div style={{fontSize:16,fontWeight:800,color:'var(--text-primary)'}}>{dealResult.fairValue||'AED '+fmtNum(Math.round(parseInt(dealPrice.replace(/,/g,''))*(dealResult.verdict==='GOOD DEAL'?1.08:dealResult.verdict==='OVERPRICED'?0.92:1.0)))}</div>
+                    </div>
+                    <div style={{textAlign:'right'}}>
+                      <div style={{fontSize:10,color:'var(--text-muted)',marginBottom:2}}>Confidence</div>
+                      <div style={{fontSize:13,fontWeight:700,color:vs.color}}>{dealResult.confidence||'High'}</div>
+                    </div>
+                  </div>
                   {dealResult.ppsqft>0 && (
                     <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10,marginBottom:14}}>
                       <div style={{background:'rgba(255,255,255,0.05)',borderRadius:10,padding:'12px',textAlign:'center'}}>
@@ -311,6 +355,17 @@ Respond ONLY with valid JSON (no markdown):
                 </div>
               );
             })()}
+          </div>
+        )}
+
+        {/* MAP */}
+        {activeTab==='map' && (
+          <div style={{height:'calc(100vh - 100px)',borderRadius:16,overflow:'hidden',border:'1px solid var(--border)'}}>
+            <MapView
+              onAreaClick={(area)=>{setActiveTab('discover');setSearch(area);}}
+              onProjectClick={()=>{}}
+              projectsData={null}
+            />
           </div>
         )}
 
