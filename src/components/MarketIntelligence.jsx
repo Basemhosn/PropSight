@@ -167,7 +167,7 @@ export default function MarketIntelligence({ areaData, core }) {
 
         {/* Hero card */}
         {topArea && (
-          <div style={{ background:'linear-gradient(135deg,#061A10,#0A2818,#051510)', border:'1px solid rgba(34,197,94,0.2)', borderRadius:14, padding:24, marginBottom:12, display:'flex', justifyContent:'space-between', alignItems:'center' }}>
+          <div style={{ background:'var(--top-area-bg, linear-gradient(135deg,#061A10,#0A2818,#051510))', border:'1px solid rgba(34,197,94,0.2)', borderRadius:14, padding:24, marginBottom:12, display:'flex', justifyContent:'space-between', alignItems:'center' }}>
             <div style={{ flex:1 }}>
               <div style={{ display:'flex', alignItems:'center', gap:10, marginBottom:12 }}>
                 <span style={{ fontSize:13, color:'#F59E0B', fontWeight:700 }}>👑 #1 Top Area</span>

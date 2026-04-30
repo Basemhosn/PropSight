@@ -27,3 +27,12 @@
   --accent: #0284C7;
   --accent-deep: #1D4ED8;
 }
+
+/* Component-specific variables */
+:root[data-theme="dark"], :root {
+  --top-area-bg: linear-gradient(135deg,#061A10,#0A2818,#051510);
+}
+
+:root[data-theme="light"] {
+  --top-area-bg: linear-gradient(135deg,#ECFDF5,#D1FAE5,#A7F3D0);
+}

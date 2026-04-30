@@ -113,8 +113,8 @@ export default function UpgradePage() {
               {/* Price */}
               <div style={{display:'flex',alignItems:'baseline',gap:4,marginBottom:8}}>
                 {plan.price===0
-                  ? <span style={{fontSize:36,fontWeight:800,color:'var(--text-primary)'}}>Free</span>
-                  : <><span style={{fontSize:36,fontWeight:800,color:'var(--text-primary)'}}>{plan.currency} {plan.price}</span><span style={{fontSize:13,color:'var(--text-muted)'}}>/mo</span></>
+                  ? <span style={{fontSize:36,fontWeight:800,color:plan.popular?'#F1F5F9':'var(--text-primary)'}}>Free</span>
+                  : <><span style={{fontSize:36,fontWeight:800,color:plan.popular?'#F1F5F9':'var(--text-primary)'}}>{plan.currency} {plan.price}</span><span style={{fontSize:13,color:plan.popular?'#94A3B8':'var(--text-muted)'}}>/mo</span></>
                 }
               </div>
 
@@ -146,7 +146,7 @@ export default function UpgradePage() {
                 {plan.features.map((f,i)=>(
                   <div key={i} style={{display:'flex',alignItems:'flex-start',gap:8}}>
                     <span style={{fontSize:13,color:plan.color,flexShrink:0,marginTop:1}}>✓</span>
-                    <span style={{fontSize:12,color:'var(--text-secondary)',lineHeight:1.4}}>{f}</span>
+                    <span style={{fontSize:12,color:plan.popular?'#94A3B8':'var(--text-secondary)',lineHeight:1.4}}>{f}</span>
                   </div>
                 ))}
               </div>
