@@ -59,6 +59,31 @@ export default function InvestorApp({ areaData, recentRaw, core, onSwitchToBroke
   const [selectedDeveloper, setSelectedDeveloper] = useState(null);
   const [selectedBuilding, setSelectedBuilding] = useState(null);
   const [savedKeys, setSavedKeys] = useState(new Set());
+  const [showFilters, setShowFilters] = useState(false);
+  const [filters, setFilters] = useState({ minPrice:'', maxPrice:'', bedrooms:'', area:'', regType:'' });
+  const [filterResults, setFilterResults] = useState(null);
+
+  const applyFilters = () => {
+    const { minPrice, maxPrice, bedrooms, area, regType } = filters;
+    if (!minPrice && !maxPrice && !bedrooms && !area && !regType) {
+      setFilterResults(null);
+      setShowFilters(false);
+      return;
+    }
+    let results = [...(recentRaw||[])];
+    if (minPrice) results = results.filter(r => (r.v||0) >= parseInt(minPrice.replace(/,/g,''))*1000);
+    if (maxPrice) results = results.filter(r => (r.v||0) <= parseInt(maxPrice.replace(/,/g,''))*1000);
+    if (bedrooms) results = results.filter(r => (r.b||'').toLowerCase().includes(bedrooms.toLowerCase()));
+    if (area) results = results.filter(r => na(r.a||'').toLowerCase().includes(area.toLowerCase()));
+    if (regType) results = results.filter(r => regType==='Off-Plan' ? r.r==='Off' : r.r!=='Off');
+    setFilterResults(results.slice(0,50));
+    setShowFilters(false);
+  };
+
+  const clearFilters = () => {
+    setFilters({ minPrice:'', maxPrice:'', bedrooms:'', area:'', regType:'' });
+    setFilterResults(null);
+  };
 
   const saveToWatchlist = async (type, name, key, area) => {
     const { supabase: sb } = await import('../context/AuthContext');
@@ -232,7 +257,8 @@ Respond ONLY with valid JSON (no markdown):
           <div style={{textAlign:'center',marginBottom:32}}>
             <h1 style={{fontSize:'clamp(22px,3vw,32px)',fontWeight:700,color:'var(--text-primary)',marginBottom:8,letterSpacing:'-0.02em'}}>What are you looking for?</h1>
             <p style={{fontSize:15,color:'var(--text-muted)',marginBottom:24}}>Search any area or project in Dubai</p>
-            <div ref={searchRef} style={{position:'relative',maxWidth:520,margin:'0 auto'}}>
+            <div style={{display:'flex',gap:10,maxWidth:620,margin:'0 auto',alignItems:'center'}}>
+            <div ref={searchRef} style={{position:'relative',flex:1}}>
               <div style={{display:'flex',alignItems:'center',gap:12,background:'var(--surface)',border:'2px solid rgba(59,130,246,0.2)',borderRadius:14,padding:'13px 18px',boxShadow:'0 4px 20px rgba(0,0,0,0.3)'}}>
                 <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#38BDF8" strokeWidth="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
                 <input value={search} onChange={e=>{setSearch(e.target.value);setSelectedArea(null);}} onFocus={()=>setSearchFocused(true)} placeholder="Dubai Marina, Business Bay, Emaar..." style={{background:'none',border:'none',outline:'none',color:'var(--text-primary)',fontSize:15,flex:1,fontFamily:'inherit'}}/>
@@ -331,9 +357,85 @@ Respond ONLY with valid JSON (no markdown):
                 </div>
               )}
             </div>
-          </div>
+            <button onClick={()=>setShowFilters(f=>!f)} style={{flexShrink:0,padding:'12px 18px',borderRadius:12,border:`1px solid ${Object.values(filters).some(Boolean)?'rgba(56,189,248,0.5)':'rgba(59,130,246,0.2)'}`,background:Object.values(filters).some(Boolean)?'rgba(56,189,248,0.1)':'var(--surface)',color:Object.values(filters).some(Boolean)?'#38BDF8':'var(--text-secondary)',fontSize:13,fontWeight:600,cursor:'pointer',fontFamily:'inherit',display:'flex',alignItems:'center',gap:6,whiteSpace:'nowrap',height:52,alignSelf:'flex-start',marginTop:0}}>
+              ⚙️ Filters{Object.values(filters).some(Boolean)?' •':''}
+            </button>
+            </div>
 
-          {!search && (
+          {/* Filter drawer */}
+          {showFilters && (
+            <div style={{background:'var(--surface)',border:'1px solid var(--border)',borderRadius:16,padding:20,marginBottom:20}}>
+              <div style={{fontSize:13,fontWeight:600,color:'var(--text-primary)',marginBottom:16}}>Filter transactions</div>
+              <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12,marginBottom:12}}>
+                <div>
+                  <label style={{fontSize:11,color:'var(--text-muted)',fontWeight:600,display:'block',marginBottom:6,textTransform:'uppercase',letterSpacing:'0.05em'}}>Min Price (AED)</label>
+                  <input value={filters.minPrice} onChange={e=>setFilters(f=>({...f,minPrice:e.target.value}))} placeholder="500,000" style={{width:'100%',padding:'10px 12px',borderRadius:8,border:'1px solid var(--border)',background:'var(--bg)',color:'var(--text-primary)',fontSize:13,fontFamily:'inherit',outline:'none',boxSizing:'border-box'}}/>
+                </div>
+                <div>
+                  <label style={{fontSize:11,color:'var(--text-muted)',fontWeight:600,display:'block',marginBottom:6,textTransform:'uppercase',letterSpacing:'0.05em'}}>Max Price (AED)</label>
+                  <input value={filters.maxPrice} onChange={e=>setFilters(f=>({...f,maxPrice:e.target.value}))} placeholder="2,000,000" style={{width:'100%',padding:'10px 12px',borderRadius:8,border:'1px solid var(--border)',background:'var(--bg)',color:'var(--text-primary)',fontSize:13,fontFamily:'inherit',outline:'none',boxSizing:'border-box'}}/>
+                </div>
+                <div>
+                  <label style={{fontSize:11,color:'var(--text-muted)',fontWeight:600,display:'block',marginBottom:6,textTransform:'uppercase',letterSpacing:'0.05em'}}>Bedrooms</label>
+                  <select value={filters.bedrooms} onChange={e=>setFilters(f=>({...f,bedrooms:e.target.value}))} style={{width:'100%',padding:'10px 12px',borderRadius:8,border:'1px solid var(--border)',background:'var(--bg)',color:'var(--text-primary)',fontSize:13,fontFamily:'inherit',outline:'none',boxSizing:'border-box',appearance:'none'}}>
+                    <option value="">Any</option>
+                    <option value="Studio">Studio</option>
+                    <option value="1 B/R">1 Bedroom</option>
+                    <option value="2 B/R">2 Bedrooms</option>
+                    <option value="3 B/R">3 Bedrooms</option>
+                    <option value="4 B/R">4+ Bedrooms</option>
+                  </select>
+                </div>
+                <div>
+                  <label style={{fontSize:11,color:'var(--text-muted)',fontWeight:600,display:'block',marginBottom:6,textTransform:'uppercase',letterSpacing:'0.05em'}}>Registration</label>
+                  <select value={filters.regType} onChange={e=>setFilters(f=>({...f,regType:e.target.value}))} style={{width:'100%',padding:'10px 12px',borderRadius:8,border:'1px solid var(--border)',background:'var(--bg)',color:'var(--text-primary)',fontSize:13,fontFamily:'inherit',outline:'none',boxSizing:'border-box',appearance:'none'}}>
+                    <option value="">Any</option>
+                    <option value="Off-Plan">Off-Plan</option>
+                    <option value="Ready">Ready</option>
+                  </select>
+                </div>
+              </div>
+              <div style={{marginBottom:12}}>
+                <label style={{fontSize:11,color:'var(--text-muted)',fontWeight:600,display:'block',marginBottom:6,textTransform:'uppercase',letterSpacing:'0.05em'}}>Area</label>
+                <input value={filters.area} onChange={e=>setFilters(f=>({...f,area:e.target.value}))} placeholder="e.g. Business Bay, Marina..." style={{width:'100%',padding:'10px 12px',borderRadius:8,border:'1px solid var(--border)',background:'var(--bg)',color:'var(--text-primary)',fontSize:13,fontFamily:'inherit',outline:'none',boxSizing:'border-box'}}/>
+              </div>
+              <div style={{display:'flex',gap:10}}>
+                <button onClick={applyFilters} style={{flex:2,padding:'11px',borderRadius:10,border:'none',cursor:'pointer',background:'linear-gradient(135deg,#1D4ED8,#38BDF8)',color:'#fff',fontSize:13,fontWeight:600,fontFamily:'inherit'}}>Apply Filters</button>
+                <button onClick={clearFilters} style={{flex:1,padding:'11px',borderRadius:10,border:'1px solid var(--border)',cursor:'pointer',background:'var(--surface)',color:'var(--text-secondary)',fontSize:13,fontFamily:'inherit'}}>Clear</button>
+              </div>
+            </div>
+          )}
+
+          {/* Filter Results */}
+          {filterResults && (
+            <div style={{marginBottom:24}}>
+              <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:12}}>
+                <div style={{fontSize:13,fontWeight:600,color:'var(--text-primary)'}}>{filterResults.length} matching transactions</div>
+                <button onClick={clearFilters} style={{fontSize:12,color:'var(--text-secondary)',background:'none',border:'none',cursor:'pointer',fontFamily:'inherit'}}>✕ Clear filters</button>
+              </div>
+              <div style={{background:'var(--surface)',border:'1px solid var(--border)',borderRadius:14,overflow:'hidden'}}>
+                <div style={{display:'grid',gridTemplateColumns:'1fr 80px 110px 75px',padding:'10px 18px',borderBottom:'1px solid var(--border)'}}>
+                  {['Property','Beds','Price','Type'].map((h,i)=><div key={i} style={{fontSize:10,color:'var(--text-secondary)',fontWeight:600,textTransform:'uppercase',letterSpacing:'0.05em'}}>{h}</div>)}
+                </div>
+                {filterResults.map((r,i)=>{
+                  const ppsqft=r.s&&r.v?Math.round(r.v/r.s/10.764):0;
+                  return (
+                    <div key={i} className="inv-row" style={{display:'grid',gridTemplateColumns:'1fr 80px 110px 75px',padding:'12px 18px',borderBottom:i<filterResults.length-1?'1px solid var(--border)':'none',alignItems:'center'}}>
+                      <div>
+                        <div style={{fontSize:13,fontWeight:600,color:'var(--text-primary)'}}>{na(r.a||'')}</div>
+                        <div style={{fontSize:11,color:'var(--text-secondary)'}}>{r.j||''}{ppsqft?' · AED '+fmtNum(ppsqft)+'/sqft':''} · {r.d||''}</div>
+                      </div>
+                      <div style={{fontSize:12,color:'var(--text-secondary)'}}>{r.b||'—'}</div>
+                      <div style={{fontSize:13,fontWeight:700,color:'var(--text-primary)'}}>{r.v?fmtAED(r.v,true):'—'}</div>
+                      <div><span style={{fontSize:10,fontWeight:600,padding:'2px 7px',borderRadius:20,background:r.r==='Off'?'rgba(59,130,246,0.1)':'rgba(34,197,94,0.1)',color:r.r==='Off'?'#38BDF8':'#22C55E'}}>{r.r==='Off'?'Off-Plan':'Ready'}</span></div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {!search && !filterResults && (
             <div onClick={()=>setActiveTab('map')} style={{display:'flex',alignItems:'center',gap:16,background:'linear-gradient(135deg,rgba(29,78,216,0.12),rgba(56,189,248,0.08))',border:'1px solid rgba(56,189,248,0.2)',borderRadius:16,padding:'16px 20px',marginBottom:20,cursor:'pointer',transition:'all 0.2s'}}
               onMouseEnter={e=>e.currentTarget.style.borderColor='rgba(56,189,248,0.4)'}
               onMouseLeave={e=>e.currentTarget.style.borderColor='rgba(56,189,248,0.2)'}>
@@ -345,8 +447,8 @@ Respond ONLY with valid JSON (no markdown):
               <div style={{fontSize:20,color:'var(--text-muted)'}}>→</div>
             </div>
           )}
-          <div style={{fontSize:12,fontWeight:600,color:'var(--text-secondary)',marginBottom:12,textTransform:'uppercase',letterSpacing:'0.07em'}}>{search.length>1?`${suggestions.length} results`:'Popular areas'}</div>
-          <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(190px,1fr))',gap:12}}>
+          {!filterResults && <div style={{fontSize:12,fontWeight:600,color:'var(--text-secondary)',marginBottom:12,textTransform:'uppercase',letterSpacing:'0.07em'}}>{search.length>1?`${suggestions.length} results`:'Popular areas'}</div>}
+          {!filterResults && <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(190px,1fr))',gap:12}}>
             {displayAreas.map((a,i)=>(
               <div key={i} className="inv-card" onClick={()=>{setSelectedArea(a);window.scrollTo({top:0,behavior:'smooth'});}} style={{background:'var(--surface)',border:'1px solid rgba(255,255,255,0.06)',borderRadius:14,padding:'16px'}}>
                 <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:10}}>
@@ -363,7 +465,8 @@ Respond ONLY with valid JSON (no markdown):
                 </div>
               </div>
             ))}
-          </div>
+          </div>}
+        </div>
         </>}
 
         {/* DEAL CHECK */}
