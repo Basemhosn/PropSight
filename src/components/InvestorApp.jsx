@@ -28,6 +28,13 @@ const VERDICT_STYLE = {
 
 export default function InvestorApp({ areaData, recentRaw, core, onSwitchToBroker }) {
   const { user, profile, signOut } = useAuth();
+  const [themeMode, setThemeMode] = useState(() => localStorage.getItem('theme') || 'dark');
+  const toggleTheme = () => {
+    const next = themeMode === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+    setThemeMode(next);
+  };
   const [search, setSearch] = useState('');
   const [selectedArea, setSelectedArea] = useState(null);
   const [dealPrice, setDealPrice] = useState('');
@@ -141,6 +148,9 @@ Respond ONLY with valid JSON (no markdown):
               Switch to Broker →
             </button>
           ) : null}
+          <button onClick={toggleTheme} style={{background:'none',border:'1px solid var(--border)',borderRadius:8,padding:'5px 10px',fontSize:12,color:'var(--text-secondary)',cursor:'pointer',fontFamily:'inherit'}}>
+            {themeMode === 'dark' ? '☀️' : '🌙'}
+          </button>
           <div style={{width:30,height:30,borderRadius:'50%',background:'linear-gradient(135deg,#1D4ED8,#38BDF8)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:13,fontWeight:700,cursor:'pointer'}} onClick={signOut} title="Sign out">
             {(profile?.full_name?.[0]||user?.email?.[0]||'U').toUpperCase()}
           </div>
