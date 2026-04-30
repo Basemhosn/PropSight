@@ -224,7 +224,7 @@ export default function MapView({ onAreaClick, onProjectClick, projectsData }) {
   const cm = METRICS.find(x => x.id === metric);
 
   return (
-    <div style={{ display:'flex', flexDirection:'column', height:'100%', minHeight:500, background:'#0A1628' }}>
+    <div style={{ display:'flex', flexDirection:'column', height:'100%', minHeight:500, background:'var(--surface)' }}>
       <div style={{ display:'flex', alignItems:'center', gap:8, padding:'10px 14px',
         background:'rgba(10,22,40,0.95)', backdropFilter:'blur(8px)',
         borderBottom:'1px solid rgba(255,255,255,0.08)', flexShrink:0, flexWrap:'wrap' }}>

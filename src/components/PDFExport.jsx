@@ -118,7 +118,7 @@ export default function PDFExport({ areaData, core }) {
     <div style={{flex:1,overflowY:'auto',background:'var(--bg)',fontFamily:'system-ui',padding:'24px 28px'}}>
       <div style={{marginBottom:24}}>
         <h1 style={{margin:0,fontSize:22,fontWeight:700,color:'var(--text-primary)',marginBottom:4}}>PDF Export</h1>
-        <div style={{fontSize:13,color:'#475569'}}>Generate branded market intelligence reports — print or save as PDF</div>
+        <div style={{fontSize:13,color:'var(--text-secondary)'}}>Generate branded market intelligence reports — print or save as PDF</div>
       </div>
       <div style={{display:'grid',gridTemplateColumns:'320px 1fr',gap:20,alignItems:'start'}}>
         <div style={{background:'var(--surface)',border:'1px solid rgba(255,255,255,0.06)',borderRadius:14,padding:24}}>
@@ -141,7 +141,7 @@ export default function PDFExport({ areaData, core }) {
           <button onClick={generatePDF} disabled={!selectedArea||generating} style={{width:'100%',padding:'12px',borderRadius:10,border:'none',cursor:'pointer',background:'linear-gradient(135deg,#1D4ED8,#38BDF8)',color:'#fff',fontSize:13,fontWeight:600,fontFamily:'system-ui',opacity:!selectedArea||generating?0.5:1}}>
             {generating?'Opening preview...':'🖨️ Generate PDF Report'}
           </button>
-          <div style={{fontSize:11,color:'#475569',marginTop:10,textAlign:'center'}}>Opens print dialog — save as PDF or print directly</div>
+          <div style={{fontSize:11,color:'var(--text-secondary)',marginTop:10,textAlign:'center'}}>Opens print dialog — save as PDF or print directly</div>
         </div>
         <div style={{background:'var(--surface)',border:'1px solid rgba(255,255,255,0.06)',borderRadius:14,overflow:'hidden'}}>
           <div style={{padding:'16px 20px',borderBottom:'1px solid rgba(255,255,255,0.06)',display:'flex',justifyContent:'space-between',alignItems:'center'}}>
@@ -153,7 +153,7 @@ export default function PDFExport({ areaData, core }) {
               <div style={{textAlign:'center',padding:40}}>
                 <div style={{fontSize:48,marginBottom:16}}>📄</div>
                 <div style={{fontSize:15,fontWeight:600,color:'var(--text-primary)',marginBottom:8}}>Select an area to preview</div>
-                <div style={{fontSize:13,color:'#475569'}}>Professional branded report ready to print or share</div>
+                <div style={{fontSize:13,color:'var(--text-secondary)'}}>Professional branded report ready to print or share</div>
               </div>
             ) : (()=>{
               const kpis = areaData[selectedArea]?.kpis||{};

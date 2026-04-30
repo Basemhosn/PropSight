@@ -54,17 +54,17 @@ export default function PriceAlerts({ areaData }) {
       <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:24}}>
         <div>
           <h1 style={{margin:0,fontSize:22,fontWeight:700,color:'var(--text-primary)',marginBottom:4}}>Price Alerts</h1>
-          <div style={{fontSize:13,color:'#475569'}}>Get emailed when area prices move by your threshold</div>
+          <div style={{fontSize:13,color:'var(--text-secondary)'}}>Get emailed when area prices move by your threshold</div>
         </div>
         <button onClick={()=>setShowAdd(true)} style={{padding:'10px 18px',borderRadius:10,border:'none',cursor:'pointer',background:'linear-gradient(135deg,#1D4ED8,#38BDF8)',color:'#fff',fontSize:13,fontWeight:600,fontFamily:'system-ui'}}>+ New Alert</button>
       </div>
 
-      {loading ? <div style={{textAlign:'center',padding:60,color:'#475569'}}>Loading...</div>
+      {loading ? <div style={{textAlign:'center',padding:60,color:'var(--text-secondary)'}}>Loading...</div>
       : alerts.length===0 ? (
         <div style={{textAlign:'center',padding:60}}>
           <div style={{fontSize:48,marginBottom:16}}>🔔</div>
           <div style={{fontSize:18,fontWeight:600,color:'var(--text-primary)',marginBottom:8}}>No alerts yet</div>
-          <div style={{fontSize:13,color:'#475569',marginBottom:24}}>Set up your first price alert</div>
+          <div style={{fontSize:13,color:'var(--text-secondary)',marginBottom:24}}>Set up your first price alert</div>
           <button onClick={()=>setShowAdd(true)} style={{padding:'11px 24px',borderRadius:10,border:'none',cursor:'pointer',background:'linear-gradient(135deg,#1D4ED8,#38BDF8)',color:'#fff',fontSize:13,fontWeight:600,fontFamily:'system-ui'}}>+ Create Alert</button>
         </div>
       ) : (
@@ -77,7 +77,7 @@ export default function PriceAlerts({ areaData }) {
                 <div style={{width:44,height:44,borderRadius:10,background:alert.active?'rgba(59,130,246,0.1)':'rgba(100,116,139,0.1)',border:`1px solid ${alert.active?'var(--border-strong)':'rgba(100,116,139,0.15)'}`,display:'flex',alignItems:'center',justifyContent:'center',fontSize:20,flexShrink:0}}>🔔</div>
                 <div style={{flex:1}}>
                   <div style={{fontSize:14,fontWeight:700,color:'var(--text-primary)',marginBottom:2}}>{alert.building_name}</div>
-                  <div style={{fontSize:12,color:'#475569'}}>Alert when price {alert.direction==='up'?'rises':'drops'} {alert.threshold_pct||5}% · {alert.email}</div>
+                  <div style={{fontSize:12,color:'var(--text-secondary)'}}>Alert when price {alert.direction==='up'?'rises':'drops'} {alert.threshold_pct||5}% · {alert.email}</div>
                   {currentPpsqm>0 && <div style={{fontSize:11,color:change>0?'#22C55E':'#F87171',marginTop:4}}>Current: AED {fmtNum(Math.round(currentPpsqm/10.764))}/sqft{change!==0?` · ${change>0?'+':''}${change}% since created`:''}</div>}
                 </div>
                 <div style={{display:'flex',alignItems:'center',gap:10}}>

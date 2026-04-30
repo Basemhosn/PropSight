@@ -57,7 +57,7 @@ function OffPlanReadyTab({ recentRaw }) {
       </div>
       <div style={{background:'var(--surface)',border:'1px solid rgba(255,255,255,0.06)',borderRadius:14,overflow:'hidden'}}>
         <div style={{display:'grid',gridTemplateColumns:'90px 70px 70px 1fr 1fr 90px 75px',padding:'10px 20px',borderBottom:'1px solid rgba(59,130,246,0.06)',background:'rgba(59,130,246,0.02)'}}>
-          {['Date','Reg','BR','Area','Project','Value','AED/sqft'].map((h,i)=><div key={i} style={{fontSize:10,color:'#475569',fontWeight:600,textTransform:'uppercase',letterSpacing:'0.05em'}}>{h}</div>)}
+          {['Date','Reg','BR','Area','Project','Value','AED/sqft'].map((h,i)=><div key={i} style={{fontSize:10,color:'var(--text-secondary)',fontWeight:600,textTransform:'uppercase',letterSpacing:'0.05em'}}>{h}</div>)}
         </div>
         {rows.slice(0,visibleCount).map((r,i)=>{
           const ppsqft=r.s&&r.v?Math.round(r.v/r.s/10.764):0;
@@ -132,7 +132,7 @@ function PropertyLookupTab({ recentRaw }) {
     setShowSugg(false); setQuery(proj.name);
   };
 
-  const tt={contentStyle:{background:'#0A1628',border:'1px solid rgba(59,130,246,0.2)',borderRadius:8,color:'var(--text-primary)',fontSize:11}};
+  const tt={contentStyle:{background:'var(--surface)',border:'1px solid rgba(59,130,246,0.2)',borderRadius:8,color:'var(--text-primary)',fontSize:11}};
 
   return (
     <div>
@@ -140,7 +140,7 @@ function PropertyLookupTab({ recentRaw }) {
         <div style={{display:'flex',alignItems:'center',gap:10,background:'var(--surface)',border:'1px solid rgba(59,130,246,0.2)',borderRadius:12,padding:'12px 18px'}}>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#38BDF8" strokeWidth="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
           <input value={query} onChange={e=>{setQuery(e.target.value);setShowSugg(true);setSelected(null);}} onFocus={()=>setShowSugg(true)} placeholder="Search building or project..." style={{background:'none',border:'none',outline:'none',color:'var(--text-primary)',fontSize:14,flex:1,fontFamily:'system-ui'}}/>
-          {query&&<button onClick={()=>{setQuery('');setSelected(null);}} style={{background:'none',border:'none',cursor:'pointer',color:'#475569',fontSize:18}}>×</button>}
+          {query&&<button onClick={()=>{setQuery('');setSelected(null);}} style={{background:'none',border:'none',cursor:'pointer',color:'var(--text-secondary)',fontSize:18}}>×</button>}
         </div>
         {showSugg&&suggestions.length>0&&(
           <div style={{position:'absolute',top:'100%',left:0,right:0,background:'var(--surface)',border:'1px solid rgba(59,130,246,0.2)',borderRadius:12,marginTop:4,overflow:'hidden',zIndex:100,boxShadow:'0 8px 32px rgba(0,0,0,0.5)'}}>
@@ -150,7 +150,7 @@ function PropertyLookupTab({ recentRaw }) {
                 onMouseLeave={e=>e.currentTarget.style.background='none'}>
                 <div>
                   <div style={{fontSize:12,fontWeight:600,color:'var(--text-primary)',marginBottom:2}}>{s.name.length>50?s.name.slice(0,50)+'…':s.name}</div>
-                  <div style={{fontSize:10,color:'#475569'}}>{na([...s.areas][0]||'')} · {s.transactions.length} txns</div>
+                  <div style={{fontSize:10,color:'var(--text-secondary)'}}>{na([...s.areas][0]||'')} · {s.transactions.length} txns</div>
                 </div>
               </button>
             ))}
@@ -162,7 +162,7 @@ function PropertyLookupTab({ recentRaw }) {
         <div style={{textAlign:'center',padding:'40px 0'}}>
           <div style={{fontSize:44,marginBottom:12}}>🏢</div>
           <div style={{fontSize:16,fontWeight:600,color:'var(--text-primary)',marginBottom:6}}>Search 1,145+ Dubai projects</div>
-          <div style={{fontSize:13,color:'#475569',marginBottom:24}}>Full DLD transaction history for any building</div>
+          <div style={{fontSize:13,color:'var(--text-secondary)',marginBottom:24}}>Full DLD transaction history for any building</div>
           <div style={{display:'flex',justifyContent:'center',gap:8,flexWrap:'wrap'}}>
             {['Creek Bay','Terra Woods','Serenz by Danube','Creek Haven'].map(p=>(
               <button key={p} onClick={()=>{setQuery(p);selectProject({name:p,...(projectIndex[p]||{transactions:[],areas:new Set()})});}} style={{padding:'7px 14px',borderRadius:20,border:'1px solid rgba(59,130,246,0.2)',background:'rgba(59,130,246,0.06)',color:'var(--text-muted)',cursor:'pointer',fontSize:12,fontFamily:'system-ui'}}>{p}</button>
@@ -202,7 +202,7 @@ function PropertyLookupTab({ recentRaw }) {
                   <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)"/>
                   <XAxis dataKey="month" tick={{fontSize:8,fill:'#475569'}} axisLine={false} tickLine={false}/>
                   <YAxis hide/>
-                  <Tooltip contentStyle={{background:'#0A1628',border:'1px solid rgba(59,130,246,0.2)',borderRadius:8,color:'var(--text-primary)',fontSize:10}} formatter={v=>[v,'Txns']}/>
+                  <Tooltip contentStyle={{background:'var(--surface)',border:'1px solid rgba(59,130,246,0.2)',borderRadius:8,color:'var(--text-primary)',fontSize:10}} formatter={v=>[v,'Txns']}/>
                   <Area type="monotone" dataKey="count" stroke="#38BDF8" strokeWidth={2} fill="url(#plg2)"/>
                 </AreaChart>
               </ResponsiveContainer>
@@ -222,7 +222,7 @@ function PropertyLookupTab({ recentRaw }) {
           <div style={{background:'var(--surface)',border:'1px solid rgba(255,255,255,0.06)',borderRadius:12,overflow:'hidden'}}>
             <div style={{padding:'12px 16px',borderBottom:'1px solid rgba(255,255,255,0.06)',fontSize:12,fontWeight:600,color:'var(--text-primary)'}}>Recent Transactions</div>
             <div style={{display:'grid',gridTemplateColumns:'90px 90px 60px 60px 80px 70px',padding:'8px 16px',borderBottom:'1px solid rgba(59,130,246,0.06)',background:'rgba(59,130,246,0.02)'}}>
-              {['Date','Value','Reg','BR','Size','AED/sqft'].map((h,i)=><div key={i} style={{fontSize:9,color:'#475569',fontWeight:600,textTransform:'uppercase',letterSpacing:'0.04em'}}>{h}</div>)}
+              {['Date','Value','Reg','BR','Size','AED/sqft'].map((h,i)=><div key={i} style={{fontSize:9,color:'var(--text-secondary)',fontWeight:600,textTransform:'uppercase',letterSpacing:'0.04em'}}>{h}</div>)}
             </div>
             {selected.recentTxns.map((t,i)=>{
               const ppsqft=t.s&&t.v?Math.round(t.v/t.s/10.764):0;
@@ -254,7 +254,7 @@ export default function PropertiesPage({ recentRaw, projectsData, onProjectClick
         <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:16}}>
           <div>
             <h1 style={{margin:0,fontSize:22,fontWeight:700,color:'var(--text-primary)',marginBottom:4}}>Properties</h1>
-            <div style={{fontSize:13,color:'#475569'}}>Off-plan & ready transactions · Search any building or project</div>
+            <div style={{fontSize:13,color:'var(--text-secondary)'}}>Off-plan & ready transactions · Search any building or project</div>
           </div>
           <div style={{display:'flex',gap:6,background:'var(--surface)',border:'1px solid rgba(59,130,246,0.15)',borderRadius:10,padding:4}}>
             {[['properties','Off-Plan & Ready'],['lookup','Property Lookup']].map(([t,l])=>(

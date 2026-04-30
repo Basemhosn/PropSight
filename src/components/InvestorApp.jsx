@@ -137,7 +137,7 @@ Respond ONLY with valid JSON (no markdown):
             <span style={{fontSize:11,fontWeight:600,color:'#38BDF8'}}>Investor Portal</span>
           </div>
           {profile?.subscription_status === 'pro' || profile?.subscription_status === 'agent' ? (
-            <button onClick={onSwitchToBroker} style={{fontSize:11,color:'#475569',background:'none',border:'1px solid rgba(255,255,255,0.07)',borderRadius:8,padding:'5px 10px',cursor:'pointer',fontFamily:'inherit'}}>
+            <button onClick={onSwitchToBroker} style={{fontSize:11,color:'var(--text-secondary)',background:'none',border:'1px solid rgba(255,255,255,0.07)',borderRadius:8,padding:'5px 10px',cursor:'pointer',fontFamily:'inherit'}}>
               Switch to Broker →
             </button>
           ) : null}
@@ -158,7 +158,7 @@ Respond ONLY with valid JSON (no markdown):
               <div style={{display:'flex',alignItems:'center',gap:12,background:'var(--surface)',border:'2px solid rgba(59,130,246,0.2)',borderRadius:14,padding:'13px 18px',boxShadow:'0 4px 20px rgba(0,0,0,0.3)'}}>
                 <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#38BDF8" strokeWidth="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
                 <input value={search} onChange={e=>{setSearch(e.target.value);setSelectedArea(null);}} placeholder="Dubai Marina, Business Bay, Emaar..." style={{background:'none',border:'none',outline:'none',color:'var(--text-primary)',fontSize:15,flex:1,fontFamily:'inherit'}}/>
-                {search && <button onClick={()=>{setSearch('');setSelectedArea(null);}} style={{background:'none',border:'none',cursor:'pointer',color:'#475569',fontSize:18,lineHeight:1,padding:0}}>×</button>}
+                {search && <button onClick={()=>{setSearch('');setSelectedArea(null);}} style={{background:'none',border:'none',cursor:'pointer',color:'var(--text-secondary)',fontSize:18,lineHeight:1,padding:0}}>×</button>}
               </div>
               {search.length>1 && suggestions.length>0 && (
                 <div style={{position:'absolute',top:'calc(100% + 6px)',left:0,right:0,background:'var(--surface)',border:'1px solid rgba(59,130,246,0.2)',borderRadius:12,zIndex:50,overflow:'hidden',boxShadow:'0 8px 32px rgba(0,0,0,0.5)'}}>
@@ -170,11 +170,11 @@ Respond ONLY with valid JSON (no markdown):
                         <span style={{fontSize:18}}>{a.emoji}</span>
                         <div style={{textAlign:'left'}}>
                           <div style={{fontSize:13,fontWeight:600,color:'var(--text-primary)'}}>{a.name}</div>
-                          <div style={{fontSize:11,color:'#475569'}}>{fmtNum(a.count)} transactions</div>
+                          <div style={{fontSize:11,color:'var(--text-secondary)'}}>{fmtNum(a.count)} transactions</div>
                         </div>
                       </div>
                       <div style={{textAlign:'right'}}>
-                        <div style={{fontSize:13,fontWeight:600,color:'var(--text-primary)'}}>AED {fmtNum(a.ppsqft)}<span style={{fontSize:10,color:'#475569'}}>/sqft</span></div>
+                        <div style={{fontSize:13,fontWeight:600,color:'var(--text-primary)'}}>AED {fmtNum(a.ppsqft)}<span style={{fontSize:10,color:'var(--text-secondary)'}}>/sqft</span></div>
                         <div style={{fontSize:11,color:a.yoy>=0?'#22C55E':'#F87171',fontWeight:600}}>{a.yoy>=0?'+':''}{a.yoy}%</div>
                       </div>
                     </button>
@@ -191,7 +191,7 @@ Respond ONLY with valid JSON (no markdown):
                   <span style={{fontSize:36}}>{selectedArea.emoji}</span>
                   <div>
                     <h2 style={{fontSize:22,fontWeight:700,color:'var(--text-primary)',margin:0,marginBottom:4}}>{selectedArea.name}</h2>
-                    <div style={{fontSize:13,color:'#475569'}}>{fmtNum(selectedArea.count)} total transactions</div>
+                    <div style={{fontSize:13,color:'var(--text-secondary)'}}>{fmtNum(selectedArea.count)} total transactions</div>
                   </div>
                 </div>
                 <div style={{background:selectedArea.yoy>=0?'rgba(34,197,94,0.1)':'rgba(248,113,113,0.1)',border:`1px solid ${selectedArea.yoy>=0?'rgba(34,197,94,0.2)':'rgba(248,113,113,0.2)'}`,borderRadius:20,padding:'6px 14px',display:'flex',alignItems:'center',gap:6}}>
@@ -215,7 +215,7 @@ Respond ONLY with valid JSON (no markdown):
             </div>
           )}
 
-          <div style={{fontSize:12,fontWeight:600,color:'#475569',marginBottom:12,textTransform:'uppercase',letterSpacing:'0.07em'}}>{search.length>1?`${suggestions.length} results`:'Popular areas'}</div>
+          <div style={{fontSize:12,fontWeight:600,color:'var(--text-secondary)',marginBottom:12,textTransform:'uppercase',letterSpacing:'0.07em'}}>{search.length>1?`${suggestions.length} results`:'Popular areas'}</div>
           <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(190px,1fr))',gap:12}}>
             {displayAreas.map((a,i)=>(
               <div key={i} className="inv-card" onClick={()=>{setSelectedArea(a);setSearch(a.name);window.scrollTo({top:0,behavior:'smooth'});}} style={{background:'var(--surface)',border:'1px solid rgba(255,255,255,0.06)',borderRadius:14,padding:'16px'}}>
@@ -224,8 +224,8 @@ Respond ONLY with valid JSON (no markdown):
                   <span style={{fontSize:11,fontWeight:700,padding:'3px 8px',borderRadius:20,background:a.yoy>=0?'rgba(34,197,94,0.1)':'rgba(248,113,113,0.1)',color:a.yoy>=0?'#22C55E':'#F87171'}}>{a.yoy>=0?'+':''}{a.yoy}%</span>
                 </div>
                 <div style={{fontSize:14,fontWeight:600,color:'var(--text-primary)',marginBottom:4}}>{a.name}</div>
-                <div style={{fontSize:20,fontWeight:700,color:'#38BDF8',marginBottom:2}}>AED {fmtNum(a.ppsqft)}<span style={{fontSize:10,color:'#475569',fontWeight:400}}>/sqft</span></div>
-                <div style={{fontSize:11,color:'#475569'}}>{fmtNum(a.count)} transactions</div>
+                <div style={{fontSize:20,fontWeight:700,color:'#38BDF8',marginBottom:2}}>AED {fmtNum(a.ppsqft)}<span style={{fontSize:10,color:'var(--text-secondary)',fontWeight:400}}>/sqft</span></div>
+                <div style={{fontSize:11,color:'var(--text-secondary)'}}>{fmtNum(a.count)} transactions</div>
               </div>
             ))}
           </div>
@@ -299,13 +299,13 @@ Respond ONLY with valid JSON (no markdown):
             <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:18}}>
               <div>
                 <h1 style={{fontSize:22,fontWeight:700,color:'var(--text-primary)',margin:0,marginBottom:4}}>Recent Sales</h1>
-                <div style={{fontSize:13,color:'#475569'}}>{selectedArea?`Latest in ${selectedArea.name}`:'Latest Dubai transactions'}</div>
+                <div style={{fontSize:13,color:'var(--text-secondary)'}}>{selectedArea?`Latest in ${selectedArea.name}`:'Latest Dubai transactions'}</div>
               </div>
-              {selectedArea && <button onClick={()=>setSelectedArea(null)} style={{background:'none',border:'1px solid rgba(255,255,255,0.08)',borderRadius:8,color:'#475569',cursor:'pointer',padding:'6px 12px',fontSize:12,fontFamily:'inherit'}}>Show all</button>}
+              {selectedArea && <button onClick={()=>setSelectedArea(null)} style={{background:'none',border:'1px solid rgba(255,255,255,0.08)',borderRadius:8,color:'var(--text-secondary)',cursor:'pointer',padding:'6px 12px',fontSize:12,fontFamily:'inherit'}}>Show all</button>}
             </div>
             <div style={{background:'var(--surface)',border:'1px solid rgba(255,255,255,0.06)',borderRadius:16,overflow:'hidden'}}>
               <div style={{display:'grid',gridTemplateColumns:'1fr 1fr 75px 90px 70px',padding:'10px 18px',borderBottom:'1px solid rgba(255,255,255,0.06)'}}>
-                {['Area','Project','Date','Price','Type'].map((h,i)=><div key={i} style={{fontSize:10,color:'#475569',fontWeight:600,textTransform:'uppercase',letterSpacing:'0.05em'}}>{h}</div>)}
+                {['Area','Project','Date','Price','Type'].map((h,i)=><div key={i} style={{fontSize:10,color:'var(--text-secondary)',fontWeight:600,textTransform:'uppercase',letterSpacing:'0.05em'}}>{h}</div>)}
               </div>
               {recentSales.map((r,i)=>{
                 const ppsqft=r.s&&r.v?Math.round(r.v/r.s/10.764):0;
@@ -313,10 +313,10 @@ Respond ONLY with valid JSON (no markdown):
                   <div key={i} className="inv-row" style={{display:'grid',gridTemplateColumns:'1fr 1fr 75px 90px 70px',padding:'13px 18px',borderBottom:i<recentSales.length-1?'1px solid rgba(255,255,255,0.03)':'none',transition:'background 0.1s'}}>
                     <div>
                       <div style={{fontSize:13,fontWeight:600,color:'var(--text-primary)'}}>{na(r.a||'')}</div>
-                      <div style={{fontSize:11,color:'#475569'}}>{r.b||''}{ppsqft?' · AED '+fmtNum(ppsqft)+'/sqft':''}</div>
+                      <div style={{fontSize:11,color:'var(--text-secondary)'}}>{r.b||''}{ppsqft?' · AED '+fmtNum(ppsqft)+'/sqft':''}</div>
                     </div>
                     <div style={{fontSize:12,color:'var(--text-muted)',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap',paddingRight:8,alignSelf:'center'}}>{r.j||'—'}</div>
-                    <div style={{fontSize:11,color:'#475569',alignSelf:'center'}}>{r.d||'—'}</div>
+                    <div style={{fontSize:11,color:'var(--text-secondary)',alignSelf:'center'}}>{r.d||'—'}</div>
                     <div style={{fontSize:13,fontWeight:600,color:'var(--text-primary)',alignSelf:'center'}}>{r.v?fmtAED(r.v,true):'—'}</div>
                     <div style={{alignSelf:'center'}}><span style={{fontSize:10,fontWeight:600,padding:'2px 7px',borderRadius:20,background:r.r==='Off'?'rgba(59,130,246,0.1)':'rgba(34,197,94,0.1)',color:r.r==='Off'?'#38BDF8':'#22C55E'}}>{r.r==='Off'?'Off-Plan':'Ready'}</span></div>
                   </div>

@@ -55,7 +55,7 @@ export default function DeveloperTracker({ projectsData, areaData }) {
       <div style={{flex:1,overflowY:'auto',padding:'24px 28px',transition:'all 0.3s'}}>
         <div style={{marginBottom:24}}>
           <h1 style={{margin:0,fontSize:22,fontWeight:700,color:'var(--text-primary)',marginBottom:4}}>Developers</h1>
-          <div style={{fontSize:13,color:'#475569'}}>Dubai's top real estate developers — click any to see full profile</div>
+          <div style={{fontSize:13,color:'var(--text-secondary)'}}>Dubai's top real estate developers — click any to see full profile</div>
         </div>
 
         <div style={{display:'flex',alignItems:'center',gap:8,background:'var(--surface)',border:'1px solid rgba(59,130,246,0.15)',borderRadius:10,padding:'10px 16px',marginBottom:20}}>
@@ -76,16 +76,16 @@ export default function DeveloperTracker({ projectsData, areaData }) {
                   <div style={{width:48,height:48,borderRadius:12,background:`${meta.color}15`,border:`1px solid ${meta.color}30`,display:'flex',alignItems:'center',justifyContent:'center',fontSize:24,flexShrink:0}}>{meta.logo}</div>
                   <div>
                     <div style={{fontSize:14,fontWeight:700,color:'var(--text-primary)'}}>{dev.name}</div>
-                    <div style={{fontSize:11,color:'#475569'}}>{dev.projects.length} projects tracked</div>
+                    <div style={{fontSize:11,color:'var(--text-secondary)'}}>{dev.projects.length} projects tracked</div>
                   </div>
                 </div>
                 <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10,marginBottom:12}}>
                   <div style={{background:'rgba(59,130,246,0.06)',borderRadius:8,padding:'8px 10px'}}>
-                    <div style={{fontSize:10,color:'#475569',marginBottom:3}}>TRANSACTIONS</div>
+                    <div style={{fontSize:10,color:'var(--text-secondary)',marginBottom:3}}>TRANSACTIONS</div>
                     <div style={{fontSize:15,fontWeight:700,color:'var(--text-primary)'}}>{fmtNum(dev.totalTxns)}</div>
                   </div>
                   <div style={{background:'rgba(59,130,246,0.06)',borderRadius:8,padding:'8px 10px'}}>
-                    <div style={{fontSize:10,color:'#475569',marginBottom:3}}>TOTAL VALUE</div>
+                    <div style={{fontSize:10,color:'var(--text-secondary)',marginBottom:3}}>TOTAL VALUE</div>
                     <div style={{fontSize:15,fontWeight:700,color:meta.color}}>{fmtAED(dev.totalValue,true)}</div>
                   </div>
                 </div>
@@ -110,7 +110,7 @@ export default function DeveloperTracker({ projectsData, areaData }) {
         return (
           <>
             <div onClick={()=>setSelected(null)} style={{position:'absolute',inset:0,background:'rgba(0,0,0,0.4)',zIndex:10}}/>
-            <div style={{position:'absolute',right:0,top:0,bottom:0,width:480,background:'#0A1628',borderLeft:`1px solid ${meta.color}30`,zIndex:11,overflowY:'auto',boxShadow:'-8px 0 40px rgba(0,0,0,0.5)'}}>
+            <div style={{position:'absolute',right:0,top:0,bottom:0,width:480,background:'var(--surface)',borderLeft:`1px solid ${meta.color}30`,zIndex:11,overflowY:'auto',boxShadow:'-8px 0 40px rgba(0,0,0,0.5)'}}>
               {/* Header */}
               <div style={{padding:24,borderBottom:'1px solid rgba(255,255,255,0.06)',background:`linear-gradient(135deg,${meta.color}10,rgba(6,14,26,0.5))`}}>
                 <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:16}}>
@@ -118,7 +118,7 @@ export default function DeveloperTracker({ projectsData, areaData }) {
                     <div style={{width:56,height:56,borderRadius:14,background:`${meta.color}15`,border:`2px solid ${meta.color}40`,display:'flex',alignItems:'center',justifyContent:'center',fontSize:28}}>{meta.logo}</div>
                     <div>
                       <div style={{fontSize:18,fontWeight:800,color:'var(--text-primary)',marginBottom:2}}>{selected.name}</div>
-                      <div style={{fontSize:12,color:'#475569'}}>Est. {meta.founded} · {meta.hq}</div>
+                      <div style={{fontSize:12,color:'var(--text-secondary)'}}>Est. {meta.founded} · {meta.hq}</div>
                     </div>
                   </div>
                   <button onClick={()=>setSelected(null)} style={{background:'rgba(59,130,246,0.1)',border:'none',borderRadius:8,color:'var(--text-muted)',padding:'6px 10px',cursor:'pointer',fontSize:18}}>×</button>
@@ -146,7 +146,7 @@ export default function DeveloperTracker({ projectsData, areaData }) {
                         <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)"/>
                         <XAxis dataKey="name" tick={{fontSize:9,fill:'#475569'}} axisLine={false} tickLine={false}/>
                         <YAxis hide/>
-                        <Tooltip contentStyle={{background:'#0A1628',border:'1px solid rgba(59,130,246,0.2)',borderRadius:8,color:'var(--text-primary)',fontSize:11}}/>
+                        <Tooltip contentStyle={{background:'var(--surface)',border:'1px solid rgba(59,130,246,0.2)',borderRadius:8,color:'var(--text-primary)',fontSize:11}}/>
                         <Bar dataKey="count" fill={meta.color} radius={[4,4,0,0]}/>
                       </BarChart>
                     </ResponsiveContainer>
@@ -160,15 +160,15 @@ export default function DeveloperTracker({ projectsData, areaData }) {
                     <div key={i} style={{background:'rgba(59,130,246,0.04)',border:'1px solid rgba(59,130,246,0.08)',borderRadius:10,padding:'12px 14px',display:'flex',justifyContent:'space-between',alignItems:'center'}}>
                       <div>
                         <div style={{fontSize:12,fontWeight:600,color:'var(--text-primary)',marginBottom:2}}>{proj.name.length>35?proj.name.slice(0,35)+'…':proj.name}</div>
-                        <div style={{fontSize:11,color:'#475569'}}>{proj.area} · {fmtNum(proj.kpis?.count||0)} txns</div>
+                        <div style={{fontSize:11,color:'var(--text-secondary)'}}>{proj.area} · {fmtNum(proj.kpis?.count||0)} txns</div>
                       </div>
                       <div style={{textAlign:'right'}}>
                         <div style={{fontSize:12,fontWeight:600,color:meta.color}}>{fmtAED(proj.kpis?.avg||0,true)}</div>
-                        <div style={{fontSize:10,color:'#475569'}}>avg deal</div>
+                        <div style={{fontSize:10,color:'var(--text-secondary)'}}>avg deal</div>
                       </div>
                     </div>
                   ))}
-                  {selected.projects.length > 12 && <div style={{textAlign:'center',fontSize:12,color:'#475569',padding:'8px 0'}}>+{selected.projects.length-12} more projects</div>}
+                  {selected.projects.length > 12 && <div style={{textAlign:'center',fontSize:12,color:'var(--text-secondary)',padding:'8px 0'}}>+{selected.projects.length-12} more projects</div>}
                 </div>
               </div>
             </div>

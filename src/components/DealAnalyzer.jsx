@@ -104,7 +104,7 @@ ${mode==='buy'?
       <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:24}}>
         <div>
           <h1 style={{margin:0,fontSize:22,fontWeight:700,color:'var(--text-primary)',marginBottom:4}}>Deal Analyzer</h1>
-          <div style={{fontSize:13,color:'#475569'}}>AI-powered analysis using live DLD market data</div>
+          <div style={{fontSize:13,color:'var(--text-secondary)'}}>AI-powered analysis using live DLD market data</div>
         </div>
         <div style={{display:'flex',gap:0,background:'var(--surface)',border:'1px solid rgba(59,130,246,0.15)',borderRadius:12,padding:4}}>
           {[['buy','🔍 Buying'],['sell','💰 Selling']].map(([m,label])=>(
@@ -183,7 +183,7 @@ ${mode==='buy'?
               </div>
               <input value={form.size} onChange={e=>setForm(f=>({...f,size:e.target.value}))} placeholder={unit==='sqft'?'1,200':'111'} style={inp}/>
               {form.size && parseFloat(form.size)>0 && (
-                <div style={{fontSize:10,color:'#475569',marginTop:4}}>
+                <div style={{fontSize:10,color:'var(--text-secondary)',marginTop:4}}>
                   = {unit==='sqft' ? Math.round(parseFloat(form.size)/10.764)+' sqm' : Math.round(parseFloat(form.size)*10.764)+' sqft'}
                 </div>
               )}
@@ -205,7 +205,7 @@ ${mode==='buy'?
                   ['Price/sqm','AED '+fmtNum(areaData[form.area].kpis?.ppsqm||0),'#38BDF8'],
                   ['Transactions',fmtNum(areaData[form.area].kpis?.count||0),'var(--text-secondary)'],
                 ].map(([l,v,c],i)=>(
-                  <div key={i}><div style={{fontSize:10,color:'#475569'}}>{l}</div><div style={{fontSize:13,fontWeight:600,color:c}}>{v}</div></div>
+                  <div key={i}><div style={{fontSize:10,color:'var(--text-secondary)'}}>{l}</div><div style={{fontSize:13,fontWeight:600,color:c}}>{v}</div></div>
                 ))}
               </div>
             </div>
@@ -217,7 +217,7 @@ ${mode==='buy'?
             <div style={{background:'var(--surface)',border:'1px solid rgba(255,255,255,0.06)',borderRadius:14,padding:40,textAlign:'center',height:'100%',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center'}}>
               <div style={{fontSize:48,marginBottom:16}}>🤖</div>
               <div style={{fontSize:16,fontWeight:600,color:'var(--text-primary)',marginBottom:8}}>AI Deal Verdict</div>
-              <div style={{fontSize:13,color:'#475569',lineHeight:1.6}}>Enter property details and click Analyze to get an AI-powered investment verdict using live Dubai market data.</div>
+              <div style={{fontSize:13,color:'var(--text-secondary)',lineHeight:1.6}}>Enter property details and click Analyze to get an AI-powered investment verdict using live Dubai market data.</div>
             </div>
           )}
           {loading && (
@@ -252,8 +252,8 @@ ${mode==='buy'?
                   </div>
                   <div style={{background:'rgba(59,130,246,0.06)',border:'1px solid rgba(59,130,246,0.1)',borderRadius:10,padding:14}}>
                     <div style={{fontSize:10,color:'var(--text-muted)',marginBottom:4}}>YOUR PRICE/SQFT</div>
-                    <div style={{fontSize:15,fontWeight:700,color:'var(--text-primary)'}}>AED {fmtNum(result.ppsqft)}<span style={{fontSize:11,color:'#475569'}}> vs mkt AED {fmtNum(result.marketPpsqft)}</span></div>
-                    <div style={{fontSize:12,color:'#475569',marginTop:2}}>AED {fmtNum(result.ppsqm)}/sqm vs mkt AED {fmtNum(result.marketPpsqm)}/sqm</div>
+                    <div style={{fontSize:15,fontWeight:700,color:'var(--text-primary)'}}>AED {fmtNum(result.ppsqft)}<span style={{fontSize:11,color:'var(--text-secondary)'}}> vs mkt AED {fmtNum(result.marketPpsqft)}</span></div>
+                    <div style={{fontSize:12,color:'var(--text-secondary)',marginTop:2}}>AED {fmtNum(result.ppsqm)}/sqm vs mkt AED {fmtNum(result.marketPpsqm)}/sqm</div>
                   </div>
                 </div>
                 <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12}}>

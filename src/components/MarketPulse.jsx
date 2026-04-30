@@ -53,7 +53,7 @@ Respond ONLY with JSON (no markdown):
       <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:24}}>
         <div>
           <h1 style={{margin:0,fontSize:22,fontWeight:700,color:'var(--text-primary)',marginBottom:4}}>Market <span style={{color:'#38BDF8'}}>Pulse</span></h1>
-          <div style={{fontSize:13,color:'#475569'}}>Weekly Dubai real estate intelligence — AI powered</div>
+          <div style={{fontSize:13,color:'var(--text-secondary)'}}>Weekly Dubai real estate intelligence — AI powered</div>
         </div>
         <button onClick={generateSummary} disabled={loading} style={{padding:'9px 16px',borderRadius:10,border:'1px solid rgba(59,130,246,0.2)',background:'rgba(59,130,246,0.06)',color:'#38BDF8',cursor:'pointer',fontSize:12,fontWeight:600,fontFamily:'system-ui',opacity:loading?0.5:1}}>🔄 Refresh</button>
       </div>
@@ -112,7 +112,7 @@ Respond ONLY with JSON (no markdown):
                 <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)"/>
                 <XAxis dataKey="month" tick={{fontSize:9,fill:'#475569'}} axisLine={false} tickLine={false}/>
                 <YAxis hide/>
-                <Tooltip contentStyle={{background:'#0A1628',border:'1px solid rgba(59,130,246,0.2)',borderRadius:8,color:'var(--text-primary)',fontSize:11}} formatter={v=>[fmtNum(v),'Transactions']}/>
+                <Tooltip contentStyle={{background:'var(--surface)',border:'1px solid rgba(59,130,246,0.2)',borderRadius:8,color:'var(--text-primary)',fontSize:11}} formatter={v=>[fmtNum(v),'Transactions']}/>
                 <Area type="monotone" dataKey="count" stroke="#38BDF8" strokeWidth={2.5} fill="url(#mpg1)"/>
               </AreaChart>
             </ResponsiveContainer>
@@ -125,7 +125,7 @@ Respond ONLY with JSON (no markdown):
                 <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)"/>
                 <XAxis dataKey="year" tick={{fontSize:9,fill:'#475569'}} axisLine={false} tickLine={false}/>
                 <YAxis hide/>
-                <Tooltip contentStyle={{background:'#0A1628',border:'1px solid rgba(59,130,246,0.2)',borderRadius:8,color:'var(--text-primary)',fontSize:11}} formatter={v=>['AED '+fmtNum(v)+'/sqft','Price']}/>
+                <Tooltip contentStyle={{background:'var(--surface)',border:'1px solid rgba(59,130,246,0.2)',borderRadius:8,color:'var(--text-primary)',fontSize:11}} formatter={v=>['AED '+fmtNum(v)+'/sqft','Price']}/>
                 <Area type="monotone" dataKey="ppsqft" stroke="#22C55E" strokeWidth={2.5} fill="url(#mpg2)"/>
               </AreaChart>
             </ResponsiveContainer>
@@ -142,7 +142,7 @@ Respond ONLY with JSON (no markdown):
                 <div style={{width:28,height:28,borderRadius:8,background:'rgba(59,130,246,0.1)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:12,fontWeight:700,color:'#38BDF8'}}>#{i+1}</div>
                 <div>
                   <div style={{fontSize:13,fontWeight:600,color:'var(--text-primary)'}}>{area.name}</div>
-                  <div style={{fontSize:11,color:'#475569'}}>{fmtNum(area.count)} transactions · AED {fmtNum(area.ppsqft)}/sqft</div>
+                  <div style={{fontSize:11,color:'var(--text-secondary)'}}>{fmtNum(area.count)} transactions · AED {fmtNum(area.ppsqft)}/sqft</div>
                 </div>
               </div>
               <span style={{fontSize:12,fontWeight:700,padding:'4px 10px',borderRadius:20,background:area.yoy>0?'rgba(34,197,94,0.1)':'rgba(248,113,113,0.1)',color:area.yoy>0?'#22C55E':'#F87171',border:`1px solid ${area.yoy>0?'rgba(34,197,94,0.2)':'rgba(248,113,113,0.2)'}`}}>{area.yoy>0?'+':''}{area.yoy}% YoY</span>

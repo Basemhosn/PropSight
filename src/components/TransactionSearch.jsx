@@ -54,7 +54,7 @@ export default function TransactionSearch({ recentRaw }) {
       <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:20}}>
         <div>
           <h1 style={{margin:0,fontSize:22,fontWeight:700,color:'var(--text-primary)',marginBottom:4}}>Transaction Search</h1>
-          <div style={{fontSize:13,color:'#475569'}}>{fmtNum(filtered.length)} of {fmtNum(rows.length)} transactions</div>
+          <div style={{fontSize:13,color:'var(--text-secondary)'}}>{fmtNum(filtered.length)} of {fmtNum(rows.length)} transactions</div>
         </div>
         <button onClick={exportCSV} style={{display:'flex',alignItems:'center',gap:8,padding:'9px 16px',borderRadius:10,border:'1px solid rgba(59,130,246,0.2)',background:'rgba(59,130,246,0.06)',color:'#38BDF8',cursor:'pointer',fontSize:13,fontWeight:600,fontFamily:'system-ui'}}>↓ Export CSV</button>
       </div>
@@ -73,9 +73,9 @@ export default function TransactionSearch({ recentRaw }) {
       </div>
       <div style={{background:'var(--surface)',border:'1px solid rgba(255,255,255,0.06)',borderRadius:14,overflow:'hidden'}}>
         <div style={{display:'grid',gridTemplateColumns:'130px 90px 70px 80px 1fr 1fr 100px 80px 70px',padding:'10px 16px',borderBottom:'1px solid rgba(255,255,255,0.06)',background:'rgba(59,130,246,0.04)'}}>
-          {['TXN ID','Date','Type','Reg','Area','Project','Value','Size','Price/sqft'].map((h,i)=><div key={i} style={{fontSize:10,color:'#475569',fontWeight:600,textTransform:'uppercase',letterSpacing:'0.06em'}}>{h}</div>)}
+          {['TXN ID','Date','Type','Reg','Area','Project','Value','Size','Price/sqft'].map((h,i)=><div key={i} style={{fontSize:10,color:'var(--text-secondary)',fontWeight:600,textTransform:'uppercase',letterSpacing:'0.06em'}}>{h}</div>)}
         </div>
-        {paged.length===0 ? <div style={{textAlign:'center',padding:40,color:'#475569'}}>No transactions match filters</div>
+        {paged.length===0 ? <div style={{textAlign:'center',padding:40,color:'var(--text-secondary)'}}>No transactions match filters</div>
         : paged.map((r,i)=>{
           const tc=TC[r.type]||{bg:'rgba(100,116,139,0.1)',color:'var(--text-secondary)'};
           const rc=RC[r.reg]||{bg:'rgba(100,116,139,0.1)',color:'var(--text-secondary)'};
@@ -83,7 +83,7 @@ export default function TransactionSearch({ recentRaw }) {
             <div key={r.id} style={{display:'grid',gridTemplateColumns:'130px 90px 70px 80px 1fr 1fr 100px 80px 70px',padding:'11px 16px',borderBottom:i<paged.length-1?'1px solid rgba(255,255,255,0.03)':'none',transition:'background 0.1s'}}
               onMouseEnter={e=>e.currentTarget.style.background='rgba(59,130,246,0.04)'}
               onMouseLeave={e=>e.currentTarget.style.background='transparent'}>
-              <div style={{fontSize:11,color:'#475569',fontFamily:'monospace'}}>{r.id}</div>
+              <div style={{fontSize:11,color:'var(--text-secondary)',fontFamily:'monospace'}}>{r.id}</div>
               <div style={{fontSize:12,color:'var(--text-muted)'}}>{r.date}</div>
               <div><span style={{fontSize:10,fontWeight:600,padding:'2px 7px',borderRadius:20,background:tc.bg,color:tc.color}}>{r.type}</span></div>
               <div><span style={{fontSize:10,fontWeight:600,padding:'2px 7px',borderRadius:20,background:rc.bg,color:rc.color}}>{r.reg}</span></div>

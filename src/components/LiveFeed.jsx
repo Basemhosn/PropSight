@@ -50,7 +50,7 @@ export default function LiveFeed({ recentRaw }) {
                 <span style={{fontSize:11,fontWeight:600,color:'#22C55E'}}>LIVE</span>
               </div>
             </div>
-            <div style={{fontSize:13,color:'#475569'}}>{fmtNum(rows.length)} transactions · latest: {rows[0]?.d||'—'}</div>
+            <div style={{fontSize:13,color:'var(--text-secondary)'}}>{fmtNum(rows.length)} transactions · latest: {rows[0]?.d||'—'}</div>
           </div>
         </div>
         {stats && (
@@ -79,9 +79,9 @@ export default function LiveFeed({ recentRaw }) {
       </div>
 
       <div style={{flex:1,overflowY:'auto'}}>
-        {rows.length===0 ? <div style={{textAlign:'center',padding:60,color:'#475569'}}>No transactions match your filters</div> : <>
+        {rows.length===0 ? <div style={{textAlign:'center',padding:60,color:'var(--text-secondary)'}}>No transactions match your filters</div> : <>
           <div style={{display:'grid',gridTemplateColumns:'90px 1fr 90px 70px 70px 80px 75px',padding:'10px 28px',borderBottom:'1px solid rgba(59,130,246,0.06)',background:'rgba(59,130,246,0.02)',position:'sticky',top:0,zIndex:10}}>
-            {['Date','Project / Area','Value','Reg','Type','Size','Price/sqft'].map((h,i)=><div key={i} style={{fontSize:10,color:'#475569',fontWeight:600,textTransform:'uppercase',letterSpacing:'0.05em'}}>{h}</div>)}
+            {['Date','Project / Area','Value','Reg','Type','Size','Price/sqft'].map((h,i)=><div key={i} style={{fontSize:10,color:'var(--text-secondary)',fontWeight:600,textTransform:'uppercase',letterSpacing:'0.05em'}}>{h}</div>)}
           </div>
           {rows.slice(0,visibleCount).map((r,i)=>{
             const tc=TYPE_COLOR[r.t||'Sale']||TYPE_COLOR.Sale;
@@ -96,7 +96,7 @@ export default function LiveFeed({ recentRaw }) {
                 </div>
                 <div style={{minWidth:0,paddingRight:8}}>
                   <div style={{fontSize:12,fontWeight:600,color:'var(--text-primary)',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{r.j||'—'}</div>
-                  <div style={{fontSize:10,color:'#475569'}}>{niceArea(r.a||'')} {r.b?'· '+r.b:''}</div>
+                  <div style={{fontSize:10,color:'var(--text-secondary)'}}>{niceArea(r.a||'')} {r.b?'· '+r.b:''}</div>
                 </div>
                 <div style={{fontSize:12,fontWeight:700,color:'var(--text-primary)'}}>{r.v?fmtAED(r.v,true):'—'}</div>
                 <div><span style={{fontSize:9,fontWeight:600,padding:'2px 5px',borderRadius:20,background:r.r==='Off'?'rgba(59,130,246,0.1)':'rgba(34,197,94,0.1)',color:r.r==='Off'?'#38BDF8':'#22C55E'}}>{r.r==='Off'?'Off-Plan':'Ready'}</span></div>

@@ -52,7 +52,7 @@ function LiveFeedTab({ recentRaw }) {
       </div>
       <div style={{background:'var(--surface)',border:'1px solid rgba(255,255,255,0.06)',borderRadius:14,overflow:'hidden'}}>
         <div style={{display:'grid',gridTemplateColumns:'90px 1fr 90px 70px 70px 80px 75px',padding:'10px 20px',borderBottom:'1px solid rgba(59,130,246,0.06)',background:'rgba(59,130,246,0.02)'}}>
-          {['Date','Project / Area','Value','Reg','Type','Size','AED/sqft'].map((h,i)=><div key={i} style={{fontSize:10,color:'#475569',fontWeight:600,textTransform:'uppercase',letterSpacing:'0.05em'}}>{h}</div>)}
+          {['Date','Project / Area','Value','Reg','Type','Size','AED/sqft'].map((h,i)=><div key={i} style={{fontSize:10,color:'var(--text-secondary)',fontWeight:600,textTransform:'uppercase',letterSpacing:'0.05em'}}>{h}</div>)}
         </div>
         {rows.slice(0,visibleCount).map((r,i)=>{
           const tc=TC[r.t||'Sale']||TC.Sale;
@@ -66,7 +66,7 @@ function LiveFeedTab({ recentRaw }) {
               </div>
               <div style={{minWidth:0,paddingRight:8}}>
                 <div style={{fontSize:12,fontWeight:600,color:'var(--text-primary)',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{r.j||'—'}</div>
-                <div style={{fontSize:10,color:'#475569'}}>{na(r.a||'')} {r.b?'· '+r.b:''}</div>
+                <div style={{fontSize:10,color:'var(--text-secondary)'}}>{na(r.a||'')} {r.b?'· '+r.b:''}</div>
               </div>
               <div style={{fontSize:12,fontWeight:700,color:'var(--text-primary)'}}>{r.v?fmtAED(r.v,true):'—'}</div>
               <div><span style={{fontSize:9,fontWeight:600,padding:'2px 5px',borderRadius:20,background:r.r==='Off'?'rgba(59,130,246,0.1)':'rgba(34,197,94,0.1)',color:r.r==='Off'?'#38BDF8':'#22C55E'}}>{r.r==='Off'?'Off-Plan':'Ready'}</span></div>
@@ -118,7 +118,7 @@ function SearchTab({ recentRaw }) {
   return (
     <div>
       <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:12}}>
-        <div style={{fontSize:13,color:'#475569'}}>{fmtNum(filtered.length)} of {fmtNum(rows.length)} transactions</div>
+        <div style={{fontSize:13,color:'var(--text-secondary)'}}>{fmtNum(filtered.length)} of {fmtNum(rows.length)} transactions</div>
         <button onClick={exportCSV} style={{padding:'7px 14px',borderRadius:8,border:'1px solid rgba(59,130,246,0.2)',background:'rgba(59,130,246,0.06)',color:'#38BDF8',cursor:'pointer',fontSize:12,fontWeight:600,fontFamily:'system-ui'}}>↓ CSV</button>
       </div>
       <div style={{display:'grid',gridTemplateColumns:'2fr 1fr 1fr 1fr 1fr',gap:8,marginBottom:14}}>
@@ -133,9 +133,9 @@ function SearchTab({ recentRaw }) {
       </div>
       <div style={{background:'var(--surface)',border:'1px solid rgba(255,255,255,0.06)',borderRadius:14,overflow:'hidden'}}>
         <div style={{display:'grid',gridTemplateColumns:'90px 70px 70px 1fr 1fr 100px 70px',padding:'10px 20px',borderBottom:'1px solid rgba(255,255,255,0.06)',background:'rgba(59,130,246,0.04)'}}>
-          {['Date','Type','Reg','Area','Project','Value','AED/sqft'].map((h,i)=><div key={i} style={{fontSize:10,color:'#475569',fontWeight:600,textTransform:'uppercase',letterSpacing:'0.04em'}}>{h}</div>)}
+          {['Date','Type','Reg','Area','Project','Value','AED/sqft'].map((h,i)=><div key={i} style={{fontSize:10,color:'var(--text-secondary)',fontWeight:600,textTransform:'uppercase',letterSpacing:'0.04em'}}>{h}</div>)}
         </div>
-        {paged.length===0 ? <div style={{textAlign:'center',padding:40,color:'#475569'}}>No results</div>
+        {paged.length===0 ? <div style={{textAlign:'center',padding:40,color:'var(--text-secondary)'}}>No results</div>
         : paged.map((r,i)=>(
           <div key={r.id||i} style={{display:'grid',gridTemplateColumns:'90px 70px 70px 1fr 1fr 100px 70px',padding:'10px 20px',borderBottom:i<paged.length-1?'1px solid rgba(255,255,255,0.03)':'none'}}
             onMouseEnter={e=>e.currentTarget.style.background='rgba(59,130,246,0.04)'}
@@ -175,7 +175,7 @@ export default function RecentTransactions({ recentRaw }) {
                 <span style={{fontSize:11,fontWeight:600,color:'#22C55E'}}>LIVE DLD DATA</span>
               </div>
             </div>
-            <div style={{fontSize:13,color:'#475569'}}>Latest transactions from Dubai Land Department</div>
+            <div style={{fontSize:13,color:'var(--text-secondary)'}}>Latest transactions from Dubai Land Department</div>
           </div>
           <div style={{display:'flex',gap:6,background:'var(--surface)',border:'1px solid rgba(59,130,246,0.15)',borderRadius:10,padding:4}}>
             {[['live','Live Feed'],['search','Search & Filter']].map(([t,l])=>(

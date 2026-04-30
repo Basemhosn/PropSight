@@ -32,7 +32,7 @@ export default function ShareableReport({ areaData, core }) {
     <div style={{flex:1,overflowY:'auto',background:'var(--bg)',fontFamily:'system-ui',padding:'24px 28px'}}>
       <div style={{marginBottom:24}}>
         <h1 style={{margin:0,fontSize:22,fontWeight:700,color:'var(--text-primary)',marginBottom:4}}>Shareable Reports</h1>
-        <div style={{fontSize:13,color:'#475569'}}>Generate a public link for any area analysis — no login required to view</div>
+        <div style={{fontSize:13,color:'var(--text-secondary)'}}>Generate a public link for any area analysis — no login required to view</div>
       </div>
       <div style={{display:'grid',gridTemplateColumns:'320px 1fr',gap:20,alignItems:'start'}}>
         <div style={{background:'var(--surface)',border:'1px solid rgba(255,255,255,0.06)',borderRadius:14,padding:24}}>
@@ -62,7 +62,7 @@ export default function ShareableReport({ areaData, core }) {
                 <div style={{flex:1,fontSize:11,color:'var(--text-muted)',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{reportUrl.slice(0,45)}...</div>
                 <button onClick={copyLink} style={{flexShrink:0,padding:'4px 10px',borderRadius:6,border:'none',cursor:'pointer',background:copied?'rgba(34,197,94,0.2)':'rgba(59,130,246,0.15)',color:copied?'#22C55E':'#38BDF8',fontSize:11,fontWeight:600,fontFamily:'system-ui'}}>{copied?'✓ Copied':'Copy'}</button>
               </div>
-              <div style={{fontSize:11,color:'#475569',marginTop:8}}>Anyone with this link can view — no login needed.</div>
+              <div style={{fontSize:11,color:'var(--text-secondary)',marginTop:8}}>Anyone with this link can view — no login needed.</div>
             </div>
           )}
         </div>
@@ -73,7 +73,7 @@ export default function ShareableReport({ areaData, core }) {
               <div>
                 <div style={{fontSize:11,color:'#38BDF8',fontWeight:600,textTransform:'uppercase',letterSpacing:'0.06em',marginBottom:4}}>PropSight Market Report</div>
                 <div style={{fontSize:22,fontWeight:800,color:'var(--text-primary)'}}>{niceArea(selectedArea)}</div>
-                <div style={{fontSize:12,color:'#475569'}}>Dubai, UAE · {new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})}</div>
+                <div style={{fontSize:12,color:'var(--text-secondary)'}}>Dubai, UAE · {new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})}</div>
               </div>
               <div style={{display:'flex',alignItems:'center',gap:6,background:'rgba(34,197,94,0.08)',border:'1px solid rgba(34,197,94,0.15)',borderRadius:20,padding:'6px 14px'}}>
                 <div style={{width:6,height:6,borderRadius:'50%',background:'#22C55E'}}/>
@@ -96,7 +96,7 @@ export default function ShareableReport({ areaData, core }) {
                   <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)"/>
                   <XAxis dataKey="year" tick={{fontSize:10,fill:'#475569'}} axisLine={false} tickLine={false}/>
                   <YAxis tick={{fontSize:10,fill:'#475569'}} axisLine={false} tickLine={false} width={40}/>
-                  <Tooltip contentStyle={{background:'#0A1628',border:'1px solid rgba(59,130,246,0.2)',borderRadius:8,color:'var(--text-primary)',fontSize:11}} formatter={v=>['AED '+fmtNum(v)+'/sqft','Price']}/>
+                  <Tooltip contentStyle={{background:'var(--surface)',border:'1px solid rgba(59,130,246,0.2)',borderRadius:8,color:'var(--text-primary)',fontSize:11}} formatter={v=>['AED '+fmtNum(v)+'/sqft','Price']}/>
                   <Area type="monotone" dataKey="ppsqft" stroke="#38BDF8" strokeWidth={2.5} fill="url(#rg1)"/>
                 </AreaChart>
               </ResponsiveContainer>
@@ -114,7 +114,7 @@ export default function ShareableReport({ areaData, core }) {
           <div style={{background:'var(--surface)',border:'1px solid rgba(255,255,255,0.06)',borderRadius:14,padding:40,display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',textAlign:'center'}}>
             <div style={{fontSize:48,marginBottom:16}}>📊</div>
             <div style={{fontSize:16,fontWeight:600,color:'var(--text-primary)',marginBottom:8}}>Report Preview</div>
-            <div style={{fontSize:13,color:'#475569'}}>Select an area to preview the shareable report</div>
+            <div style={{fontSize:13,color:'var(--text-secondary)'}}>Select an area to preview the shareable report</div>
           </div>
         )}
       </div>

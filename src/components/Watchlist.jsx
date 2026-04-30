@@ -63,17 +63,17 @@ export default function Watchlist({ areaData, projectsData, setPage }) {
       <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:24}}>
         <div>
           <h1 style={{margin:0,fontSize:22,fontWeight:700,color:'var(--text-primary)',marginBottom:4}}>Watchlist</h1>
-          <div style={{fontSize:13,color:'#475569'}}>Track areas and projects you are interested in</div>
+          <div style={{fontSize:13,color:'var(--text-secondary)'}}>Track areas and projects you are interested in</div>
         </div>
         <button onClick={()=>setShowAdd(true)} style={{padding:'10px 18px',borderRadius:10,border:'none',cursor:'pointer',background:'linear-gradient(135deg,#1D4ED8,#38BDF8)',color:'#fff',fontSize:13,fontWeight:600,fontFamily:'system-ui'}}>+ Add to Watchlist</button>
       </div>
 
-      {loading ? <div style={{textAlign:'center',padding:60,color:'#475569'}}>Loading...</div>
+      {loading ? <div style={{textAlign:'center',padding:60,color:'var(--text-secondary)'}}>Loading...</div>
       : items.length === 0 ? (
         <div style={{textAlign:'center',padding:60}}>
           <div style={{fontSize:48,marginBottom:16}}>🔖</div>
           <div style={{fontSize:18,fontWeight:600,color:'var(--text-primary)',marginBottom:8}}>Nothing saved yet</div>
-          <div style={{fontSize:13,color:'#475569',marginBottom:24}}>Add areas or projects you want to track</div>
+          <div style={{fontSize:13,color:'var(--text-secondary)',marginBottom:24}}>Add areas or projects you want to track</div>
           <button onClick={()=>setShowAdd(true)} style={{padding:'11px 24px',borderRadius:10,border:'none',cursor:'pointer',background:'linear-gradient(135deg,#1D4ED8,#38BDF8)',color:'#fff',fontSize:13,fontWeight:600,fontFamily:'system-ui'}}>+ Add First Item</button>
         </div>
       ) : (
@@ -88,18 +88,18 @@ export default function Watchlist({ areaData, projectsData, setPage }) {
                   <div>
                     <span style={{fontSize:10,fontWeight:600,padding:'2px 8px',borderRadius:20,background:item.type==='area'?'rgba(59,130,246,0.1)':'rgba(245,158,11,0.1)',color:item.type==='area'?'#38BDF8':'#F59E0B',display:'inline-block',marginBottom:6}}>{item.type==='area'?'AREA':'PROJECT'}</span>
                     <div style={{fontSize:15,fontWeight:700,color:'var(--text-primary)'}}>{item.name}</div>
-                    {item.area && <div style={{fontSize:11,color:'#475569',marginTop:2}}>📍 {niceArea(item.area)}</div>}
+                    {item.area && <div style={{fontSize:11,color:'var(--text-secondary)',marginTop:2}}>📍 {niceArea(item.area)}</div>}
                   </div>
                   <button onClick={()=>removeItem(item.id)} style={{background:'rgba(248,113,113,0.1)',border:'1px solid rgba(248,113,113,0.2)',borderRadius:8,cursor:'pointer',color:'#F87171',padding:'4px 8px',fontSize:12,fontFamily:'system-ui'}}>✕</button>
                 </div>
                 {item.type==='area' && currentPpsqm>0 && (
                   <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8,marginBottom:10}}>
                     <div style={{background:'rgba(59,130,246,0.06)',borderRadius:8,padding:10}}>
-                      <div style={{fontSize:9,color:'#475569',marginBottom:3}}>PRICE/SQFT</div>
+                      <div style={{fontSize:9,color:'var(--text-secondary)',marginBottom:3}}>PRICE/SQFT</div>
                       <div style={{fontSize:13,fontWeight:700,color:'var(--text-primary)'}}>AED {fmtNum(Math.round(currentPpsqm/10.764))}</div>
                     </div>
                     <div style={{background:'rgba(59,130,246,0.06)',borderRadius:8,padding:10}}>
-                      <div style={{fontSize:9,color:'#475569',marginBottom:3}}>AVG DEAL</div>
+                      <div style={{fontSize:9,color:'var(--text-secondary)',marginBottom:3}}>AVG DEAL</div>
                       <div style={{fontSize:13,fontWeight:700,color:'var(--text-primary)'}}>{fmtAED(currentAvg,true)}</div>
                     </div>
                   </div>

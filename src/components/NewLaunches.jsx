@@ -97,13 +97,13 @@ export default function NewLaunches({ projectsData }) {
           </div>
         </div>
         <div style={{display:'flex',gap:8,flexWrap:'wrap',alignItems:'center',marginBottom:10}}>
-          <span style={{fontSize:11,color:'#475569'}}>Developer:</span>
+          <span style={{fontSize:11,color:'var(--text-secondary)'}}>Developer:</span>
           {developers.slice(0,9).map(dev=>(
             <button key={dev} onClick={()=>setSelectedDev(dev)} style={{padding:'5px 14px',borderRadius:20,border:'none',cursor:'pointer',fontSize:11,fontWeight:selectedDev===dev?600:400,fontFamily:'system-ui',background:selectedDev===dev?'linear-gradient(135deg,#16A34A,#22C55E)':'rgba(59,130,246,0.06)',color:selectedDev===dev?'#fff':'var(--text-muted)'}}>{dev}</button>
           ))}
         </div>
         <div style={{display:'flex',gap:8,flexWrap:'wrap',alignItems:'center'}}>
-          <span style={{fontSize:11,color:'#475569'}}>Status:</span>
+          <span style={{fontSize:11,color:'var(--text-secondary)'}}>Status:</span>
           {['All','Ready','Under Construction','Initial Stage'].map(s=>(
             <button key={s} onClick={()=>setSelectedStatus(s)} style={{padding:'5px 14px',borderRadius:20,cursor:'pointer',fontSize:11,fontWeight:selectedStatus===s?600:400,fontFamily:'system-ui',background:selectedStatus===s?'var(--border-strong)':'rgba(59,130,246,0.06)',color:selectedStatus===s?'#38BDF8':'var(--text-muted)',border:selectedStatus===s?'1px solid rgba(59,130,246,0.3)':'1px solid rgba(59,130,246,0.1)'}}>{s}</button>
           ))}

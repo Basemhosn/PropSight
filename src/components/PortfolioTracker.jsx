@@ -111,16 +111,16 @@ export default function PortfolioTracker({ areaData }) {
       <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:24}}>
         <div>
           <h1 style={{margin:0,fontSize:22,fontWeight:700,color:'var(--text-primary)',marginBottom:4}}>My Portfolio</h1>
-          <div style={{fontSize:13,color:'#475569'}}>{properties.length} {properties.length===1?'property':'properties'} tracked</div>
+          <div style={{fontSize:13,color:'var(--text-secondary)'}}>{properties.length} {properties.length===1?'property':'properties'} tracked</div>
         </div>
         <button onClick={()=>setShowAdd(true)} style={{display:'flex',alignItems:'center',gap:8,padding:'10px 18px',borderRadius:10,border:'none',cursor:'pointer',background:'linear-gradient(135deg,#1D4ED8,#38BDF8)',color:'#fff',fontSize:13,fontWeight:600,fontFamily:'system-ui'}}>+ Add Property</button>
       </div>
 
-      {loading ? <div style={{textAlign:'center',padding:60,color:'#475569'}}>Loading...</div> : properties.length === 0 ? (
+      {loading ? <div style={{textAlign:'center',padding:60,color:'var(--text-secondary)'}}>Loading...</div> : properties.length === 0 ? (
         <div style={{textAlign:'center',padding:60}}>
           <div style={{fontSize:48,marginBottom:16}}>🏢</div>
           <div style={{fontSize:18,fontWeight:600,color:'var(--text-primary)',marginBottom:8}}>No properties yet</div>
-          <div style={{fontSize:13,color:'#475569',marginBottom:24}}>Add your first property to start tracking</div>
+          <div style={{fontSize:13,color:'var(--text-secondary)',marginBottom:24}}>Add your first property to start tracking</div>
           <button onClick={()=>setShowAdd(true)} style={{padding:'11px 24px',borderRadius:10,border:'none',cursor:'pointer',background:'linear-gradient(135deg,#1D4ED8,#38BDF8)',color:'#fff',fontSize:13,fontWeight:600,fontFamily:'system-ui'}}>+ Add Your First Property</button>
         </div>
       ) : (
@@ -138,7 +138,7 @@ export default function PortfolioTracker({ areaData }) {
               <ResponsiveContainer width={140} height={140}>
                 <PieChart><Pie data={areaBreakdown} cx="50%" cy="50%" innerRadius={38} outerRadius={58} dataKey="value" strokeWidth={0}>
                   {areaBreakdown.map((_,i)=><Cell key={i} fill={COLORS[i%COLORS.length]}/>)}
-                </Pie><Tooltip formatter={v=>[fmtAED(v,true),'']} contentStyle={{background:'#0A1628',border:'1px solid rgba(59,130,246,0.2)',borderRadius:8,color:'var(--text-primary)',fontSize:11}}/></PieChart>
+                </Pie><Tooltip formatter={v=>[fmtAED(v,true),'']} contentStyle={{background:'var(--surface)',border:'1px solid rgba(59,130,246,0.2)',borderRadius:8,color:'var(--text-primary)',fontSize:11}}/></PieChart>
               </ResponsiveContainer>
               <div style={{flex:1,display:'flex',flexDirection:'column',gap:6}}>
                 {areaBreakdown.map((item,i)=>(
@@ -166,10 +166,10 @@ export default function PortfolioTracker({ areaData }) {
                   </div>
                   <div style={{flex:1,minWidth:0}}>
                     <div style={{fontSize:14,fontWeight:700,color:'var(--text-primary)',marginBottom:2,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{prop.name}</div>
-                    <div style={{fontSize:12,color:'#475569',marginBottom:10}}>{prop.area_display||prop.area} · {prop.property_type}{prop.size_sqft?` · ${fmtNum(prop.size_sqft)} sqft`:''}</div>
+                    <div style={{fontSize:12,color:'var(--text-secondary)',marginBottom:10}}>{prop.area_display||prop.area} · {prop.property_type}{prop.size_sqft?` · ${fmtNum(prop.size_sqft)} sqft`:''}</div>
                     <div style={{display:'flex',gap:16,flexWrap:'wrap'}}>
                       {[['PURCHASED',fmtAED(prop.purchase_price,true),'var(--text-primary)'],['CURRENT',fmtAED(prop.current_value||prop.purchase_price,true),'var(--text-primary)'],['GAIN',`${gain>=0?'+':''}${fmtAED(Math.abs(gain),true)} (${gainPct}%)`,gain>=0?'#22C55E':'#F87171'],annYield?['YIELD',annYield+'%','#38BDF8']:null].filter(Boolean).map(([l,v,c],j)=>(
-                        <div key={j}><div style={{fontSize:10,color:'#475569',marginBottom:2}}>{l}</div><div style={{fontSize:13,fontWeight:600,color:c}}>{v}</div></div>
+                        <div key={j}><div style={{fontSize:10,color:'var(--text-secondary)',marginBottom:2}}>{l}</div><div style={{fontSize:13,fontWeight:600,color:c}}>{v}</div></div>
                       ))}
                     </div>
                   </div>

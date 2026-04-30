@@ -175,16 +175,16 @@ export default function HomePage({ core, areaData, recentRaw, onNavigate, isPro 
               <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:14}}>
                 <div>
                   <span style={{fontSize:14,fontWeight:600,color:'var(--text-primary)'}}>{results.length} {isRental?'Ready Residential':'Sale'} results</span>
-                  <span style={{fontSize:12,color:'#475569',marginLeft:8}}>{searchQuery?`for "${searchQuery}"`:'latest'}</span>
+                  <span style={{fontSize:12,color:'var(--text-secondary)',marginLeft:8}}>{searchQuery?`for "${searchQuery}"`:'latest'}</span>
                   {isRental&&<span style={{fontSize:10,color:'#F59E0B',marginLeft:8,background:'rgba(245,158,11,0.1)',padding:'2px 8px',borderRadius:20}}>Ready residential — DLD sales data</span>}
                 </div>
                 <div style={{display:'flex',gap:16}}>
-                  {avgVal>0 && <div style={{textAlign:'right'}}><div style={{fontSize:10,color:'#475569'}}>AVG DEAL</div><div style={{fontSize:14,fontWeight:700,color:'#38BDF8'}}>{fmtAED(avgVal,true)}</div></div>}
-                  {avgPsqft>0 && <div style={{textAlign:'right'}}><div style={{fontSize:10,color:'#475569'}}>AVG/SQFT</div><div style={{fontSize:14,fontWeight:700,color:'var(--text-primary)'}}>AED {fmtNum(avgPsqft)}</div></div>}
+                  {avgVal>0 && <div style={{textAlign:'right'}}><div style={{fontSize:10,color:'var(--text-secondary)'}}>AVG DEAL</div><div style={{fontSize:14,fontWeight:700,color:'#38BDF8'}}>{fmtAED(avgVal,true)}</div></div>}
+                  {avgPsqft>0 && <div style={{textAlign:'right'}}><div style={{fontSize:10,color:'var(--text-secondary)'}}>AVG/SQFT</div><div style={{fontSize:14,fontWeight:700,color:'var(--text-primary)'}}>AED {fmtNum(avgPsqft)}</div></div>}
                 </div>
               </div>
               {results.length === 0 ? (
-                <div style={{textAlign:'center',padding:'20px 0',color:'#475569',fontSize:13}}>No {isRental?'rental':'sale'} transactions found for "{searchQuery}"</div>
+                <div style={{textAlign:'center',padding:'20px 0',color:'var(--text-secondary)',fontSize:13}}>No {isRental?'rental':'sale'} transactions found for "{searchQuery}"</div>
               ) : (
                 <div style={{display:'flex',flexDirection:'column',gap:0,borderRadius:10,overflow:'hidden',border:'1px solid rgba(255,255,255,0.06)'}}>
                   {results.map((r,i)=>{
@@ -194,7 +194,7 @@ export default function HomePage({ core, areaData, recentRaw, onNavigate, isPro 
                         <div style={{fontSize:11,color:'var(--text-muted)'}}>{r.d||'—'}</div>
                         <div>
                           <div style={{fontSize:12,fontWeight:600,color:'var(--text-primary)',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{r.j||'—'}</div>
-                          <div style={{fontSize:10,color:'#475569'}}>{r.a||''} {r.b?'· '+r.b:''}</div>
+                          <div style={{fontSize:10,color:'var(--text-secondary)'}}>{r.a||''} {r.b?'· '+r.b:''}</div>
                         </div>
                         <div style={{fontSize:12,fontWeight:700,color:'var(--text-primary)'}}>{r.v?fmtAED(r.v,true):'—'}</div>
                         <div><span style={{fontSize:9,fontWeight:600,padding:'2px 5px',borderRadius:20,background:r.r==='Off'?'rgba(59,130,246,0.1)':'rgba(34,197,94,0.1)',color:r.r==='Off'?'#38BDF8':'#22C55E'}}>{r.r==='Off'?'Off-Plan':'Ready'}</span></div>
@@ -312,7 +312,7 @@ export default function HomePage({ core, areaData, recentRaw, onNavigate, isPro 
                 <YAxis hide/>
                 <Tooltip
                   formatter={v => [fmtAED(v) + '/sqft', 'Price']}
-                  contentStyle={{ background: '#0A1628', border: '1px solid rgba(59,130,246,0.2)', borderRadius: 8, color: 'var(--text-primary)', fontSize: 11 }}
+                  contentStyle={{ background: 'var(--surface)', border: '1px solid rgba(59,130,246,0.2)', borderRadius: 8, color: 'var(--text-primary)', fontSize: 11 }}
                   labelStyle={{ color: 'var(--text-muted)' }}/>
                 <Area type="monotone" dataKey="ppsqm" stroke="#38BDF8" strokeWidth={2.5} fill="url(#pg)"/>
               </AreaChart>
@@ -346,7 +346,7 @@ export default function HomePage({ core, areaData, recentRaw, onNavigate, isPro 
                 <YAxis hide/>
                 <Tooltip
                   formatter={v => [fmtNum(v), 'Deals']}
-                  contentStyle={{ background: '#0A1628', border: '1px solid rgba(59,130,246,0.2)', borderRadius: 8, color: 'var(--text-primary)', fontSize: 11 }}/>
+                  contentStyle={{ background: 'var(--surface)', border: '1px solid rgba(59,130,246,0.2)', borderRadius: 8, color: 'var(--text-primary)', fontSize: 11 }}/>
                 <Bar dataKey="count" radius={[4, 4, 0, 0]} fill="url(#bg)"/>
               </BarChart>
             </ResponsiveContainer>

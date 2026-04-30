@@ -127,7 +127,7 @@ export default function AreaDeepDive({ areaData, areaList }) {
               <Pie data={typeData} dataKey="value" nameKey="name" cx="50%" cy="45%" outerRadius={55} labelLine={false} fontSize={10}>
                 {typeData.map((_,i) => <Cell key={i} fill={COLORS[i%COLORS.length]} />)}
               </Pie>
-              <Tooltip formatter={(v)=>[fmtNum(v),'Deals']} contentStyle={{background:"#0A1628",border:"1px solid rgba(59,130,246,0.2)",borderRadius:8,color:"var(--text-primary)",fontSize:11}} />
+              <Tooltip formatter={(v)=>[fmtNum(v),'Deals']} contentStyle={{background:"var(--surface)",border:"1px solid rgba(59,130,246,0.2)",borderRadius:8,color:"var(--text-primary)",fontSize:11}} />
               <Legend iconSize={8} iconType="circle" formatter={(value)=>value} wrapperStyle={{fontSize:11,color:'var(--text-secondary)'}}/>
             </PieChart>
           </ResponsiveContainer>

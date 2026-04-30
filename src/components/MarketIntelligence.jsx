@@ -100,7 +100,7 @@ export default function MarketIntelligence({ areaData, core }) {
               Market <span style={{ color:'#38BDF8' }}>Intelligence</span>
             </h1>
           </div>
-          <div style={{ fontSize:13, color:'#475569' }}>Dubai property market overview — powered by DLD data · {fmtNum(meta.totalRows||0)} transactions</div>
+          <div style={{ fontSize:13, color:'var(--text-secondary)' }}>Dubai property market overview — powered by DLD data · {fmtNum(meta.totalRows||0)} transactions</div>
         </div>
         <div style={{ display:'flex', alignItems:'center', gap:6, background:'rgba(34,197,94,0.08)', border:'1px solid rgba(34,197,94,0.15)', borderRadius:20, padding:'6px 14px' }}>
           <div style={{ width:6, height:6, borderRadius:'50%', background:'#22C55E', boxShadow:'0 0 6px #22C55E' }}/>
@@ -142,7 +142,7 @@ export default function MarketIntelligence({ areaData, core }) {
         <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:14 }}>
           <div>
             <div style={{ fontSize:14, fontWeight:600, color:'var(--text-primary)' }}>Price Trend (AED/sqft)</div>
-            <div style={{ fontSize:11, color:'#475569' }}>{activeTab==='all'?'All Dubai average':nice(activeTab)} · Yearly</div>
+            <div style={{ fontSize:11, color:'var(--text-secondary)' }}>{activeTab==='all'?'All Dubai average':nice(activeTab)} · Yearly</div>
           </div>
         </div>
         <ResponsiveContainer width="100%" height={160}>
@@ -150,7 +150,7 @@ export default function MarketIntelligence({ areaData, core }) {
             <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)"/>
             <XAxis dataKey="y" tick={{fontSize:10,fill:'#475569'}} axisLine={false} tickLine={false}/>
             <YAxis tick={{fontSize:10,fill:'#475569'}} axisLine={false} tickLine={false} width={40}/>
-            <Tooltip contentStyle={{background:'#0A1628',border:'1px solid rgba(59,130,246,0.2)',borderRadius:8,color:'var(--text-primary)',fontSize:11}}
+            <Tooltip contentStyle={{background:'var(--surface)',border:'1px solid rgba(59,130,246,0.2)',borderRadius:8,color:'var(--text-primary)',fontSize:11}}
               formatter={v=>['AED '+fmtNum(v)+'/sqft','Price']}/>
             <Line type="monotone" dataKey="v" stroke="#38BDF8" strokeWidth={2.5} dot={{fill:'#38BDF8',r:4}} activeDot={{r:6}}/>
           </LineChart>
@@ -162,7 +162,7 @@ export default function MarketIntelligence({ areaData, core }) {
         <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:16 }}>
           <span style={{ fontSize:16 }}>👑</span>
           <span style={{ fontSize:15, fontWeight:700, color:'var(--text-primary)' }}>Top Performing Areas</span>
-          <span style={{ fontSize:12, color:'#475569' }}>by transaction volume</span>
+          <span style={{ fontSize:12, color:'var(--text-secondary)' }}>by transaction volume</span>
         </div>
 
         {/* Hero card */}
@@ -176,7 +176,7 @@ export default function MarketIntelligence({ areaData, core }) {
                 </span>
               </div>
               <div style={{ fontSize:24, fontWeight:800, color:'var(--text-primary)', marginBottom:4 }}>{topArea.name}</div>
-              <div style={{ fontSize:12, color:'#475569', marginBottom:20 }}>📍 Dubai, UAE · {fmtNum(topArea.count)} transactions</div>
+              <div style={{ fontSize:12, color:'var(--text-secondary)', marginBottom:20 }}>📍 Dubai, UAE · {fmtNum(topArea.count)} transactions</div>
               <div style={{ display:'flex', gap:40 }}>
                 {[
                   {l:'Price / sqft', v:`AED ${fmtNum(topArea.ppsqft)}`, c:'var(--text-primary)'},
@@ -213,7 +213,7 @@ export default function MarketIntelligence({ areaData, core }) {
                 }}>{area.yoy>0?'+':''}{area.yoy}% YoY</span>
               </div>
               <div style={{ fontSize:13, fontWeight:700, color:'var(--text-primary)', marginBottom:2 }}>{area.name.length>20?area.name.split(' ').slice(0,3).join(' '):area.name}</div>
-              <div style={{ fontSize:11, color:'#475569', marginBottom:10 }}>{fmtNum(area.count)} transactions</div>
+              <div style={{ fontSize:11, color:'var(--text-secondary)', marginBottom:10 }}>{fmtNum(area.count)} transactions</div>
               <div style={{ fontSize:10, color:'var(--text-muted)', marginBottom:3 }}>PRICE / SQFT</div>
               <div style={{ fontSize:15, fontWeight:700, color:'var(--text-primary)' }}>AED {fmtNum(area.ppsqft)}</div>
             </div>
@@ -224,7 +224,7 @@ export default function MarketIntelligence({ areaData, core }) {
         <div style={{ background:'var(--surface)', border:'1px solid rgba(255,255,255,0.06)', borderRadius:14, overflow:'hidden' }}>
           <div style={{ display:'grid', gridTemplateColumns:'2fr 1fr 1fr 1fr 1fr 1fr 100px', padding:'12px 20px', borderBottom:'1px solid rgba(255,255,255,0.06)' }}>
             {['Area','Price/sqft','YoY Growth','Rental Yield','Volume','Off-Plan %',''].map((h,i)=>(
-              <div key={i} style={{ fontSize:10, color:'#475569', fontWeight:600, textTransform:'uppercase', letterSpacing:'0.05em' }}>{h}</div>
+              <div key={i} style={{ fontSize:10, color:'var(--text-secondary)', fontWeight:600, textTransform:'uppercase', letterSpacing:'0.05em' }}>{h}</div>
             ))}
           </div>
           {allAreas.map((area,i)=>{

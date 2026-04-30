@@ -89,7 +89,7 @@ export default function Sidebar({ page, setPage }) {
           <span style={{fontSize:11,fontWeight:700,color:profile?.role==='broker'?'#F59E0B':'#38BDF8'}}>{profile?.role==='broker'?'Broker Portal':'Investor Portal'}</span>
         </div>
         {profile?.role==='broker' && (
-          <button onClick={async()=>{const {supabase:sb}=await import('../context/AuthContext');await sb.from('profiles').update({role:'investor'}).eq('id',user?.id);window.location.reload();}} style={{fontSize:10,color:'#475569',background:'none',border:'none',cursor:'pointer',fontFamily:'inherit',padding:0}}>Investor →</button>
+          <button onClick={async()=>{const {supabase:sb}=await import('../context/AuthContext');await sb.from('profiles').update({role:'investor'}).eq('id',user?.id);window.location.reload();}} style={{fontSize:10,color:'var(--text-secondary)',background:'none',border:'none',cursor:'pointer',fontFamily:'inherit',padding:0}}>Investor →</button>
         )}
       </div>
         {NAV_SECTIONS.map((section, si) => (

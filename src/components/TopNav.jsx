@@ -32,7 +32,7 @@ export default function TopNav({ datasetMeta, filteredCount }) {
             </span>
             <span style={{
               fontSize:11, padding:'3px 10px', borderRadius:20,
-              background:'rgba(59,130,246,0.06)', color:'#475569',
+              background:'rgba(59,130,246,0.06)', color:'var(--text-secondary)',
               border:'1px solid rgba(59,130,246,0.1)',
             }}>
               Updated {datasetMeta.lastUpdated}
@@ -70,7 +70,7 @@ export default function TopNav({ datasetMeta, filteredCount }) {
         <button onClick={signOut} style={{
           background:'transparent',
           border:'1px solid rgba(59,130,246,0.15)',
-          color:'#475569', borderRadius:8,
+          color:'var(--text-secondary)', borderRadius:8,
           padding:'5px 10px', fontSize:11,
           cursor:'pointer', fontWeight:500,
           transition:'all 0.15s', fontFamily:'system-ui,sans-serif',

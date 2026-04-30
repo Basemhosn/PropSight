@@ -56,7 +56,7 @@ export default function ComparableSales({ recentRaw }) {
     <div style={{flex:1,overflowY:'auto',background:'var(--bg)',fontFamily:'system-ui',padding:'24px 28px'}}>
       <div style={{marginBottom:24}}>
         <h1 style={{margin:0,fontSize:22,fontWeight:700,color:'var(--text-primary)',marginBottom:4}}>Comparable Sales</h1>
-        <div style={{fontSize:13,color:'#475569'}}>Find similar recent transactions — filter by area, bedrooms, size and date</div>
+        <div style={{fontSize:13,color:'var(--text-secondary)'}}>Find similar recent transactions — filter by area, bedrooms, size and date</div>
       </div>
 
       <div style={{background:'var(--surface)',border:'1px solid rgba(255,255,255,0.06)',borderRadius:14,padding:20,marginBottom:24}}>
@@ -107,7 +107,7 @@ export default function ComparableSales({ recentRaw }) {
       </div>
 
       {!area && (
-        <div style={{textAlign:'center',padding:60,color:'#475569'}}>
+        <div style={{textAlign:'center',padding:60,color:'var(--text-secondary)'}}>
           <div style={{fontSize:40,marginBottom:12}}>🔍</div>
           <div style={{fontSize:16,fontWeight:600,color:'var(--text-primary)',marginBottom:8}}>Select an area to find comparables</div>
           <div style={{fontSize:13}}>Filter by bedrooms, size and date range</div>
@@ -115,7 +115,7 @@ export default function ComparableSales({ recentRaw }) {
       )}
 
       {area && comps.length===0 && (
-        <div style={{textAlign:'center',padding:60,color:'#475569'}}>
+        <div style={{textAlign:'center',padding:60,color:'var(--text-secondary)'}}>
           <div style={{fontSize:40,marginBottom:12}}>📭</div>
           <div style={{fontSize:16,color:'var(--text-primary)',marginBottom:8}}>No transactions found</div>
           <div style={{fontSize:13}}>Try widening your filters or extending the date range</div>
@@ -133,10 +133,10 @@ export default function ComparableSales({ recentRaw }) {
         </div>
         <div style={{background:'var(--surface)',border:'1px solid rgba(255,255,255,0.06)',borderRadius:14,overflow:'hidden'}}>
           <div style={{padding:'16px 20px',borderBottom:'1px solid rgba(255,255,255,0.06)',display:'flex',justifyContent:'space-between',alignItems:'center'}}>
-            <div><div style={{fontSize:14,fontWeight:600,color:'var(--text-primary)'}}>Comparable Transactions</div><div style={{fontSize:12,color:'#475569'}}>{fmtNum(comps.length)} results in {niceArea(area)}</div></div>
+            <div><div style={{fontSize:14,fontWeight:600,color:'var(--text-primary)'}}>Comparable Transactions</div><div style={{fontSize:12,color:'var(--text-secondary)'}}>{fmtNum(comps.length)} results in {niceArea(area)}</div></div>
           </div>
           <div style={{display:'grid',gridTemplateColumns:'90px 90px 65px 65px 1fr 80px 80px',padding:'10px 20px',borderBottom:'1px solid rgba(255,255,255,0.06)',background:'rgba(59,130,246,0.04)'}}>
-            {['Date','Value','Reg','BR','Project','Size','Price/sqft'].map((h,i)=><div key={i} style={{fontSize:10,color:'#475569',fontWeight:600,textTransform:'uppercase',letterSpacing:'0.05em'}}>{h}</div>)}
+            {['Date','Value','Reg','BR','Project','Size','Price/sqft'].map((h,i)=><div key={i} style={{fontSize:10,color:'var(--text-secondary)',fontWeight:600,textTransform:'uppercase',letterSpacing:'0.05em'}}>{h}</div>)}
           </div>
           {comps.map((t,i)=>{
             const ppsqft=t.s&&t.v?Math.round(t.v/t.s/10.764):0;

@@ -37,7 +37,7 @@ export default function OnboardingPage({ user, onComplete }) {
       <div style={{width:'100%',maxWidth:560}}>
         <div style={{textAlign:'center',marginBottom:32}}>
           <div style={{fontSize:28,fontWeight:800,color:'var(--text-primary)',marginBottom:4}}>Prop<span style={{color:'#38BDF8'}}>Sight</span></div>
-          <div style={{fontSize:13,color:'#475569',marginBottom:20}}>Step {step} of 3</div>
+          <div style={{fontSize:13,color:'var(--text-secondary)',marginBottom:20}}>Step {step} of 3</div>
           <div style={{background:'rgba(59,130,246,0.1)',borderRadius:20,height:4,overflow:'hidden'}}>
             <div style={{height:'100%',background:'linear-gradient(90deg,#1D4ED8,#38BDF8)',borderRadius:20,width:`${(step/3)*100}%`,transition:'width 0.4s ease'}}/>
           </div>
@@ -98,7 +98,7 @@ export default function OnboardingPage({ user, onComplete }) {
               <button onClick={()=>setStep(2)} style={{flex:1,padding:'13px',borderRadius:12,border:'1px solid rgba(59,130,246,0.15)',background:'transparent',color:'var(--text-muted)',fontSize:13,fontWeight:600,cursor:'pointer',fontFamily:'system-ui'}}>← Back</button>
               <button onClick={finish} disabled={saving} style={{flex:2,padding:'13px',borderRadius:12,border:'none',cursor:'pointer',background:'linear-gradient(135deg,#16A34A,#22C55E)',color:'#fff',fontSize:14,fontWeight:700,fontFamily:'system-ui'}}>{saving?'Setting up...':'🚀 Launch PropSight'}</button>
             </div>
-            <button onClick={finish} style={{width:'100%',marginTop:10,background:'none',border:'none',cursor:'pointer',color:'#475569',fontSize:12,fontFamily:'system-ui'}}>Skip for now</button>
+            <button onClick={finish} style={{width:'100%',marginTop:10,background:'none',border:'none',cursor:'pointer',color:'var(--text-secondary)',fontSize:12,fontFamily:'system-ui'}}>Skip for now</button>
           </>}
         </div>
       </div>

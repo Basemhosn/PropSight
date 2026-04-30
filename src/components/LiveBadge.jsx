@@ -34,7 +34,7 @@ export default function LiveBadge({ isLive, loading, error, lastUpdate, onRefres
       {hovering && (
         <div style={{
           position:'absolute', top:'100%', right:0, marginTop:6,
-          background:'#0A1628', color:'#fff', fontSize:11, borderRadius:8,
+          background:'var(--surface)', color:'#fff', fontSize:11, borderRadius:8,
           padding:'8px 12px', whiteSpace:'nowrap', zIndex:100,
           boxShadow:'0 4px 16px rgba(0,0,0,0.2)',
         }}>

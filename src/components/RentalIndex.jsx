@@ -62,14 +62,14 @@ export default function RentalIndex({ areaData }) {
   const nYield = gYield ? (parseFloat(gYield)*0.78).toFixed(2) : 0;
 
   const inp = {background:'var(--bg-alt)',border:'1px solid rgba(59,130,246,0.15)',borderRadius:8,color:'var(--text-primary)',fontSize:13,padding:'9px 12px',outline:'none',fontFamily:'system-ui',width:'100%',boxSizing:'border-box'};
-  const tt = {contentStyle:{background:'#0A1628',border:'1px solid rgba(59,130,246,0.2)',borderRadius:8,color:'var(--text-primary)',fontSize:11}};
+  const tt = {contentStyle:{background:'var(--surface)',border:'1px solid rgba(59,130,246,0.2)',borderRadius:8,color:'var(--text-primary)',fontSize:11}};
 
   return (
     <div style={{flex:1,overflowY:'auto',background:'var(--bg)',fontFamily:'system-ui',padding:'24px 28px'}}>
       <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:24}}>
         <div>
           <h1 style={{margin:0,fontSize:22,fontWeight:700,color:'var(--text-primary)',marginBottom:4}}>Rental Index</h1>
-          <div style={{fontSize:13,color:'#475569'}}>Dubai rental market — rates, yields and trends by area</div>
+          <div style={{fontSize:13,color:'var(--text-secondary)'}}>Dubai rental market — rates, yields and trends by area</div>
         </div>
         <div style={{display:'flex',gap:6,background:'var(--surface)',border:'1px solid rgba(59,130,246,0.15)',borderRadius:10,padding:4}}>
           {[['overview','Overview'],['calculator','Yield Calculator']].map(([m,l])=>(
@@ -131,10 +131,10 @@ export default function RentalIndex({ areaData }) {
         <div style={{background:'var(--surface)',border:'1px solid rgba(255,255,255,0.06)',borderRadius:14,overflow:'hidden'}}>
           <div style={{padding:'16px 20px',borderBottom:'1px solid rgba(255,255,255,0.06)'}}>
             <div style={{fontSize:14,fontWeight:600,color:'var(--text-primary)'}}>Rental Rates by Area</div>
-            <div style={{fontSize:12,color:'#475569'}}>Annual asking rents in AED</div>
+            <div style={{fontSize:12,color:'var(--text-secondary)'}}>Annual asking rents in AED</div>
           </div>
           <div style={{display:'grid',gridTemplateColumns:'1.5fr 1fr 1fr 1fr 1fr 1fr 0.8fr 0.8fr',padding:'10px 20px',borderBottom:'1px solid rgba(255,255,255,0.06)',background:'rgba(59,130,246,0.04)'}}>
-            {['Area','Studio','1 B/R','2 B/R','3 B/R','4 B/R','Yield','YoY'].map((h,i)=><div key={i} style={{fontSize:10,color:'#475569',fontWeight:600,textTransform:'uppercase',letterSpacing:'0.05em'}}>{h}</div>)}
+            {['Area','Studio','1 B/R','2 B/R','3 B/R','4 B/R','Yield','YoY'].map((h,i)=><div key={i} style={{fontSize:10,color:'var(--text-secondary)',fontWeight:600,textTransform:'uppercase',letterSpacing:'0.05em'}}>{h}</div>)}
           </div>
           {AREAS.map((area,i)=>{
             const rd=RENTAL_DATA[area]||{};
@@ -176,14 +176,14 @@ export default function RentalIndex({ areaData }) {
                 </div>
               </div>
               <input value={calcSize} onChange={e=>setCalcSize(e.target.value)} placeholder={calcUnit==='sqft'?'e.g. 1200':'e.g. 111'} style={inp}/>
-              {cSizeNum>0 && <div style={{fontSize:10,color:'#475569',marginTop:4}}>{calcUnit==='sqft'?Math.round(cSizeNum/10.764)+' sqm':Math.round(cSizeNum*10.764)+' sqft'}</div>}
+              {cSizeNum>0 && <div style={{fontSize:10,color:'var(--text-secondary)',marginTop:4}}>{calcUnit==='sqft'?Math.round(cSizeNum/10.764)+' sqm':Math.round(cSizeNum*10.764)+' sqft'}</div>}
             </div>
             {cAnnual>0 && (
               <div style={{background:'rgba(59,130,246,0.06)',border:'1px solid rgba(59,130,246,0.1)',borderRadius:10,padding:14}}>
                 <div style={{fontSize:11,color:'var(--text-muted)',marginBottom:8,fontWeight:600,textTransform:'uppercase',letterSpacing:'0.05em'}}>Market Rent — {calcArea}</div>
                 <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8}}>
                   {[['Annual',fmtAED(cAnnual,true),'var(--text-primary)'],['Monthly',fmtAED(Math.round(cAnnual/12),true),'var(--text-primary)'],['Market Yield',cd.yield+'%','#22C55E'],['YoY Growth','+'+cd.trend+'%','#38BDF8']].map(([l,v,c],i)=>(
-                    <div key={i}><div style={{fontSize:10,color:'#475569'}}>{l}</div><div style={{fontSize:14,fontWeight:700,color:c}}>{v}</div></div>
+                    <div key={i}><div style={{fontSize:10,color:'var(--text-secondary)'}}>{l}</div><div style={{fontSize:14,fontWeight:700,color:c}}>{v}</div></div>
                   ))}
                 </div>
               </div>
@@ -191,7 +191,7 @@ export default function RentalIndex({ areaData }) {
           </div>
           <div style={{background:'var(--surface)',border:'1px solid rgba(255,255,255,0.06)',borderRadius:14,padding:24}}>
             <div style={{fontSize:15,fontWeight:700,color:'var(--text-primary)',marginBottom:20}}>Yield Analysis</div>
-            {!cAnnual ? <div style={{textAlign:'center',padding:40,color:'#475569'}}><div style={{fontSize:32,marginBottom:12}}>📊</div><div>Select area and bedrooms</div></div> : <>
+            {!cAnnual ? <div style={{textAlign:'center',padding:40,color:'var(--text-secondary)'}}><div style={{fontSize:32,marginBottom:12}}>📊</div><div>Select area and bedrooms</div></div> : <>
               <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12,marginBottom:16}}>
                 {[['Annual Rent',fmtAED(cAnnual,true),'var(--text-primary)','rgba(59,130,246,0.1)'],['Monthly',fmtAED(Math.round(cAnnual/12),true),'#38BDF8','rgba(59,130,246,0.08)'],['Gross Yield',gYield+'%','#22C55E','rgba(34,197,94,0.1)'],['Net Yield',nYield+'%','#22C55E','rgba(34,197,94,0.08)']].map(([l,v,c,bg],i)=>(
                   <div key={i} style={{background:bg,border:'1px solid rgba(59,130,246,0.1)',borderRadius:10,padding:14}}>

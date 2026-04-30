@@ -68,7 +68,7 @@ export default function ROICalculator({ areaData }) {
     <div style={{ flex:1, overflowY:'auto', background:'var(--bg)', fontFamily:'system-ui', padding:'24px 28px' }}>
       <div style={{ marginBottom:24 }}>
         <h1 style={{ margin:0, fontSize:22, fontWeight:700, color:'var(--text-primary)', marginBottom:4 }}>ROI Calculator</h1>
-        <div style={{ fontSize:13, color:'#475569' }}>Estimate rental yield, mortgage payments and 5-year return</div>
+        <div style={{ fontSize:13, color:'var(--text-secondary)' }}>Estimate rental yield, mortgage payments and 5-year return</div>
       </div>
 
       <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'1.5rem' }}>
@@ -96,7 +96,7 @@ export default function ROICalculator({ areaData }) {
             <input type="range" min={500000} max={20000000} step={100000} value={price}
               onChange={e=>setPrice(+e.target.value)}
               style={{ width:'100%', accentColor:'#38BDF8' }}/>
-            <div style={{ display:'flex', justifyContent:'space-between', fontSize:10, color:'#475569' }}>
+            <div style={{ display:'flex', justifyContent:'space-between', fontSize:10, color:'var(--text-secondary)' }}>
               <span>500K</span><span>20M</span>
             </div>
           </div>
@@ -109,7 +109,7 @@ export default function ROICalculator({ areaData }) {
             <input type="range" min={20} max={100} step={5} value={downPct}
               onChange={e=>setDownPct(+e.target.value)}
               style={{ width:'100%', accentColor:'#38BDF8' }}/>
-            <div style={{ display:'flex', justifyContent:'space-between', fontSize:10, color:'#475569' }}>
+            <div style={{ display:'flex', justifyContent:'space-between', fontSize:10, color:'var(--text-secondary)' }}>
               <span>20%</span><span>100%</span>
             </div>
           </div>
@@ -122,7 +122,7 @@ export default function ROICalculator({ areaData }) {
             <input type="range" min={3} max={8} step={0.1} value={mortgageRate}
               onChange={e=>setMortgageRate(+e.target.value)}
               style={{ width:'100%', accentColor:'#38BDF8' }}/>
-            <div style={{ display:'flex', justifyContent:'space-between', fontSize:10, color:'#475569' }}>
+            <div style={{ display:'flex', justifyContent:'space-between', fontSize:10, color:'var(--text-secondary)' }}>
               <span>3%</span><span>8%</span>
             </div>
           </div>
@@ -135,7 +135,7 @@ export default function ROICalculator({ areaData }) {
             <input type="range" min={1} max={15} step={1} value={years}
               onChange={e=>setYears(+e.target.value)}
               style={{ width:'100%', accentColor:'#38BDF8' }}/>
-            <div style={{ display:'flex', justifyContent:'space-between', fontSize:10, color:'#475569' }}>
+            <div style={{ display:'flex', justifyContent:'space-between', fontSize:10, color:'var(--text-secondary)' }}>
               <span>1yr</span><span>15yr</span>
             </div>
           </div>
@@ -145,7 +145,7 @@ export default function ROICalculator({ areaData }) {
             padding:'10px 12px', background:'var(--surface)', borderRadius:8 }}>
             <div>
               <div style={{ fontSize:12, fontWeight:500, color:'var(--text-primary)' }}>Furnished rental</div>
-              <div style={{ fontSize:10, color:'#475569' }}>+0.8% yield premium</div>
+              <div style={{ fontSize:10, color:'var(--text-secondary)' }}>+0.8% yield premium</div>
             </div>
             <div onClick={() => setFurnished(f=>!f)} style={{
               width:40, height:22, borderRadius:11, cursor:'pointer',
@@ -227,7 +227,7 @@ export default function ROICalculator({ areaData }) {
             </div>
           </div>
 
-          <div style={{ fontSize:10, color:'#475569', lineHeight:1.5 }}>
+          <div style={{ fontSize:10, color:'var(--text-secondary)', lineHeight:1.5 }}>
             * Estimates based on historical DLD transaction data. Does not include service charges,
             maintenance fees, agent commission (2%), or DLD transfer fees (4%). For indicative purposes only.
           </div>

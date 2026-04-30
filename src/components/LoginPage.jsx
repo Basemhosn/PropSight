@@ -31,7 +31,7 @@ export default function LoginPage() {
     width: '100%', padding: '11px 14px', borderRadius: 10,
     border: '1px solid rgba(59,130,246,0.15)',
     background: 'rgba(59,130,246,0.04)',
-    color: '#E2E8F0', fontSize: 13, outline: 'none',
+    color: 'var(--text-primary)', fontSize: 13, outline: 'none',
     boxSizing: 'border-box', display: 'block',
     transition: 'border-color 0.15s', fontFamily: 'system-ui,sans-serif',
     marginBottom: '0.875rem',
@@ -99,7 +99,7 @@ export default function LoginPage() {
           background:'rgba(59,130,246,0.04)',
           cursor:'pointer', display:'flex', alignItems:'center',
           justifyContent:'center', gap:10,
-          fontSize:13, fontWeight:500, color:'#CBD5E1',
+          fontSize:13, fontWeight:500, color:'var(--text-secondary)',
           marginBottom:'1.25rem', transition:'all 0.15s',
           fontFamily:'system-ui,sans-serif',
         }}
