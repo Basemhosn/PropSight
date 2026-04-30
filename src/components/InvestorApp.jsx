@@ -935,7 +935,7 @@ Respond ONLY with valid JSON (no markdown):
 
             {/* CTAs */}
             <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12}}>
-              <button onClick={()=>setActiveTab('deal')} style={{padding:'14px',borderRadius:12,border:'none',cursor:'pointer',background:'linear-gradient(135deg,#1D4ED8,#38BDF8)',color:'#fff',fontSize:15,fontWeight:600,fontFamily:'inherit'}}>Check a Deal</button>
+              <button onClick={()=>{setActiveTab('deal');}} style={{padding:'14px',borderRadius:12,border:'none',cursor:'pointer',background:'linear-gradient(135deg,#1D4ED8,#38BDF8)',color:'#fff',fontSize:15,fontWeight:600,fontFamily:'inherit'}}>Analyze a Deal Here →</button>
               <button onClick={()=>setActiveTab('feed')} style={{padding:'14px',borderRadius:12,border:'1px solid var(--border)',cursor:'pointer',background:'var(--surface)',color:'var(--text-primary)',fontSize:15,fontWeight:600,fontFamily:'inherit'}}>Recent Sales</button>
             </div>
           </div>
@@ -1068,8 +1068,45 @@ Respond ONLY with valid JSON (no markdown):
                 })}
               </div>
             )}
-            <button onClick={()=>{const a=areas.find(x=>x.key===selectedProject.area||na(x.key)===selectedProject.area);if(a)setSelectedArea(a);setSelectedProject(null);setActiveTab('deal');}} style={{width:'100%',padding:'14px',borderRadius:12,border:'none',cursor:'pointer',background:'linear-gradient(135deg,#1D4ED8,#38BDF8)',color:'#fff',fontSize:15,fontWeight:600,fontFamily:'inherit'}}>
-              Check a Deal in {selectedProject.area}
+            {/* Comparable Sales by bedroom */}
+            {projectsData?.[selectedProject.key]?.rooms?.length>0 && (
+              <div style={{background:'var(--surface)',border:'1px solid var(--border)',borderRadius:14,overflow:'hidden',marginBottom:20}}>
+                <div style={{padding:'14px 18px',borderBottom:'1px solid var(--border)',display:'flex',justifyContent:'space-between',alignItems:'center'}}>
+                  <div style={{fontSize:13,fontWeight:600,color:'var(--text-primary)'}}>Comparable Sales by Bedroom</div>
+                  <div style={{fontSize:11,color:'var(--text-muted)'}}>Avg price per type</div>
+                </div>
+                {projectsData[selectedProject.key].rooms.slice(0,5).map((r,i,arr)=>{
+                  const maxAvg=Math.max(...arr.map(x=>x.avg));
+                  const pct=Math.round(r.avg/maxAvg*100);
+                  const ppsqft=r.avgSize?Math.round(r.avg/r.avgSize/10.764):0;
+                  return (
+                    <div key={i} style={{padding:'12px 18px',borderBottom:i<arr.length-1?'1px solid var(--border)':'none'}}>
+                      <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:6}}>
+                        <div>
+                          <span style={{fontSize:13,fontWeight:600,color:'var(--text-primary)'}}>{r.rooms}</span>
+                          <span style={{fontSize:11,color:'var(--text-muted)',marginLeft:8}}>{fmtNum(r.count)} sales · {fmtNum(Math.round(r.avgSize||0))} sqft avg</span>
+                        </div>
+                        <div style={{textAlign:'right'}}>
+                          <div style={{fontSize:14,fontWeight:700,color:'#38BDF8'}}>{fmtAED(r.avg,true)}</div>
+                          {ppsqft>0&&<div style={{fontSize:11,color:'var(--text-muted)'}}>AED {fmtNum(ppsqft)}/sqft</div>}
+                        </div>
+                      </div>
+                      <div style={{height:5,borderRadius:3,background:'var(--border)'}}>
+                        <div style={{height:'100%',width:pct+'%',borderRadius:3,background:'linear-gradient(90deg,#1D4ED8,#38BDF8)'}}/>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+
+            <button onClick={()=>{
+              const a=areas.find(x=>x.key===selectedProject.area||na(x.key)===selectedProject.area);
+              if(a) setSelectedArea(a);
+              setSelectedProject(null);
+              setActiveTab('deal');
+            }} style={{width:'100%',padding:'14px',borderRadius:12,border:'none',cursor:'pointer',background:'linear-gradient(135deg,#1D4ED8,#38BDF8)',color:'#fff',fontSize:15,fontWeight:600,fontFamily:'inherit'}}>
+              Analyze a Deal in {selectedProject.area} →
             </button>
           </div>
         </div>
