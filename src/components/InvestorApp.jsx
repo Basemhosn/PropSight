@@ -117,7 +117,7 @@ Respond ONLY with valid JSON (no markdown):
       `}</style>
 
       {/* NAV */}
-      <nav style={{position:'sticky',top:0,zIndex:100,background:'rgba(6,14,26,0.96)',backdropFilter:'blur(20px)',borderBottom:'1px solid rgba(255,255,255,0.06)',height:58,padding:'0 24px',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+      <nav style={{position:'sticky',top:0,zIndex:100,background:'var(--bg-alt)',backdropFilter:'blur(20px)',borderBottom:'1px solid var(--border)',height:58,padding:'0 24px',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
         <div style={{display:'flex',alignItems:'center',gap:10}}>
           <div style={{width:28,height:28,borderRadius:7,background:'linear-gradient(135deg,#1D4ED8,#38BDF8)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:14}}>🏙️</div>
           <span style={{fontSize:17,fontWeight:700,color:'var(--text-primary)'}}>Prop<span style={{color:'#38BDF8'}}>Sight</span></span>
