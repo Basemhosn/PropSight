@@ -55,6 +55,24 @@ export default function UpgradePage() {
   const [error, setError] = useState('');
   const currentPlan = isPro ? 'pro' : isLite ? 'lite' : 'free';
 
+  const handleManageBilling = async () => {
+    if (!profile?.stripe_customer_id) {
+      setError('No billing account found. Please contact support.');
+      return;
+    }
+    setLoading('portal'); setError('');
+    try {
+      const res = await fetch('/api/create-portal', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ customerId: profile.stripe_customer_id, returnUrl: window.location.origin }),
+      });
+      const data = await res.json();
+      if (data.url) window.location.href = data.url;
+      else setError(data.error || 'Could not open billing portal');
+    } catch(err) { setError(err.message); }
+    setLoading('');
+  };
+
   const handleUpgrade = async (planId) => {
     if (planId === 'free' || planId === currentPlan) return;
     setLoading(planId); setError('');
@@ -72,6 +90,19 @@ export default function UpgradePage() {
 
   return (
     <div style={{flex:1,overflowY:'auto',background:'var(--bg)',fontFamily:'system-ui',padding:'40px 28px'}}>
+      {(isPro || isLite) && profile?.stripe_customer_id && (
+        <div style={{maxWidth:920,margin:'0 auto 24px',background:'var(--surface)',border:'1px solid var(--border)',borderRadius:14,padding:'16px 20px',display:'flex',alignItems:'center',justifyContent:'space-between',gap:16}}>
+          <div>
+            <div style={{fontSize:14,fontWeight:600,color:'var(--text-primary)',marginBottom:2}}>
+              {isPro ? '⭐ You are on the Pro plan' : '✦ You are on the Lite plan'}
+            </div>
+            <div style={{fontSize:12,color:'var(--text-muted)'}}>Manage your subscription, update payment method, or cancel anytime.</div>
+          </div>
+          <button onClick={handleManageBilling} disabled={loading==='portal'} style={{padding:'10px 20px',borderRadius:10,border:'1px solid var(--border)',background:'var(--bg)',color:'var(--text-primary)',fontSize:13,fontWeight:600,cursor:'pointer',fontFamily:'inherit',whiteSpace:'nowrap',flexShrink:0}}>
+            {loading==='portal' ? 'Opening...' : '⚙️ Manage Billing →'}
+          </button>
+        </div>
+      )}
       <div style={{textAlign:'center',marginBottom:48}}>
         <div style={{display:'inline-flex',alignItems:'center',gap:8,background:'rgba(245,158,11,0.1)',border:'1px solid rgba(245,158,11,0.2)',borderRadius:20,padding:'6px 16px',marginBottom:16}}>
           <span style={{fontSize:14}}>⚡</span>
