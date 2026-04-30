@@ -137,7 +137,19 @@ export default function App() {
   return (
     <div style={{display:"flex",minHeight:"100vh",background:"var(--bg)",flexDirection:isMobile?"column":"row"}} dir={lang==="ar"?"rtl":"ltr"}>
       <Sidebar page={page} setPage={setPage} />
-      <div style={{flex:1,display:"flex",flexDirection:"column",overflow:"hidden",paddingTop:isMobile?56:0,minWidth:0}}>
+      {/* Broker top bar — matches investor portal nav style */}
+      <div style={{display:'flex',flexDirection:'column',flex:1,overflow:'hidden',minWidth:0}}>
+        <div style={{height:52,borderBottom:'1px solid var(--border)',background:'var(--bg-alt)',display:'flex',alignItems:'center',justifyContent:'flex-end',padding:'0 20px',gap:10,flexShrink:0,paddingTop:isMobile?56:0}}>
+          <div style={{display:'flex',alignItems:'center',gap:6,background:'rgba(245,158,11,0.08)',border:'1px solid rgba(245,158,11,0.2)',borderRadius:20,padding:'4px 12px'}}>
+            <span style={{fontSize:11}}>🏢</span>
+            <span style={{fontSize:11,fontWeight:600,color:'#F59E0B'}}>Broker Portal</span>
+          </div>
+          <button onClick={async()=>{const {supabase}=await import('./context/AuthContext');await supabase.from('profiles').update({role:'investor'}).eq('id',user?.id);window.location.reload();}} style={{fontSize:11,color:'var(--text-secondary)',background:'none',border:'1px solid var(--border)',borderRadius:8,padding:'5px 10px',cursor:'pointer',fontFamily:'inherit'}}>
+            Switch to Investor →
+          </button>
+        </div>
+        <div style={{flex:1,display:"flex",flexDirection:"column",overflow:"hidden",minWidth:0}}>
+
         {page === "home" && <HomePage core={core} areaData={areaData} recentRaw={recentRaw} onNavigate={setPage} isPro={isPro} isLite={isLite} />}
         {page === "overview" && <FilterBar filters={filters} setFilters={setFilters} options={options} dateRange={dateRange} showRegFilter={true} />}
         {page === "overview" && (
@@ -186,6 +198,7 @@ export default function App() {
         {page === "reports" && <ShareableReport areaData={areaData} core={core} />}
         {page === "pulse" && <MarketPulse onAreaClick={()=>setPage("areas")} onProjectClick={(name,data)=>setSelectedProject({name,data})} projectsData={projectsData} core={core} areaData={areaData} />}
         {selectedProject && <ProjectDetail project={selectedProject.name} data={selectedProject.data} onClose={()=>setSelectedProject(null)} />}
+      </div>
       </div>
     </div>
   );
