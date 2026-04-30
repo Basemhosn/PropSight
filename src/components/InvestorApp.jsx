@@ -641,6 +641,112 @@ Respond ONLY with valid JSON (no markdown):
             </div>
           </div>
         )}
+
+      {/* FULL-SCREEN PROJECT PROFILE */}
+      {selectedProject && (
+        <div style={{position:'fixed',inset:0,background:'var(--bg)',zIndex:500,overflowY:'auto'}}>
+          <div style={{position:'sticky',top:0,zIndex:10,background:'var(--bg-alt)',borderBottom:'1px solid var(--border)',height:52,display:'flex',alignItems:'center',padding:'0 24px'}}>
+            <button onClick={()=>setSelectedProject(null)} style={{display:'flex',alignItems:'center',gap:8,background:'none',border:'none',cursor:'pointer',color:'var(--text-primary)',fontSize:14,fontWeight:600,fontFamily:'inherit'}}>
+              ← Back to search
+            </button>
+          </div>
+          <div style={{position:'relative',height:280,overflow:'hidden',background:'var(--surface)'}}>
+            {projectsData?.[selectedProject.key]?.image
+              ? <img src={projectsData[selectedProject.key].image} alt={selectedProject.name} style={{width:'100%',height:'100%',objectFit:'cover'}}/>
+              : <div style={{width:'100%',height:'100%',background:'linear-gradient(135deg,#0D2137,#0A3040)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:64}}>🏗️</div>
+            }
+            <div style={{position:'absolute',inset:0,background:'linear-gradient(to top,rgba(0,0,0,0.7) 0%,transparent 60%)'}}/>
+            <div style={{position:'absolute',bottom:20,left:24}}>
+              <h1 style={{fontSize:26,fontWeight:800,color:'#fff',margin:0,marginBottom:4}}>{selectedProject.name}</h1>
+              <div style={{fontSize:13,color:'rgba(255,255,255,0.8)'}}>📍 {selectedProject.area}</div>
+            </div>
+          </div>
+          <div style={{maxWidth:900,margin:'0 auto',padding:'24px'}}>
+            <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:12,marginBottom:24}}>
+              {[
+                ['Avg Price',fmtAED(projectsData?.[selectedProject.key]?.kpis?.avg||selectedProject.avg,true),'💰','#38BDF8'],
+                ['Transactions',fmtNum(projectsData?.[selectedProject.key]?.kpis?.count||selectedProject.count),'📊','#22C55E'],
+                ['Price/sqft','AED '+fmtNum(Math.round((projectsData?.[selectedProject.key]?.kpis?.ppsqm||0)/10.764)),'📐','#A78BFA'],
+                ['Off-Plan',projectsData?.[selectedProject.key]?.kpis?Math.round((projectsData[selectedProject.key].kpis.offPlan||0)/(projectsData[selectedProject.key].kpis.count||1)*100)+'%':'—','🏗️','#F59E0B'],
+              ].map(([l,v,icon,color],i)=>(
+                <div key={i} style={{background:'var(--surface)',border:'1px solid var(--border)',borderRadius:14,padding:'16px',textAlign:'center'}}>
+                  <div style={{fontSize:20,marginBottom:6}}>{icon}</div>
+                  <div style={{fontSize:18,fontWeight:800,color,marginBottom:4}}>{v}</div>
+                  <div style={{fontSize:10,color:'var(--text-muted)',textTransform:'uppercase',letterSpacing:'0.05em'}}>{l}</div>
+                </div>
+              ))}
+            </div>
+            {projectsData?.[selectedProject.key]?.priceTrend?.length>1 && (
+              <div style={{background:'var(--surface)',border:'1px solid var(--border)',borderRadius:14,padding:'18px',marginBottom:20}}>
+                <div style={{fontSize:13,fontWeight:600,color:'var(--text-primary)',marginBottom:14}}>Price Trend (AED/sqft)</div>
+                <div style={{display:'flex',alignItems:'flex-end',gap:4,height:72}}>
+                  {projectsData[selectedProject.key].priceTrend.slice(-18).map((p,i,arr)=>{
+                    const vals=arr.map(x=>Math.round((x.ppsqm||0)/10.764));
+                    const min=Math.min(...vals),max=Math.max(...vals);
+                    const h=max===min?100:Math.round(((vals[i]-min)/(max-min))*80)+20;
+                    return <div key={i} style={{flex:1,height:h+'%',borderRadius:'3px 3px 0 0',background:i===arr.length-1?'#38BDF8':'rgba(56,189,248,0.25)'}}/>;
+                  })}
+                </div>
+              </div>
+            )}
+            {projectsData?.[selectedProject.key]?.recent?.length>0 && (
+              <div style={{background:'var(--surface)',border:'1px solid var(--border)',borderRadius:14,overflow:'hidden',marginBottom:20}}>
+                <div style={{padding:'14px 18px',borderBottom:'1px solid var(--border)',fontSize:13,fontWeight:600,color:'var(--text-primary)'}}>Recent Transactions</div>
+                {projectsData[selectedProject.key].recent.slice(0,8).map((r,i,arr)=>{
+                  const ppsqft=r.s&&r.v?Math.round(r.v/r.s/10.764):0;
+                  return (
+                    <div key={i} style={{display:'grid',gridTemplateColumns:'1fr 90px 100px 80px',padding:'12px 18px',borderBottom:i<arr.length-1?'1px solid var(--border)':'none',alignItems:'center'}}>
+                      <div>
+                        <div style={{fontSize:13,fontWeight:600,color:'var(--text-primary)'}}>{r.b||'—'} {r.t||''}</div>
+                        <div style={{fontSize:11,color:'var(--text-secondary)'}}>{r.d||''}{ppsqft?' · AED '+fmtNum(ppsqft)+'/sqft':''}</div>
+                      </div>
+                      <div style={{fontSize:11,color:'var(--text-secondary)',textAlign:'center'}}>{r.s?fmtNum(Math.round(r.s))+' sqft':'—'}</div>
+                      <div style={{fontSize:13,fontWeight:700,color:'var(--text-primary)',textAlign:'right'}}>{r.v?fmtAED(r.v,true):'—'}</div>
+                      <div style={{textAlign:'right'}}><span style={{fontSize:10,fontWeight:600,padding:'2px 7px',borderRadius:20,background:r.r==='Off'?'rgba(59,130,246,0.1)':'rgba(34,197,94,0.1)',color:r.r==='Off'?'#38BDF8':'#22C55E'}}>{r.r==='Off'?'Off-Plan':'Ready'}</span></div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+            <button onClick={()=>{const a=areas.find(x=>x.key===selectedProject.area||na(x.key)===selectedProject.area);if(a)setSelectedArea(a);setSelectedProject(null);setActiveTab('deal');}} style={{width:'100%',padding:'14px',borderRadius:12,border:'none',cursor:'pointer',background:'linear-gradient(135deg,#1D4ED8,#38BDF8)',color:'#fff',fontSize:15,fontWeight:600,fontFamily:'inherit'}}>
+              ⚡ Check a deal in {selectedProject.area} →
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* FULL-SCREEN BUILDING PROFILE */}
+      {selectedBuilding && (
+        <div style={{position:'fixed',inset:0,background:'var(--bg)',zIndex:500,overflowY:'auto'}}>
+          <div style={{position:'sticky',top:0,zIndex:10,background:'var(--bg-alt)',borderBottom:'1px solid var(--border)',height:52,display:'flex',alignItems:'center',padding:'0 24px'}}>
+            <button onClick={()=>setSelectedBuilding(null)} style={{display:'flex',alignItems:'center',gap:8,background:'none',border:'none',cursor:'pointer',color:'var(--text-primary)',fontSize:14,fontWeight:600,fontFamily:'inherit'}}>
+              ← Back to search
+            </button>
+          </div>
+          <div style={{height:180,background:'linear-gradient(135deg,rgba(34,197,94,0.15),rgba(16,185,129,0.08))',display:'flex',alignItems:'center',justifyContent:'center',flexDirection:'column',gap:10}}>
+            <div style={{fontSize:52}}>🏠</div>
+            <h1 style={{fontSize:22,fontWeight:800,color:'var(--text-primary)',margin:0}}>{selectedBuilding.name}</h1>
+            <div style={{fontSize:13,color:'var(--text-secondary)'}}>📍 {na(selectedBuilding.area||'')}</div>
+          </div>
+          <div style={{maxWidth:900,margin:'0 auto',padding:'24px'}}>
+            <div style={{display:'grid',gridTemplateColumns:'repeat(2,1fr)',gap:12,marginBottom:24}}>
+              {[
+                ['Total Transactions',fmtNum(selectedBuilding.count),'📊','#38BDF8'],
+                ['Location',na(selectedBuilding.area||''),'📍','#22C55E'],
+              ].map(([l,v,icon,color],i)=>(
+                <div key={i} style={{background:'var(--surface)',border:'1px solid var(--border)',borderRadius:14,padding:'16px',textAlign:'center'}}>
+                  <div style={{fontSize:20,marginBottom:6}}>{icon}</div>
+                  <div style={{fontSize:18,fontWeight:800,color,marginBottom:4}}>{v}</div>
+                  <div style={{fontSize:10,color:'var(--text-muted)',textTransform:'uppercase',letterSpacing:'0.05em'}}>{l}</div>
+                </div>
+              ))}
+            </div>
+            <button onClick={()=>{const a=areas.find(x=>x.key===selectedBuilding.area||na(x.key)===na(selectedBuilding.area||''));if(a)setSelectedArea(a);setSelectedBuilding(null);setActiveTab('deal');}} style={{width:'100%',padding:'14px',borderRadius:12,border:'none',cursor:'pointer',background:'linear-gradient(135deg,#1D4ED8,#38BDF8)',color:'#fff',fontSize:15,fontWeight:600,fontFamily:'inherit'}}>
+              ⚡ Check a deal in this area →
+            </button>
+          </div>
+        </div>
+      )}
       </div>
     </div>
   );
