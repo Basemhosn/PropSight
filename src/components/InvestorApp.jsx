@@ -569,8 +569,8 @@ Respond ONLY with valid JSON (no markdown):
         {activeTab==='map' && (
           <div style={{height:'calc(100vh - 100px)',borderRadius:16,overflow:'hidden',border:'1px solid var(--border)'}}>
             <MapView
-              onAreaClick={(area)=>{setActiveTab('discover');setSearch(area);}}
-              onProjectClick={()=>{}}
+              onAreaClick={(area)=>{const a=areas.find(x=>x.key===area||na(x.key)===area||x.name===area);if(a){setSelectedArea(a);setActiveTab('discover');}else{setSearch(area);setActiveTab('discover');}}}
+              onProjectClick={(name,data)=>{if(data){setSelectedProject({key:name,name,area:na(data.area||''),avg:data.kpis?.avg||0,count:data.kpis?.count||0});}setActiveTab('discover');}}
               projectsData={projectsData}
             />
           </div>
