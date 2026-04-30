@@ -71,10 +71,10 @@ export default function InvestorApp({ areaData, recentRaw, core, onSwitchToBroke
       return;
     }
     let results = [...(recentRaw||[])];
-    if (minPrice) results = results.filter(r => (r.v||0) >= parseInt(minPrice.replace(/,/g,'')));
-    if (maxPrice) results = results.filter(r => (r.v||0) <= parseInt(maxPrice.replace(/,/g,'')));
-    if (bedrooms) results = results.filter(r => (r.b||'').toLowerCase().includes(bedrooms.toLowerCase()));
-    if (area) results = results.filter(r => na(r.a||'').toLowerCase().includes(area.toLowerCase()) || (r.a||'').toLowerCase().includes(area.toLowerCase()));
+    if (minPrice) { const mn=parseFloat(minPrice.replace(/,/g,'')); if(!isNaN(mn)) results = results.filter(r => (r.v||0) >= mn); }
+    if (maxPrice) { const mx=parseFloat(maxPrice.replace(/,/g,'')); if(!isNaN(mx)) results = results.filter(r => (r.v||0) <= mx); }
+    if (bedrooms) results = results.filter(r => (r.b||'')=== bedrooms);
+    if (area) { const q=area.toLowerCase(); results = results.filter(r => (r.a||'').toLowerCase().includes(q) || na(r.a||'').toLowerCase().includes(q)); }
     if (regType) results = results.filter(r => regType==='Off-Plan' ? r.r==='Off' : r.r!=='Off');
     setFilterResults(results.slice(0,50));
     setShowFilters(false);
@@ -380,10 +380,10 @@ Respond ONLY with valid JSON (no markdown):
                   <select value={filters.bedrooms} onChange={e=>setFilters(f=>({...f,bedrooms:e.target.value}))} style={{width:'100%',padding:'10px 12px',borderRadius:8,border:'1px solid var(--border)',background:'var(--bg)',color:'var(--text-primary)',fontSize:13,fontFamily:'inherit',outline:'none',boxSizing:'border-box',appearance:'none'}}>
                     <option value="">Any</option>
                     <option value="Studio">Studio</option>
-                    <option value="1 B/R">1 Bedroom</option>
-                    <option value="2 B/R">2 Bedrooms</option>
-                    <option value="3 B/R">3 Bedrooms</option>
-                    <option value="4 B/R">4+ Bedrooms</option>
+                    <option value="1 B/R">1 B/R</option>
+                    <option value="2 B/R">2 B/R</option>
+                    <option value="3 B/R">3 B/R</option>
+                    <option value="4 B/R">4 B/R</option>
                   </select>
                 </div>
                 <div>
