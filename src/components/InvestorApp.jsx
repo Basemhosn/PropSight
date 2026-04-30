@@ -88,6 +88,7 @@ export default function InvestorApp({ areaData, recentRaw, core, onSwitchToBroke
         avg: d.kpis?.avg || 0,
         ppsqft: Math.round((d.kpis?.ppsqm||0)/10.764),
         yoy: parseFloat(yoy.toFixed(1)),
+        mScore: parseFloat(Math.min(10, Math.max(1, 5 + yoy / 3)).toFixed(1)),
         offPlanPct: d.kpis?.count ? Math.round((d.kpis?.offPlan||0)/d.kpis.count*100) : 0,
       };
     }).sort((a,b) => b.count - a.count);
@@ -354,7 +355,12 @@ Respond ONLY with valid JSON (no markdown):
                 </div>
                 <div style={{fontSize:14,fontWeight:600,color:'var(--text-primary)',marginBottom:4}}>{a.name}</div>
                 <div style={{fontSize:20,fontWeight:700,color:'#38BDF8',marginBottom:2}}>AED {fmtNum(a.ppsqft)}<span style={{fontSize:10,color:'var(--text-secondary)',fontWeight:400}}>/sqft</span></div>
-                <div style={{fontSize:11,color:'var(--text-secondary)'}}>{fmtNum(a.count)} transactions</div>
+                <div style={{display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+                  <span style={{fontSize:11,color:'var(--text-secondary)'}}>{fmtNum(a.count)} txns</span>
+                  <span style={{fontSize:10,fontWeight:700,padding:'2px 7px',borderRadius:20,background:a.mScore>=8?'rgba(34,197,94,0.12)':a.mScore>=6?'rgba(245,158,11,0.12)':'rgba(100,116,139,0.12)',color:a.mScore>=8?'#22C55E':a.mScore>=6?'#F59E0B':'#94A3B8'}}>
+                    {a.mScore>=8?'🔥 Strong Buy':a.mScore>=6?'✓ Buy':'→ Hold'} {a.mScore}/10
+                  </span>
+                </div>
               </div>
             ))}
           </div>
@@ -622,6 +628,9 @@ Respond ONLY with valid JSON (no markdown):
             <div style={{display:'flex',alignItems:'center',gap:10}}>
               <span style={{fontSize:13,color:'var(--text-secondary)'}}>{fmtNum(selectedArea.count)} transactions</span>
               <span style={{fontSize:13,fontWeight:700,padding:'4px 12px',borderRadius:20,background:selectedArea.yoy>=0?'rgba(34,197,94,0.12)':'rgba(248,113,113,0.12)',color:selectedArea.yoy>=0?'#22C55E':'#F87171'}}>{selectedArea.yoy>=0?'+':''}{selectedArea.yoy}% YoY</span>
+              <span style={{fontSize:13,fontWeight:700,padding:'4px 12px',borderRadius:20,background:selectedArea.mScore>=8?'rgba(34,197,94,0.12)':selectedArea.mScore>=6?'rgba(245,158,11,0.12)':'rgba(100,116,139,0.12)',color:selectedArea.mScore>=8?'#22C55E':selectedArea.mScore>=6?'#F59E0B':'#94A3B8'}}>
+                {selectedArea.mScore>=8?'🔥 Strong Buy':selectedArea.mScore>=6?'✓ Buy':'→ Hold'} · {selectedArea.mScore}/10
+              </span>
             </div>
           </div>
 
