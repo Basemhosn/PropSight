@@ -162,7 +162,7 @@ export default function App() {
         onBrokerLogin={() => { setShowLogin(true); sessionStorage.setItem('intended_role','broker'); }}
       />; }
   if (user && profile?.role === 'investor') {
-    return <InvestorApp areaData={areaData} recentRaw={recentRaw} core={core}
+    return <InvestorApp areaData={areaData} recentRaw={recentRaw} core={core} projectsData={projectsData}
       onSwitchToBroker={async () => {
         const { createClient } = await import('@supabase/supabase-js');
         const sb = createClient(process.env.REACT_APP_SUPABASE_URL, process.env.REACT_APP_SUPABASE_ANON_KEY);
