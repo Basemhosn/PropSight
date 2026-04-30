@@ -332,57 +332,6 @@ Respond ONLY with valid JSON (no markdown):
             </div>
           </div>
 
-          {selectedArea && (
-            <div style={{background:'linear-gradient(135deg,rgba(29,78,216,0.1),rgba(6,14,26,0.5))',border:'1px solid rgba(59,130,246,0.2)',borderRadius:20,padding:24,marginBottom:24}}>
-              <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:20}}>
-                <div style={{display:'flex',alignItems:'center',gap:12}}>
-                  <span style={{fontSize:36}}>{selectedArea.emoji}</span>
-                  <div>
-                    <h2 style={{fontSize:22,fontWeight:700,color:'var(--text-primary)',margin:0,marginBottom:4}}>{selectedArea.name}</h2>
-                    <div style={{fontSize:13,color:'var(--text-secondary)'}}>{fmtNum(selectedArea.count)} total transactions</div>
-                  </div>
-                </div>
-                <div style={{background:selectedArea.yoy>=0?'rgba(34,197,94,0.1)':'rgba(248,113,113,0.1)',border:`1px solid ${selectedArea.yoy>=0?'rgba(34,197,94,0.2)':'rgba(248,113,113,0.2)'}`,borderRadius:20,padding:'6px 14px',display:'flex',alignItems:'center',gap:6}}>
-                  <span>{selectedArea.yoy>=0?'📈':'📉'}</span>
-                  <span style={{fontSize:14,fontWeight:700,color:selectedArea.yoy>=0?'#22C55E':'#F87171'}}>{selectedArea.yoy>=0?'+':''}{selectedArea.yoy}% YoY</span>
-                </div>
-              </div>
-              <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:12,marginBottom:18}}>
-                {[['Avg Sale Price',fmtAED(selectedArea.avg,true),'var(--text-primary)','💰'],['Price / sqft','AED '+fmtNum(selectedArea.ppsqft),'#38BDF8','📐'],['Off-Plan Share',selectedArea.offPlanPct+'%','#F59E0B','🏗️']].map(([l,v,c,icon],i)=>(
-                  <div key={i} style={{background:'rgba(255,255,255,0.04)',borderRadius:12,padding:'14px',textAlign:'center'}}>
-                    <div style={{fontSize:18,marginBottom:6}}>{icon}</div>
-                    <div style={{fontSize:10,color:'var(--text-muted)',marginBottom:4,textTransform:'uppercase',letterSpacing:'0.05em'}}>{l}</div>
-                    <div style={{fontSize:18,fontWeight:700,color:c}}>{v}</div>
-                  </div>
-                ))}
-              </div>
-              {/* Price trend sparkline */}
-              {areaData && areaData[selectedArea.key]?.priceTrend?.length > 1 && (
-                <div style={{marginBottom:16}}>
-                  <div style={{fontSize:11,color:'var(--text-muted)',marginBottom:8,textTransform:'uppercase',letterSpacing:'0.05em',fontWeight:600}}>Price Trend (AED/sqft)</div>
-                  <div style={{display:'flex',alignItems:'flex-end',gap:3,height:40}}>
-                    {areaData[selectedArea.key].priceTrend.slice(-12).map((p,i,arr)=>{
-                      const vals=arr.map(x=>Math.round((x.ppsqm||0)/10.764));
-                      const min=Math.min(...vals),max=Math.max(...vals);
-                      const h=max===min?100:Math.round(((vals[i]-min)/(max-min))*80)+20;
-                      const isLast=i===arr.length-1;
-                      return <div key={i} style={{flex:1,height:h+'%',borderRadius:'3px 3px 0 0',background:isLast?'#38BDF8':'rgba(56,189,248,0.3)',transition:'height 0.3s'}} title={`AED ${fmtNum(vals[i])}/sqft`}/>;
-                    })}
-                  </div>
-                  <div style={{display:'flex',justifyContent:'space-between',marginTop:4}}>
-                    <span style={{fontSize:10,color:'var(--text-muted)'}}>{areaData[selectedArea.key].priceTrend.slice(-12)[0]?.month||''}</span>
-                    <span style={{fontSize:10,color:'#38BDF8',fontWeight:600}}>AED {fmtNum(selectedArea.ppsqft)}/sqft</span>
-                  </div>
-                </div>
-              )}
-              <div style={{display:'flex',gap:10}}>
-                <button onClick={()=>setActiveTab('deal')} style={{flex:1,padding:'11px',borderRadius:11,border:'none',cursor:'pointer',background:'linear-gradient(135deg,#1D4ED8,#38BDF8)',color:'#fff',fontSize:14,fontWeight:600,fontFamily:'inherit'}}>⚡ Check a deal here</button>
-                <button onClick={()=>setActiveTab('feed')} style={{flex:1,padding:'11px',borderRadius:11,border:'1px solid rgba(255,255,255,0.08)',cursor:'pointer',background:'rgba(255,255,255,0.04)',color:'var(--text-secondary)',fontSize:14,fontFamily:'inherit'}}>📋 Recent sales</button>
-              </div>
-              <button onClick={()=>setSelectedArea(null)} style={{marginTop:10,background:'none',border:'none',cursor:'pointer',fontSize:12,color:'var(--text-muted)',fontFamily:'inherit',width:'100%',textAlign:'center'}}>✕ Close</button>
-            </div>
-          )}
-
           {!search && (
             <div onClick={()=>setActiveTab('map')} style={{display:'flex',alignItems:'center',gap:16,background:'linear-gradient(135deg,rgba(29,78,216,0.12),rgba(56,189,248,0.08))',border:'1px solid rgba(56,189,248,0.2)',borderRadius:16,padding:'16px 20px',marginBottom:20,cursor:'pointer',transition:'all 0.2s'}}
               onMouseEnter={e=>e.currentTarget.style.borderColor='rgba(56,189,248,0.4)'}
@@ -702,14 +651,14 @@ Respond ONLY with valid JSON (no markdown):
                 <div style={{background:'var(--surface)',border:'1px solid var(--border)',borderRadius:14,padding:'18px'}}>
                   <div style={{fontSize:13,fontWeight:600,color:'var(--text-primary)',marginBottom:14}}>📈 Price Trend (AED/sqft)</div>
                   <div style={{display:'flex',alignItems:'flex-end',gap:3,height:80}}>
-                    {areaData[selectedArea.key].priceTrend.slice(-18).map((p,i,arr)=>{
+                    {areaData[selectedArea.key].priceTrend.map((p,i,arr)=>{
                       const vals=arr.map(x=>Math.round((x.ppsqm||0)/10.764));
                       const min=Math.min(...vals),max=Math.max(...vals);
                       const h=max===min?100:Math.round(((vals[i]-min)/(max-min))*80)+20;
                       return (
                         <div key={i} style={{flex:1,display:'flex',flexDirection:'column',alignItems:'center',gap:2}}>
-                          <div style={{width:'100%',height:h+'%',borderRadius:'3px 3px 0 0',background:i===arr.length-1?'#38BDF8':'rgba(56,189,248,0.25)'}}/>
-                          {(i===0||i===arr.length-1)&&<div style={{fontSize:8,color:'var(--text-muted)',whiteSpace:'nowrap'}}>{p.month?.slice(2,7)||''}</div>}
+                          <div style={{width:'100%',height:h+'%',minHeight:4,borderRadius:'3px 3px 0 0',background:i===arr.length-1?'#38BDF8':'rgba(56,189,248,0.25)'}}/>
+                          <div style={{fontSize:8,color:'var(--text-muted)',whiteSpace:'nowrap'}}>{p.year||p.month?.slice(0,4)||''}</div>
                         </div>
                       );
                     })}
@@ -807,8 +756,8 @@ Respond ONLY with valid JSON (no markdown):
                     const h=max===0?0:Math.round((m.count/max)*100);
                     return (
                       <div key={i} style={{flex:1,display:'flex',flexDirection:'column',alignItems:'center',gap:2}}>
-                        <div style={{width:'100%',height:h+'%',borderRadius:'2px 2px 0 0',background:i===arr.length-1?'#F59E0B':'rgba(245,158,11,0.3)'}}/>
-                        {(i===0||i===arr.length-1)&&<div style={{fontSize:8,color:'var(--text-muted)',whiteSpace:'nowrap'}}>{m.month?.slice(2,7)||''}</div>}
+                        <div style={{width:'100%',height:h+'%',minHeight:4,borderRadius:'2px 2px 0 0',background:i===arr.length-1?'#F59E0B':'rgba(245,158,11,0.3)'}}/>
+                        <div style={{fontSize:8,color:'var(--text-muted)',whiteSpace:'nowrap'}}>{(i===0||i===arr.length-1)?(m.month?.slice(2,7)||''):''}</div>
                       </div>
                     );
                   })}
@@ -822,8 +771,8 @@ Respond ONLY with valid JSON (no markdown):
                 <div style={{fontSize:13,fontWeight:600,color:'var(--text-primary)',marginBottom:12}}>🏗️ Top Projects in {selectedArea.name}</div>
                 <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(180px,1fr))',gap:10}}>
                   {areaData[selectedArea.key].projects.slice(0,12).map((p,i)=>(
-                    <div key={i} onClick={()=>{if(projectsData?.[p.name]){setSelectedProject({key:p.name,name:p.name,area:selectedArea.name,avg:p.avg||0,count:p.count||0});}}} className="inv-card" style={{background:'var(--bg)',border:'1px solid var(--border)',borderRadius:12,padding:'14px',cursor:projectsData?.[p.name]?'pointer':'default'}}>
-                      <div style={{fontSize:12,fontWeight:600,color:'var(--text-primary)',marginBottom:4,lineHeight:1.3}}>{p.name}</div>
+                    <div key={i} onClick={()=>{if(projectsData?.[p.project||p.name]){setSelectedProject({key:p.project||p.name,name:p.project||p.name,area:selectedArea.name,avg:p.avg||0,count:p.count||0});}}} className="inv-card" style={{background:'var(--bg)',border:'1px solid var(--border)',borderRadius:12,padding:'14px',cursor:projectsData?.[p.name]?'pointer':'default'}}>
+                      <div style={{fontSize:12,fontWeight:600,color:'var(--text-primary)',marginBottom:4,lineHeight:1.3}}>{p.project||p.name||'—'}</div>
                       <div style={{fontSize:13,fontWeight:700,color:'#38BDF8'}}>{fmtAED(p.avg||0,true)}</div>
                       <div style={{fontSize:11,color:'var(--text-muted)'}}>{fmtNum(p.count||0)} txns</div>
                     </div>
