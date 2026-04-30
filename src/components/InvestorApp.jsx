@@ -62,11 +62,14 @@ export default function InvestorApp({ areaData, recentRaw, core, onSwitchToBroke
   const [showFilters, setShowFilters] = useState(false);
   const [filters, setFilters] = useState({ minPrice:'', maxPrice:'', bedrooms:'', area:'', regType:'' });
   const [filterResults, setFilterResults] = useState(null);
+  const [filterPage, setFilterPage] = useState(0);
+  const FILTER_PAGE_SIZE = 20;
 
   const applyFilters = () => {
     const { minPrice, maxPrice, bedrooms, area, regType } = filters;
     if (!minPrice && !maxPrice && !bedrooms && !area && !regType) {
       setFilterResults(null);
+    setFilterPage(0);
       setShowFilters(false);
       return;
     }
@@ -76,13 +79,15 @@ export default function InvestorApp({ areaData, recentRaw, core, onSwitchToBroke
     if (bedrooms) results = results.filter(r => (r.b||'')=== bedrooms);
     if (area) { const q=area.toLowerCase(); results = results.filter(r => (r.a||'').toLowerCase().includes(q) || na(r.a||'').toLowerCase().includes(q)); }
     if (regType) results = results.filter(r => regType==='Off-Plan' ? r.r==='Off' : r.r!=='Off');
-    setFilterResults(results.slice(0,50));
+    setFilterResults(results);
+    setFilterPage(0);
     setShowFilters(false);
   };
 
   const clearFilters = () => {
     setFilters({ minPrice:'', maxPrice:'', bedrooms:'', area:'', regType:'' });
     setFilterResults(null);
+    setFilterPage(0);
   };
 
   const saveToWatchlist = async (type, name, key, area) => {
@@ -410,17 +415,22 @@ Respond ONLY with valid JSON (no markdown):
           {filterResults && (
             <div style={{marginBottom:24}}>
               <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:12}}>
-                <div style={{fontSize:13,fontWeight:600,color:'var(--text-primary)'}}>{filterResults.length} matching transactions</div>
+                <div style={{fontSize:13,fontWeight:600,color:'var(--text-primary)'}}>
+                  {filterResults.length} matching transactions
+                  <span style={{fontSize:11,color:'var(--text-muted)',fontWeight:400,marginLeft:8}}>
+                    (from 5,000 recent — full 354K coming soon)
+                  </span>
+                </div>
                 <button onClick={clearFilters} style={{fontSize:12,color:'var(--text-secondary)',background:'none',border:'none',cursor:'pointer',fontFamily:'inherit'}}>✕ Clear filters</button>
               </div>
-              <div style={{background:'var(--surface)',border:'1px solid var(--border)',borderRadius:14,overflow:'hidden'}}>
+              <div style={{background:'var(--surface)',border:'1px solid var(--border)',borderRadius:14,overflow:'hidden',marginBottom:12}}>
                 <div style={{display:'grid',gridTemplateColumns:'1fr 80px 110px 75px',padding:'10px 18px',borderBottom:'1px solid var(--border)'}}>
                   {['Property','Beds','Price','Type'].map((h,i)=><div key={i} style={{fontSize:10,color:'var(--text-secondary)',fontWeight:600,textTransform:'uppercase',letterSpacing:'0.05em'}}>{h}</div>)}
                 </div>
-                {filterResults.map((r,i)=>{
+                {filterResults.slice(filterPage*FILTER_PAGE_SIZE,(filterPage+1)*FILTER_PAGE_SIZE).map((r,i,arr)=>{
                   const ppsqft=r.s&&r.v?Math.round(r.v/r.s/10.764):0;
                   return (
-                    <div key={i} className="inv-row" style={{display:'grid',gridTemplateColumns:'1fr 80px 110px 75px',padding:'12px 18px',borderBottom:i<filterResults.length-1?'1px solid var(--border)':'none',alignItems:'center'}}>
+                    <div key={i} className="inv-row" style={{display:'grid',gridTemplateColumns:'1fr 80px 110px 75px',padding:'12px 18px',borderBottom:i<arr.length-1?'1px solid var(--border)':'none',alignItems:'center'}}>
                       <div>
                         <div style={{fontSize:13,fontWeight:600,color:'var(--text-primary)'}}>{na(r.a||'')}</div>
                         <div style={{fontSize:11,color:'var(--text-secondary)'}}>{r.j||''}{ppsqft?' · AED '+fmtNum(ppsqft)+'/sqft':''} · {r.d||''}</div>
@@ -432,6 +442,15 @@ Respond ONLY with valid JSON (no markdown):
                   );
                 })}
               </div>
+              {filterResults.length > FILTER_PAGE_SIZE && (
+                <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'8px 4px'}}>
+                  <button onClick={()=>setFilterPage(p=>Math.max(0,p-1))} disabled={filterPage===0} style={{padding:'8px 18px',borderRadius:8,border:'1px solid var(--border)',background:'var(--surface)',color:filterPage===0?'var(--text-muted)':'var(--text-primary)',cursor:filterPage===0?'default':'pointer',fontSize:13,fontFamily:'inherit'}}>← Previous</button>
+                  <span style={{fontSize:13,color:'var(--text-secondary)'}}>
+                    Page {filterPage+1} of {Math.ceil(filterResults.length/FILTER_PAGE_SIZE)} · showing {filterPage*FILTER_PAGE_SIZE+1}–{Math.min((filterPage+1)*FILTER_PAGE_SIZE,filterResults.length)} of {filterResults.length}
+                  </span>
+                  <button onClick={()=>setFilterPage(p=>Math.min(Math.ceil(filterResults.length/FILTER_PAGE_SIZE)-1,p+1))} disabled={(filterPage+1)*FILTER_PAGE_SIZE>=filterResults.length} style={{padding:'8px 18px',borderRadius:8,border:'1px solid var(--border)',background:'var(--surface)',color:(filterPage+1)*FILTER_PAGE_SIZE>=filterResults.length?'var(--text-muted)':'var(--text-primary)',cursor:(filterPage+1)*FILTER_PAGE_SIZE>=filterResults.length?'default':'pointer',fontSize:13,fontFamily:'inherit'}}>Next →</button>
+                </div>
+              )}
             </div>
           )}
 
