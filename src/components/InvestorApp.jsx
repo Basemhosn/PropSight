@@ -27,7 +27,7 @@ const VERDICT_STYLE = {
   'ERROR':{bg:'rgba(100,116,139,0.1)',border:'rgba(100,116,139,0.2)',color:'var(--text-muted)'},
 };
 
-export default function InvestorApp({ areaData, recentRaw, core, onSwitchToBroker }) {
+export default function InvestorApp({ areaData, recentRaw, core, onSwitchToBroker, projectsData, buildingsData }) {
   const { user, profile, signOut } = useAuth();
   const [themeMode, setThemeMode] = useState(() => localStorage.getItem('theme') || 'dark');
   const [showMenu, setShowMenu] = useState(false);
@@ -44,6 +44,14 @@ export default function InvestorApp({ areaData, recentRaw, core, onSwitchToBroke
   const [dealResult, setDealResult] = useState(null);
   const [dealLoading, setDealLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('discover');
+  const [searchFocused, setSearchFocused] = useState(false);
+  const [selectedProject, setSelectedProject] = useState(null);
+  const [selectedDeveloper, setSelectedDeveloper] = useState(null);
+
+  useEffect(() => {
+    fetch('/data/developers.json').then(r=>r.json()).then(d=>{ window.__devData = d.developers||[]; }).catch(()=>{});
+    fetch('/data/buildings.json').then(r=>r.json()).then(d=>{ window.__bldData = d.index||[]; }).catch(()=>{});
+  }, []);
 
   const areas = useMemo(() => {
     if (!areaData) return [];
@@ -182,25 +190,96 @@ Respond ONLY with valid JSON (no markdown):
                 <input value={search} onChange={e=>{setSearch(e.target.value);setSelectedArea(null);}} placeholder="Dubai Marina, Business Bay, Emaar..." style={{background:'none',border:'none',outline:'none',color:'var(--text-primary)',fontSize:15,flex:1,fontFamily:'inherit'}}/>
                 {search && <button onClick={()=>{setSearch('');setSelectedArea(null);}} style={{background:'none',border:'none',cursor:'pointer',color:'var(--text-secondary)',fontSize:18,lineHeight:1,padding:0}}>×</button>}
               </div>
-              {search.length>1 && suggestions.length>0 && (
-                <div style={{position:'absolute',top:'calc(100% + 6px)',left:0,right:0,background:'var(--surface)',border:'1px solid rgba(59,130,246,0.2)',borderRadius:12,zIndex:50,overflow:'hidden',boxShadow:'0 8px 32px rgba(0,0,0,0.5)'}}>
-                  {suggestions.map((a,i)=>(
-                    <button key={i} onClick={()=>{setSelectedArea(a);setSearch(a.name);}} style={{display:'flex',justifyContent:'space-between',alignItems:'center',width:'100%',padding:'12px 16px',background:'none',border:'none',cursor:'pointer',borderBottom:i<suggestions.length-1?'1px solid rgba(255,255,255,0.04)':'none',fontFamily:'inherit'}}
-                      onMouseEnter={e=>e.currentTarget.style.background='rgba(59,130,246,0.08)'}
-                      onMouseLeave={e=>e.currentTarget.style.background='none'}>
-                      <div style={{display:'flex',alignItems:'center',gap:10}}>
-                        <span style={{fontSize:18}}>{a.emoji}</span>
-                        <div style={{textAlign:'left'}}>
-                          <div style={{fontSize:13,fontWeight:600,color:'var(--text-primary)'}}>{a.name}</div>
-                          <div style={{fontSize:11,color:'var(--text-secondary)'}}>{fmtNum(a.count)} transactions</div>
-                        </div>
-                      </div>
-                      <div style={{textAlign:'right'}}>
-                        <div style={{fontSize:13,fontWeight:600,color:'var(--text-primary)'}}>AED {fmtNum(a.ppsqft)}<span style={{fontSize:10,color:'var(--text-secondary)'}}>/sqft</span></div>
-                        <div style={{fontSize:11,color:a.yoy>=0?'#22C55E':'#F87171',fontWeight:600}}>{a.yoy>=0?'+':''}{a.yoy}%</div>
-                      </div>
-                    </button>
-                  ))}
+              {search.length>1 && hasResults && (
+                <div style={{position:'absolute',top:'calc(100% + 8px)',left:0,right:0,background:'var(--surface)',border:'1px solid var(--border)',borderRadius:16,zIndex:50,overflow:'hidden',boxShadow:'0 16px 48px rgba(0,0,0,0.4)',maxHeight:480,overflowY:'auto'}}>
+                  
+                  {/* Areas */}
+                  {allSearchResults.areas.length > 0 && (
+                    <div>
+                      <div style={{padding:'10px 16px 6px',fontSize:10,fontWeight:700,color:'var(--text-muted)',textTransform:'uppercase',letterSpacing:'0.1em',borderBottom:'1px solid var(--border)'}}>📍 Areas</div>
+                      {allSearchResults.areas.map((a,i)=>(
+                        <button key={i} onClick={()=>{setSelectedArea(a);setSearch(a.name);setSearchFocused(false);}} style={{display:'flex',justifyContent:'space-between',alignItems:'center',width:'100%',padding:'12px 16px',background:'none',border:'none',cursor:'pointer',fontFamily:'inherit',borderBottom:'1px solid var(--border)'}}
+                          onMouseEnter={e=>e.currentTarget.style.background='rgba(59,130,246,0.06)'}
+                          onMouseLeave={e=>e.currentTarget.style.background='none'}>
+                          <div style={{display:'flex',alignItems:'center',gap:12}}>
+                            <div style={{width:36,height:36,borderRadius:10,background:'linear-gradient(135deg,rgba(29,78,216,0.2),rgba(56,189,248,0.1))',display:'flex',alignItems:'center',justifyContent:'center',fontSize:18,flexShrink:0}}>{a.emoji}</div>
+                            <div style={{textAlign:'left'}}>
+                              <div style={{fontSize:14,fontWeight:600,color:'var(--text-primary)'}}>{a.name}</div>
+                              <div style={{fontSize:11,color:'var(--text-secondary)'}}>{fmtNum(a.count)} transactions</div>
+                            </div>
+                          </div>
+                          <div style={{textAlign:'right'}}>
+                            <div style={{fontSize:14,fontWeight:700,color:'#38BDF8'}}>AED {fmtNum(a.ppsqft)}<span style={{fontSize:10,color:'var(--text-muted)',fontWeight:400}}>/sqft</span></div>
+                            <div style={{fontSize:11,fontWeight:600,color:a.yoy>=0?'#22C55E':'#F87171'}}>{a.yoy>=0?'+':''}{a.yoy}% YoY</div>
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Projects */}
+                  {allSearchResults.projects.length > 0 && (
+                    <div>
+                      <div style={{padding:'10px 16px 6px',fontSize:10,fontWeight:700,color:'var(--text-muted)',textTransform:'uppercase',letterSpacing:'0.1em',borderBottom:'1px solid var(--border)'}}>🏗️ Projects</div>
+                      {allSearchResults.projects.map((p,i)=>(
+                        <button key={i} onClick={()=>{setSearch(p.name);setSearchFocused(false);}} style={{display:'flex',justifyContent:'space-between',alignItems:'center',width:'100%',padding:'12px 16px',background:'none',border:'none',cursor:'pointer',fontFamily:'inherit',borderBottom:'1px solid var(--border)'}}
+                          onMouseEnter={e=>e.currentTarget.style.background='rgba(59,130,246,0.06)'}
+                          onMouseLeave={e=>e.currentTarget.style.background='none'}>
+                          <div style={{display:'flex',alignItems:'center',gap:12}}>
+                            <div style={{width:36,height:36,borderRadius:10,background:'linear-gradient(135deg,rgba(245,158,11,0.2),rgba(251,191,36,0.1))',display:'flex',alignItems:'center',justifyContent:'center',fontSize:18,flexShrink:0}}>🏗️</div>
+                            <div style={{textAlign:'left'}}>
+                              <div style={{fontSize:14,fontWeight:600,color:'var(--text-primary)'}}>{p.name}</div>
+                              <div style={{fontSize:11,color:'var(--text-secondary)'}}>📍 {p.area} · {fmtNum(p.count)} transactions</div>
+                            </div>
+                          </div>
+                          <div style={{textAlign:'right'}}>
+                            <div style={{fontSize:13,fontWeight:700,color:'var(--text-primary)'}}>{fmtAED(p.avg,true)}</div>
+                            <div style={{fontSize:10,color:'var(--text-muted)'}}>avg price</div>
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Developers */}
+                  {allSearchResults.developers.length > 0 && (
+                    <div>
+                      <div style={{padding:'10px 16px 6px',fontSize:10,fontWeight:700,color:'var(--text-muted)',textTransform:'uppercase',letterSpacing:'0.1em',borderBottom:'1px solid var(--border)'}}>🏢 Developers</div>
+                      {allSearchResults.developers.map((d,i)=>(
+                        <button key={i} onClick={()=>{setSearch(d.name);setSearchFocused(false);}} style={{display:'flex',justifyContent:'space-between',alignItems:'center',width:'100%',padding:'12px 16px',background:'none',border:'none',cursor:'pointer',fontFamily:'inherit',borderBottom:'1px solid var(--border)'}}
+                          onMouseEnter={e=>e.currentTarget.style.background='rgba(59,130,246,0.06)'}
+                          onMouseLeave={e=>e.currentTarget.style.background='none'}>
+                          <div style={{display:'flex',alignItems:'center',gap:12}}>
+                            <div style={{width:36,height:36,borderRadius:10,background:'linear-gradient(135deg,rgba(139,92,246,0.2),rgba(167,139,250,0.1))',display:'flex',alignItems:'center',justifyContent:'center',fontSize:18,flexShrink:0}}>🏢</div>
+                            <div style={{textAlign:'left'}}>
+                              <div style={{fontSize:14,fontWeight:600,color:'var(--text-primary)'}}>{d.name}</div>
+                              <div style={{fontSize:11,color:'var(--text-secondary)'}}>{fmtNum(d.count)} total transactions</div>
+                            </div>
+                          </div>
+                          <div style={{fontSize:13,fontWeight:700,color:'#A78BFA'}}>{fmtAED(d.avg,true)}</div>
+                        </button>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Buildings */}
+                  {allSearchResults.buildings.length > 0 && (
+                    <div>
+                      <div style={{padding:'10px 16px 6px',fontSize:10,fontWeight:700,color:'var(--text-muted)',textTransform:'uppercase',letterSpacing:'0.1em',borderBottom:'1px solid var(--border)'}}>🏠 Buildings</div>
+                      {allSearchResults.buildings.map((b,i)=>(
+                        <button key={i} onClick={()=>{setSearch(b.name);setSearchFocused(false);}} style={{display:'flex',alignItems:'center',gap:12,width:'100%',padding:'12px 16px',background:'none',border:'none',cursor:'pointer',fontFamily:'inherit',borderBottom:i<allSearchResults.buildings.length-1?'1px solid var(--border)':'none'}}
+                          onMouseEnter={e=>e.currentTarget.style.background='rgba(59,130,246,0.06)'}
+                          onMouseLeave={e=>e.currentTarget.style.background='none'}>
+                          <div style={{width:36,height:36,borderRadius:10,background:'linear-gradient(135deg,rgba(34,197,94,0.15),rgba(34,197,94,0.05))',display:'flex',alignItems:'center',justifyContent:'center',fontSize:18,flexShrink:0}}>🏠</div>
+                          <div style={{textAlign:'left'}}>
+                            <div style={{fontSize:14,fontWeight:600,color:'var(--text-primary)'}}>{b.name}</div>
+                            <div style={{fontSize:11,color:'var(--text-secondary)'}}>📍 {na(b.area||'')} · {fmtNum(b.count)} transactions</div>
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  )}
+
                 </div>
               )}
             </div>
@@ -253,6 +332,7 @@ Respond ONLY with valid JSON (no markdown):
                 <button onClick={()=>setActiveTab('deal')} style={{flex:1,padding:'11px',borderRadius:11,border:'none',cursor:'pointer',background:'linear-gradient(135deg,#1D4ED8,#38BDF8)',color:'#fff',fontSize:14,fontWeight:600,fontFamily:'inherit'}}>⚡ Check a deal here</button>
                 <button onClick={()=>setActiveTab('feed')} style={{flex:1,padding:'11px',borderRadius:11,border:'1px solid rgba(255,255,255,0.08)',cursor:'pointer',background:'rgba(255,255,255,0.04)',color:'var(--text-secondary)',fontSize:14,fontFamily:'inherit'}}>📋 Recent sales</button>
               </div>
+              <button onClick={()=>setSelectedArea(null)} style={{marginTop:10,background:'none',border:'none',cursor:'pointer',fontSize:12,color:'var(--text-muted)',fontFamily:'inherit',width:'100%',textAlign:'center'}}>✕ Close</button>
             </div>
           )}
 
