@@ -63,6 +63,8 @@ function Icon({ name, size=15 }) {
 export default function Sidebar({ page, setPage }) {
   const { user, profile, signOut, isPro, isLite, theme, toggleTheme, lang, toggleLang } = useAuth();
   const [open, setOpen] = useState(false);
+  const [brokerMenu, setBrokerMenu] = useState(false);
+  const [brokerTheme, setBrokerTheme] = useState(() => localStorage.getItem('theme') || 'dark');
   const [themeMode, setThemeMode] = useState(() => localStorage.getItem('theme') || 'dark');
   const [isMobile, setIsMobile] = useState(true);
 
@@ -77,8 +79,11 @@ export default function Sidebar({ page, setPage }) {
 
   const navItems = (
     <div style={{ display:'flex', flexDirection:'column', height:'100%' }}>
-      <div style={{ padding:'16px', borderBottom:'1px solid rgba(59,130,246,0.08)', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
-        <PropSightLogo size="sm" />
+      <div style={{ padding:'14px 16px', borderBottom:'1px solid var(--border)', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+        <div style={{display:'flex',alignItems:'center',gap:8}}>
+          <div style={{width:28,height:28,borderRadius:7,background:'linear-gradient(135deg,#1D4ED8,#38BDF8)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:14}}>🏙️</div>
+          <span style={{fontSize:16,fontWeight:800,color:'var(--text-primary)',fontFamily:"system-ui"}}>Prop<span style={{color:'#38BDF8'}}>Sight</span></span>
+        </div>
         {isMobile && <button onClick={() => setOpen(false)} style={{ background:'none', border:'none', cursor:'pointer', color:'var(--text-muted)', padding:4 }}><Icon name="close" size={20}/></button>}
       </div>
       <div style={{ flex:1, padding:'12px 8px', overflowY:'auto' }}>
