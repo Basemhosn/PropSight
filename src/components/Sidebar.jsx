@@ -87,16 +87,6 @@ export default function Sidebar({ page, setPage }) {
         {isMobile && <button onClick={() => setOpen(false)} style={{ background:'none', border:'none', cursor:'pointer', color:'var(--text-muted)', padding:4 }}><Icon name="close" size={20}/></button>}
       </div>
       <div style={{ flex:1, padding:'12px 8px', overflowY:'auto' }}>
-      {/* Portal Badge */}
-      <div style={{margin:'8px 8px 0',padding:'8px 12px',borderRadius:10,background:profile?.role==='broker'?'rgba(245,158,11,0.08)':'rgba(56,189,248,0.08)',border:profile?.role==='broker'?'1px solid rgba(245,158,11,0.2)':'1px solid rgba(56,189,248,0.2)',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
-        <div style={{display:'flex',alignItems:'center',gap:6}}>
-          <span style={{fontSize:13}}>{profile?.role==='broker'?'🏢':'👤'}</span>
-          <span style={{fontSize:11,fontWeight:700,color:profile?.role==='broker'?'#F59E0B':'#38BDF8'}}>{profile?.role==='broker'?'Broker Portal':'Investor Portal'}</span>
-        </div>
-        {profile?.role==='broker' && (
-          <button onClick={async()=>{const {supabase:sb}=await import('../context/AuthContext');await sb.from('profiles').update({role:'investor'}).eq('id',user?.id);window.location.reload();}} style={{fontSize:10,color:'var(--text-secondary)',background:'none',border:'none',cursor:'pointer',fontFamily:'inherit',padding:0}}>Investor →</button>
-        )}
-      </div>
         {NAV_SECTIONS.map((section, si) => (
           <div key={si} style={{ marginBottom:8 }}>
             {section.label && <div style={{ fontSize:10, fontWeight:600, color:'var(--text-faint)', letterSpacing:'0.12em', padding:'8px 8px 4px' }}>{section.label}</div>}
