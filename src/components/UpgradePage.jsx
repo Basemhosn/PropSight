@@ -155,20 +155,20 @@ export default function UpgradePage() {
               </div>
 
               {/* CTA Button */}
-              <button onClick={()=>handleUpgrade(plan.id)}
-                disabled={isCurrent || loading===plan.id || plan.price===0 || isDowngrade}
+              <button onClick={()=>isDowngrade ? handleManageBilling() : handleUpgrade(plan.id)}
+                disabled={isCurrent || loading===plan.id || plan.price===0}
                 style={{
                   width:'100%', padding:'12px', borderRadius:10, border:'none',
-                  cursor: isCurrent||plan.price===0||isDowngrade ? 'default' : 'pointer',
+                  cursor: isCurrent||plan.price===0 ? 'default' : 'pointer',
                   marginBottom:24, fontSize:13, fontWeight:600, fontFamily:'system-ui',
-                  background: isCurrent ? plan.accent : plan.price===0||isDowngrade ? 'rgba(100,116,139,0.1)' : BTN_BG[plan.id],
-                  color: isCurrent ? plan.color : plan.price===0||isDowngrade ? 'var(--text-muted)' : '#fff',
+                  background: isCurrent ? plan.accent : plan.price===0 ? 'rgba(100,116,139,0.1)' : isDowngrade ? 'rgba(100,116,139,0.15)' : BTN_BG[plan.id],
+                  color: isCurrent ? plan.color : plan.price===0 ? 'var(--text-muted)' : isDowngrade ? 'var(--text-secondary)' : '#fff',
                   opacity: loading===plan.id ? 0.7 : 1,
                 }}>
                 {loading===plan.id ? 'Redirecting...'
                   : isCurrent ? '✓ Current Plan'
                   : plan.price===0 ? 'Free Forever'
-                  : isDowngrade ? 'Downgrade'
+                  : isDowngrade ? '↓ Downgrade via Portal'
                   : `Upgrade to ${plan.name} →`}
               </button>
 
