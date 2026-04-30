@@ -761,13 +761,13 @@ Respond ONLY with valid JSON (no markdown):
             {/* KPI Grid */}
             <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(140px,1fr))',gap:12,marginBottom:24}}>
               {[
-                ['Avg Price',fmtAED(selectedArea.avg,true),'💰','#38BDF8'],
-                ['Price/sqft','AED '+fmtNum(selectedArea.ppsqft),'📐','#A78BFA'],
-                ['Off-Plan',selectedArea.offPlanPct+'%','🏗️','#F59E0B'],
-                ['Total Value',fmtAED((areaData?.[selectedArea.key]?.kpis?.total)||0,true),'💎','#22C55E'],
+                ['Avg Price',fmtAED(selectedArea.avg,true),null,'#38BDF8'],
+                ['Price/sqft','AED '+fmtNum(selectedArea.ppsqft),null,'#A78BFA'],
+                ['Off-Plan',selectedArea.offPlanPct+'%',null,'#F59E0B'],
+                ['Total Value',fmtAED((areaData?.[selectedArea.key]?.kpis?.total)||0,true),null,'#22C55E'],
               ].map(([l,v,icon,color],i)=>(
                 <div key={i} style={{background:'var(--surface)',border:'1px solid var(--border)',borderRadius:14,padding:'16px',textAlign:'center'}}>
-                  <div style={{fontSize:20,marginBottom:6}}>{icon}</div>
+                  {icon&&<div style={{fontSize:20,marginBottom:6}}>{icon}</div>}
                   <div style={{fontSize:17,fontWeight:800,color,marginBottom:4,letterSpacing:'-0.01em'}}>{v}</div>
                   <div style={{fontSize:10,color:'var(--text-muted)',textTransform:'uppercase',letterSpacing:'0.05em'}}>{l}</div>
                 </div>
@@ -956,12 +956,12 @@ Respond ONLY with valid JSON (no markdown):
           <div style={{maxWidth:960,margin:'0 auto',padding:'24px'}}>
             <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(140px,1fr))',gap:12,marginBottom:24}}>
               {[
-                ['Total Transactions',fmtNum(selectedDeveloper.count),'📊','#38BDF8'],
-                ['Total Value',fmtAED(selectedDeveloper.total||0,true),'💎','#22C55E'],
+                ['Total Transactions',fmtNum(selectedDeveloper.count),null,'#38BDF8'],
+                ['Total Value',fmtAED(selectedDeveloper.total||0,true),null,'#22C55E'],
                 ['Avg Deal Size',fmtAED(selectedDeveloper.avg,true),'💰','#A78BFA'],
               ].map(([l,v,icon,color],i)=>(
                 <div key={i} style={{background:'var(--surface)',border:'1px solid var(--border)',borderRadius:14,padding:'16px',textAlign:'center'}}>
-                  <div style={{fontSize:20,marginBottom:6}}>{icon}</div>
+                  {icon&&<div style={{fontSize:20,marginBottom:6}}>{icon}</div>}
                   <div style={{fontSize:17,fontWeight:800,color,marginBottom:4}}>{v}</div>
                   <div style={{fontSize:10,color:'var(--text-muted)',textTransform:'uppercase',letterSpacing:'0.05em'}}>{l}</div>
                 </div>
@@ -1024,13 +1024,13 @@ Respond ONLY with valid JSON (no markdown):
           <div style={{maxWidth:900,margin:'0 auto',padding:'20px 16px'}}>
             <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(140px,1fr))',gap:12,marginBottom:24}}>
               {[
-                ['Avg Price',fmtAED(projectsData?.[selectedProject.key]?.kpis?.avg||selectedProject.avg,true),'💰','#38BDF8'],
-                ['Transactions',fmtNum(projectsData?.[selectedProject.key]?.kpis?.count||selectedProject.count),'📊','#22C55E'],
-                ['Price/sqft','AED '+fmtNum(Math.round((projectsData?.[selectedProject.key]?.kpis?.ppsqm||0)/10.764)),'📐','#A78BFA'],
-                ['Off-Plan',projectsData?.[selectedProject.key]?.kpis?Math.round((projectsData[selectedProject.key].kpis.offPlan||0)/(projectsData[selectedProject.key].kpis.count||1)*100)+'%':'—','🏗️','#F59E0B'],
+                ['Avg Price',fmtAED(projectsData?.[selectedProject.key]?.kpis?.avg||selectedProject.avg,true),null,'#38BDF8'],
+                ['Transactions',fmtNum(projectsData?.[selectedProject.key]?.kpis?.count||selectedProject.count),null,'#22C55E'],
+                ['Price/sqft','AED '+fmtNum(Math.round((projectsData?.[selectedProject.key]?.kpis?.ppsqm||0)/10.764)),null,'#A78BFA'],
+                ['Off-Plan',projectsData?.[selectedProject.key]?.kpis?Math.round((projectsData[selectedProject.key].kpis.offPlan||0)/(projectsData[selectedProject.key].kpis.count||1)*100)+'%':'—',null,'#F59E0B'],
               ].map(([l,v,icon,color],i)=>(
                 <div key={i} style={{background:'var(--surface)',border:'1px solid var(--border)',borderRadius:14,padding:'16px',textAlign:'center'}}>
-                  <div style={{fontSize:20,marginBottom:6}}>{icon}</div>
+                  {icon&&<div style={{fontSize:20,marginBottom:6}}>{icon}</div>}
                   <div style={{fontSize:18,fontWeight:800,color,marginBottom:4}}>{v}</div>
                   <div style={{fontSize:10,color:'var(--text-muted)',textTransform:'uppercase',letterSpacing:'0.05em'}}>{l}</div>
                 </div>
@@ -1091,11 +1091,11 @@ Respond ONLY with valid JSON (no markdown):
           <div style={{maxWidth:900,margin:'0 auto',padding:'20px 16px'}}>
             <div style={{display:'grid',gridTemplateColumns:'repeat(2,1fr)',gap:12,marginBottom:24}}>
               {[
-                ['Total Transactions',fmtNum(selectedBuilding.count),'📊','#38BDF8'],
-                ['Location',na(selectedBuilding.area||''),'📍','#22C55E'],
+                ['Total Transactions',fmtNum(selectedBuilding.count),null,'#38BDF8'],
+                ['Location',na(selectedBuilding.area||''),null,'#22C55E'],
               ].map(([l,v,icon,color],i)=>(
                 <div key={i} style={{background:'var(--surface)',border:'1px solid var(--border)',borderRadius:14,padding:'16px',textAlign:'center'}}>
-                  <div style={{fontSize:20,marginBottom:6}}>{icon}</div>
+                  {icon&&<div style={{fontSize:20,marginBottom:6}}>{icon}</div>}
                   <div style={{fontSize:18,fontWeight:800,color,marginBottom:4}}>{v}</div>
                   <div style={{fontSize:10,color:'var(--text-muted)',textTransform:'uppercase',letterSpacing:'0.05em'}}>{l}</div>
                 </div>
