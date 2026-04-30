@@ -58,6 +58,18 @@ export default function InvestorApp({ areaData, recentRaw, core, onSwitchToBroke
   const [selectedProject, setSelectedProject] = useState(null);
   const [selectedDeveloper, setSelectedDeveloper] = useState(null);
   const [selectedBuilding, setSelectedBuilding] = useState(null);
+  const [savedKeys, setSavedKeys] = useState(new Set());
+
+  const saveToWatchlist = async (type, name, key, area) => {
+    const { supabase: sb } = await import('../context/AuthContext');
+    const areaKey = type === 'area' ? key : area;
+    await sb.from('watchlist').insert({
+      user_id: user?.id, type, name, key, area: areaKey,
+      current_ppsqm: areaData?.[areaKey]?.kpis?.ppsqm || 0,
+      current_avg: areaData?.[areaKey]?.kpis?.avg || 0,
+    });
+    setSavedKeys(s => new Set([...s, key]));
+  };
 
   useEffect(() => {
     fetch('/data/developers.json').then(r=>r.json()).then(d=>{ window.__devData = d.developers||[]; }).catch(()=>{});
@@ -233,7 +245,7 @@ Respond ONLY with valid JSON (no markdown):
                     <div>
                       <div style={{padding:'10px 16px 6px',fontSize:10,fontWeight:700,color:'var(--text-muted)',textTransform:'uppercase',letterSpacing:'0.1em',borderBottom:'1px solid var(--border)'}}>📍 Areas</div>
                       {allSearchResults.areas.map((a,i)=>(
-                        <button key={i} onClick={()=>{setSelectedArea(a);setSearch(a.name);setSearchFocused(false);}} style={{display:'flex',justifyContent:'space-between',alignItems:'center',width:'100%',padding:'12px 16px',background:'none',border:'none',cursor:'pointer',fontFamily:'inherit',borderBottom:'1px solid var(--border)'}}
+                        <button key={i} onClick={()=>{setSelectedArea(a);setSearch('');setSearchFocused(false);}} style={{display:'flex',justifyContent:'space-between',alignItems:'center',width:'100%',padding:'12px 16px',background:'none',border:'none',cursor:'pointer',fontFamily:'inherit',borderBottom:'1px solid var(--border)'}}
                           onMouseEnter={e=>e.currentTarget.style.background='rgba(59,130,246,0.06)'}
                           onMouseLeave={e=>e.currentTarget.style.background='none'}>
                           <div style={{display:'flex',alignItems:'center',gap:12}}>
@@ -386,7 +398,7 @@ Respond ONLY with valid JSON (no markdown):
           <div style={{fontSize:12,fontWeight:600,color:'var(--text-secondary)',marginBottom:12,textTransform:'uppercase',letterSpacing:'0.07em'}}>{search.length>1?`${suggestions.length} results`:'Popular areas'}</div>
           <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(190px,1fr))',gap:12}}>
             {displayAreas.map((a,i)=>(
-              <div key={i} className="inv-card" onClick={()=>{setSelectedArea(a);setSearch(a.name);window.scrollTo({top:0,behavior:'smooth'});}} style={{background:'var(--surface)',border:'1px solid rgba(255,255,255,0.06)',borderRadius:14,padding:'16px'}}>
+              <div key={i} className="inv-card" onClick={()=>{setSelectedArea(a);window.scrollTo({top:0,behavior:'smooth'});}} style={{background:'var(--surface)',border:'1px solid rgba(255,255,255,0.06)',borderRadius:14,padding:'16px'}}>
                 <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:10}}>
                   <span style={{fontSize:24}}>{a.emoji}</span>
                   <span style={{fontSize:11,fontWeight:700,padding:'3px 8px',borderRadius:20,background:a.yoy>=0?'rgba(34,197,94,0.1)':'rgba(248,113,113,0.1)',color:a.yoy>=0?'#22C55E':'#F87171'}}>{a.yoy>=0?'+':''}{a.yoy}%</span>
@@ -642,12 +654,150 @@ Respond ONLY with valid JSON (no markdown):
           </div>
         )}
 
+
+      {/* FULL-SCREEN AREA PROFILE */}
+      {selectedArea && (
+        <div style={{position:'fixed',inset:0,background:'var(--bg)',zIndex:500,overflowY:'auto'}}>
+          <div style={{position:'sticky',top:0,zIndex:10,background:'var(--bg-alt)',borderBottom:'1px solid var(--border)',height:52,display:'flex',alignItems:'center',justifyContent:'space-between',padding:'0 24px'}}>
+            <button onClick={()=>setSelectedArea(null)} style={{display:'flex',alignItems:'center',gap:8,background:'none',border:'none',cursor:'pointer',color:'var(--text-primary)',fontSize:14,fontWeight:600,fontFamily:'inherit'}}>
+              ← Back to search
+            </button>
+            <button onClick={()=>saveToWatchlist('area',selectedArea.name,selectedArea.key,selectedArea.key)} disabled={savedKeys.has(selectedArea.key)} style={{display:'flex',alignItems:'center',gap:6,background:'none',border:'1px solid var(--border)',borderRadius:20,padding:'6px 14px',cursor:'pointer',fontSize:12,color:savedKeys.has(selectedArea.key)?'#22C55E':'var(--text-secondary)',fontFamily:'inherit'}}>
+              {savedKeys.has(selectedArea.key)?'✓ Saved':'♡ Save'}
+            </button>
+          </div>
+          <div style={{height:220,background:`linear-gradient(135deg,rgba(29,78,216,0.3),rgba(56,189,248,0.15))`,display:'flex',alignItems:'center',justifyContent:'center',flexDirection:'column',gap:10,position:'relative'}}>
+            <div style={{fontSize:56}}>{selectedArea.emoji}</div>
+            <h1 style={{fontSize:26,fontWeight:800,color:'var(--text-primary)',margin:0,marginBottom:4}}>{selectedArea.name}</h1>
+            <div style={{display:'flex',alignItems:'center',gap:8}}>
+              <span style={{fontSize:13,color:'var(--text-secondary)'}}>{fmtNum(selectedArea.count)} transactions</span>
+              <span style={{fontSize:13,fontWeight:700,padding:'3px 10px',borderRadius:20,background:selectedArea.yoy>=0?'rgba(34,197,94,0.1)':'rgba(248,113,113,0.1)',color:selectedArea.yoy>=0?'#22C55E':'#F87171'}}>{selectedArea.yoy>=0?'+':''}{selectedArea.yoy}% YoY</span>
+            </div>
+          </div>
+          <div style={{maxWidth:900,margin:'0 auto',padding:'24px'}}>
+            <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:12,marginBottom:24}}>
+              {[
+                ['Avg Price',fmtAED(selectedArea.avg,true),'💰','#38BDF8'],
+                ['Price/sqft','AED '+fmtNum(selectedArea.ppsqft),'📐','#A78BFA'],
+                ['Off-Plan',selectedArea.offPlanPct+'%','🏗️','#F59E0B'],
+                ['YoY Growth',(selectedArea.yoy>=0?'+':'')+selectedArea.yoy+'%','📈',selectedArea.yoy>=0?'#22C55E':'#F87171'],
+              ].map(([l,v,icon,color],i)=>(
+                <div key={i} style={{background:'var(--surface)',border:'1px solid var(--border)',borderRadius:14,padding:'16px',textAlign:'center'}}>
+                  <div style={{fontSize:20,marginBottom:6}}>{icon}</div>
+                  <div style={{fontSize:18,fontWeight:800,color,marginBottom:4}}>{v}</div>
+                  <div style={{fontSize:10,color:'var(--text-muted)',textTransform:'uppercase',letterSpacing:'0.05em'}}>{l}</div>
+                </div>
+              ))}
+            </div>
+            {areaData?.[selectedArea.key]?.priceTrend?.length>1 && (
+              <div style={{background:'var(--surface)',border:'1px solid var(--border)',borderRadius:14,padding:'18px',marginBottom:20}}>
+                <div style={{fontSize:13,fontWeight:600,color:'var(--text-primary)',marginBottom:14}}>Price Trend (AED/sqft)</div>
+                <div style={{display:'flex',alignItems:'flex-end',gap:4,height:72}}>
+                  {areaData[selectedArea.key].priceTrend.slice(-18).map((p,i,arr)=>{
+                    const vals=arr.map(x=>Math.round((x.ppsqm||0)/10.764));
+                    const min=Math.min(...vals),max=Math.max(...vals);
+                    const h=max===min?100:Math.round(((vals[i]-min)/(max-min))*80)+20;
+                    return <div key={i} style={{flex:1,height:h+'%',borderRadius:'3px 3px 0 0',background:i===arr.length-1?'#38BDF8':'rgba(56,189,248,0.25)'}}/>;
+                  })}
+                </div>
+              </div>
+            )}
+            {projectsData && (
+              <div style={{marginBottom:20}}>
+                <div style={{fontSize:13,fontWeight:600,color:'var(--text-primary)',marginBottom:12}}>Top Projects in {selectedArea.name}</div>
+                <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(200px,1fr))',gap:10}}>
+                  {Object.entries(projectsData).filter(([k,v])=>na(v.area||'')===selectedArea.name||v.area===selectedArea.key).slice(0,6).map(([k,v],i)=>(
+                    <div key={i} onClick={()=>{setSelectedProject({key:k,name:k,area:selectedArea.name,avg:v.kpis?.avg||0,count:v.kpis?.count||0});setSelectedArea(null);}} className="inv-card" style={{background:'var(--surface)',border:'1px solid var(--border)',borderRadius:12,padding:'14px',cursor:'pointer'}}>
+                      <div style={{fontSize:13,fontWeight:600,color:'var(--text-primary)',marginBottom:4}}>{k}</div>
+                      <div style={{fontSize:12,color:'#38BDF8',fontWeight:700}}>{fmtAED(v.kpis?.avg||0,true)}</div>
+                      <div style={{fontSize:11,color:'var(--text-muted)'}}>{fmtNum(v.kpis?.count||0)} txns</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+            <div style={{display:'flex',gap:12}}>
+              <button onClick={()=>setActiveTab('deal')} style={{flex:1,padding:'14px',borderRadius:12,border:'none',cursor:'pointer',background:'linear-gradient(135deg,#1D4ED8,#38BDF8)',color:'#fff',fontSize:15,fontWeight:600,fontFamily:'inherit'}}>
+                ⚡ Check a deal here
+              </button>
+              <button onClick={()=>setActiveTab('feed')} style={{flex:1,padding:'14px',borderRadius:12,border:'1px solid var(--border)',cursor:'pointer',background:'var(--surface)',color:'var(--text-primary)',fontSize:15,fontWeight:600,fontFamily:'inherit'}}>
+                📋 Recent sales
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* FULL-SCREEN DEVELOPER PROFILE */}
+      {selectedDeveloper && (
+        <div style={{position:'fixed',inset:0,background:'var(--bg)',zIndex:500,overflowY:'auto'}}>
+          <div style={{position:'sticky',top:0,zIndex:10,background:'var(--bg-alt)',borderBottom:'1px solid var(--border)',height:52,display:'flex',alignItems:'center',padding:'0 24px'}}>
+            <button onClick={()=>setSelectedDeveloper(null)} style={{display:'flex',alignItems:'center',gap:8,background:'none',border:'none',cursor:'pointer',color:'var(--text-primary)',fontSize:14,fontWeight:600,fontFamily:'inherit'}}>
+              ← Back to search
+            </button>
+          </div>
+          <div style={{height:200,background:'linear-gradient(135deg,rgba(139,92,246,0.2),rgba(167,139,250,0.08))',display:'flex',alignItems:'center',justifyContent:'center',flexDirection:'column',gap:10}}>
+            <div style={{width:64,height:64,borderRadius:18,background:'linear-gradient(135deg,#7C3AED,#A78BFA)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:28}}>🏢</div>
+            <h1 style={{fontSize:24,fontWeight:800,color:'var(--text-primary)',margin:0}}>{selectedDeveloper.name}</h1>
+            <div style={{fontSize:13,color:'var(--text-secondary)'}}>Dubai Real Estate Developer</div>
+          </div>
+          <div style={{maxWidth:900,margin:'0 auto',padding:'24px'}}>
+            <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:12,marginBottom:24}}>
+              {[
+                ['Total Transactions',fmtNum(selectedDeveloper.count),'📊','#38BDF8'],
+                ['Avg Deal Size',fmtAED(selectedDeveloper.avg,true),'💰','#22C55E'],
+                ['Market Share',Math.round(selectedDeveloper.count/354343*100)+'%','📈','#A78BFA'],
+              ].map(([l,v,icon,color],i)=>(
+                <div key={i} style={{background:'var(--surface)',border:'1px solid var(--border)',borderRadius:14,padding:'16px',textAlign:'center'}}>
+                  <div style={{fontSize:20,marginBottom:6}}>{icon}</div>
+                  <div style={{fontSize:18,fontWeight:800,color,marginBottom:4}}>{v}</div>
+                  <div style={{fontSize:10,color:'var(--text-muted)',textTransform:'uppercase',letterSpacing:'0.05em'}}>{l}</div>
+                </div>
+              ))}
+            </div>
+            {selectedDeveloper.yearly?.length>0 && (
+              <div style={{background:'var(--surface)',border:'1px solid var(--border)',borderRadius:14,padding:'18px',marginBottom:20}}>
+                <div style={{fontSize:13,fontWeight:600,color:'var(--text-primary)',marginBottom:14}}>Yearly Transaction Volume</div>
+                <div style={{display:'flex',alignItems:'flex-end',gap:6,height:72}}>
+                  {selectedDeveloper.yearly.map((y,i,arr)=>{
+                    const max=Math.max(...arr.map(x=>x.count));
+                    const h=Math.round((y.count/max)*100);
+                    return (
+                      <div key={i} style={{flex:1,display:'flex',flexDirection:'column',alignItems:'center',gap:4}}>
+                        <div style={{width:'100%',height:h+'%',borderRadius:'3px 3px 0 0',background:i===arr.length-1?'#A78BFA':'rgba(167,139,250,0.3)'}}/>
+                        <div style={{fontSize:9,color:'var(--text-muted)'}}>{y.year}</div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+            {projectsData && Object.entries(projectsData).filter(([k,v])=>v.developer===selectedDeveloper.name).length>0 && (
+              <div>
+                <div style={{fontSize:13,fontWeight:600,color:'var(--text-primary)',marginBottom:12}}>Projects by {selectedDeveloper.name}</div>
+                <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(200px,1fr))',gap:10}}>
+                  {Object.entries(projectsData).filter(([k,v])=>v.developer===selectedDeveloper.name).slice(0,6).map(([k,v],i)=>(
+                    <div key={i} onClick={()=>{setSelectedProject({key:k,name:k,area:na(v.area||''),avg:v.kpis?.avg||0,count:v.kpis?.count||0});setSelectedDeveloper(null);}} className="inv-card" style={{background:'var(--surface)',border:'1px solid var(--border)',borderRadius:12,padding:'14px',cursor:'pointer'}}>
+                      <div style={{fontSize:13,fontWeight:600,color:'var(--text-primary)',marginBottom:4}}>{k}</div>
+                      <div style={{fontSize:12,color:'#A78BFA',fontWeight:700}}>{fmtAED(v.kpis?.avg||0,true)}</div>
+                      <div style={{fontSize:11,color:'var(--text-muted)'}}>{fmtNum(v.kpis?.count||0)} txns</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
       {/* FULL-SCREEN PROJECT PROFILE */}
       {selectedProject && (
         <div style={{position:'fixed',inset:0,background:'var(--bg)',zIndex:500,overflowY:'auto'}}>
-          <div style={{position:'sticky',top:0,zIndex:10,background:'var(--bg-alt)',borderBottom:'1px solid var(--border)',height:52,display:'flex',alignItems:'center',padding:'0 24px'}}>
+          <div style={{position:'sticky',top:0,zIndex:10,background:'var(--bg-alt)',borderBottom:'1px solid var(--border)',height:52,display:'flex',alignItems:'center',justifyContent:'space-between',padding:'0 24px'}}>
             <button onClick={()=>setSelectedProject(null)} style={{display:'flex',alignItems:'center',gap:8,background:'none',border:'none',cursor:'pointer',color:'var(--text-primary)',fontSize:14,fontWeight:600,fontFamily:'inherit'}}>
               ← Back to search
+            </button>
+            <button onClick={()=>saveToWatchlist('project',selectedProject.name,selectedProject.key,selectedProject.area)} disabled={savedKeys.has(selectedProject.key)} style={{display:'flex',alignItems:'center',gap:6,background:'none',border:'1px solid var(--border)',borderRadius:20,padding:'6px 14px',cursor:'pointer',fontSize:12,color:savedKeys.has(selectedProject.key)?'#22C55E':'var(--text-secondary)',fontFamily:'inherit'}}>
+              {savedKeys.has(selectedProject.key)?'✓ Saved':'♡ Save'}
             </button>
           </div>
           <div style={{position:'relative',height:280,overflow:'hidden',background:'var(--surface)'}}>
