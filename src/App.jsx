@@ -121,7 +121,7 @@ function BrokerTopBar({ user, profile, signOut }) {
 }
 
 export default function App() {
-  const { user, profile, loading, theme, lang, isPro, isLite } = useAuth();
+  const { user, profile, loading, theme, lang, isPro, isLite, signOut, colors } = useAuth();
   const [core, setCore] = useState(null);
   const [areaData, setAreaData] = useState(null);
   const [recentRaw, setRecentRaw] = useState([]);
