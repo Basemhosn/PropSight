@@ -1,19 +1,19 @@
 import { useEffect, useState, useRef } from 'react';
 
 const FEATURES_BENTO = {
-  hero: { icon:'🤖', title:'AI Deal Analyzer', desc:'Paste any property. Get an instant Buy/Hold/Avoid verdict with fair value, rental yield, and comparable sales — in seconds.', accent:'#38BDF8' },
-  tall: { icon:'📊', title:'354K+ Live Transactions', desc:'Complete DLD transaction history from 2020 to today. Every sale, mortgage, and transfer in Dubai — fully searchable.', accent:'#A78BFA' },
-  wide: { icon:'📈', title:'Weekly Market Pulse', desc:'AI-generated weekly summary. Know what moved, what is trending, and what to watch.', accent:'#F59E0B' },
-  small1: { icon:'🗺️', title:'Dubai Heatmap', desc:'Visualize price per sqft across every area. Spot the next hot neighborhood.' },
-  small2: { icon:'💼', title:'Portfolio Tracker', desc:'Track all your Dubai investments. Capital gain, rental yield, payment schedules.' },
-  small3: { icon:'🔔', title:'Price Alerts', desc:'Get notified when prices in your target areas move by your chosen threshold.' },
+  hero: { icon:null, title:'AI Deal Analyzer', desc:'Paste any property. Get an instant Buy/Hold/Avoid verdict with fair value, rental yield, and comparable sales — in seconds.', accent:'#38BDF8' },
+  tall: { icon:null, title:'354K+ Live Transactions', desc:'Complete DLD transaction history from 2020 to today. Every sale, mortgage, and transfer in Dubai — fully searchable.', accent:'#A78BFA' },
+  wide: { icon:null, title:'Weekly Market Pulse', desc:'AI-generated weekly summary. Know what moved, what is trending, and what to watch.', accent:'#F59E0B' },
+  small1: { icon:null, title:'Dubai Heatmap', desc:'Visualize price per sqft across every area. Spot the next hot neighborhood.' },
+  small2: { icon:null, title:'Portfolio Tracker', desc:'Track all your Dubai investments. Capital gain, rental yield, payment schedules.' },
+  small3: { icon:null, title:'Price Alerts', desc:'Get notified when prices in your target areas move by your chosen threshold.' },
 };
 
 const AGENT_FEATURES = [
   { icon:'📥', title:'Bulk CSV Export', desc:'Export any dataset for your CRM or client presentations.' },
   { icon:'📄', title:'Branded PDF Reports', desc:'Send professional reports with your agency branding.' },
   { icon:'🔍', title:'Broker Lookup', desc:'Search DLD registered brokers by transaction volume and area.' },
-  { icon:'📊', title:'Comparable Sales', desc:'Find the most similar recent transactions for any property.' },
+  { icon:null, title:'Comparable Sales', desc:'Find the most similar recent transactions for any property.' },
 ];
 
 const INVESTOR_PLANS = [
@@ -215,7 +215,7 @@ export default function LandingPage({ onLogin, onInvestorLogin, onBrokerLogin })
       }}>
         <div className="lp-nav-inner">
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }} onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-            <div style={{ width: 32, height: 32, borderRadius: 8, background: 'linear-gradient(135deg,#1D4ED8,#38BDF8)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16 }}>🏙️</div>
+            <div style={{ width: 32, height: 32, borderRadius: 8, background: 'linear-gradient(135deg,#1D4ED8,#38BDF8)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}></div>
             <span style={{ fontFamily: "'Syne',sans-serif", fontSize: 20, fontWeight: 800, color: '#F1F5F9' }}>Prop<span style={{ color: '#38BDF8' }}>Sight</span></span>
           </div>
           <div className="lp-nav-links" style={{ display: 'flex', alignItems: 'center', gap: 28 }}>
@@ -255,12 +255,12 @@ export default function LandingPage({ onLogin, onInvestorLogin, onBrokerLogin })
         <Reveal delay={240}>
           <div className="lp-hero-cta-row" style={{ display: 'flex', gap: 14, flexWrap: 'wrap', justifyContent: 'center', marginBottom: 56 }}>
             <button onClick={onInvestorLogin || onLogin} className="lp-btn lp-hero-card" style={{ padding: '14px 28px', borderRadius: 12, border: '1px solid rgba(56,189,248,0.3)', cursor: 'pointer', background: 'rgba(29,78,216,0.12)', color: '#F1F5F9', fontSize: 15, fontWeight: 600, fontFamily: 'inherit', minWidth: 220, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10 }}>
-              <span style={{ fontSize: 18 }}>👤</span>
+              
               <span style={{ color: '#38BDF8' }}>I'm an investor</span>
               <span style={{ color: '#64748B', fontWeight: 400 }}>→</span>
             </button>
             <button onClick={onBrokerLogin || onLogin} className="lp-btn lp-hero-card" style={{ padding: '14px 28px', borderRadius: 12, border: '1px solid rgba(245,158,11,0.3)', cursor: 'pointer', background: 'rgba(180,83,9,0.08)', color: '#F1F5F9', fontSize: 15, fontWeight: 600, fontFamily: 'inherit', minWidth: 220, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10 }}>
-              <span style={{ fontSize: 18 }}>🏢</span>
+              
               <span style={{ color: '#F59E0B' }}>I'm a broker</span>
               <span style={{ color: '#64748B', fontWeight: 400 }}>→</span>
             </button>
@@ -396,7 +396,7 @@ export default function LandingPage({ onLogin, onInvestorLogin, onBrokerLogin })
       <section style={{ padding: '24px clamp(20px, 5vw, 80px)', borderTop: '1px solid rgba(255,255,255,0.04)', borderBottom: '1px solid rgba(255,255,255,0.04)', background: 'rgba(13,25,41,0.4)' }}>
         <div style={{ ...S.section, textAlign: 'center' }}>
           <div style={{ fontSize: 13, fontWeight: 600, color: '#94A3B8', letterSpacing: '0.01em' }}>
-            🇦🇪 Live in Dubai. <span style={{ color: '#475569' }}>Coming soon to Abu Dhabi, Riyadh, and Doha.</span>
+            Live in Dubai. <span style={{ color: '#475569' }}>Coming soon to Abu Dhabi, Riyadh, and Doha.</span>
           </div>
         </div>
       </section>

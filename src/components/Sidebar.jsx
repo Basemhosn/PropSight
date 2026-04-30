@@ -137,7 +137,7 @@ export default function Sidebar({ page, setPage }) {
         }
         <div style={{ flex:1, minWidth:0 }}>
           <div style={{ fontSize:12, fontWeight:600, color:'var(--text-secondary)', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{profile?.full_name?.split(' ')[0] || user?.email?.split('@')[0] || 'User'}</div>
-          <div style={{ fontSize:10, color:'var(--text-faint)' }}>{isPro?<span style={{color:'#F59E0B',fontWeight:700}}>⭐ Pro</span>:isLite?<span style={{color:'#A78BFA',fontWeight:700}}>✦ Lite</span>:'Free plan'}</div>
+          <div style={{ fontSize:10, color:'var(--text-faint)' }}>{isPro?<span style={{color:'#F59E0B',fontWeight:700}}>Pro</span>:isLite?<span style={{color:'#A78BFA',fontWeight:700}}>Lite</span>:'Free plan'}</div>
         </div>
         <button onClick={() => { const c=document.documentElement.getAttribute('data-theme')||'dark'; const n=c==='dark'?'light':'dark'; document.documentElement.setAttribute('data-theme',n); localStorage.setItem('theme',n); setThemeMode(n); }} style={{ background:'none', border:'none', cursor:'pointer', color:'var(--text-muted)', padding:4, fontSize:13 }}>{themeMode==='dark'?'☀️':'🌙'}</button>
         <button onClick={signOut} style={{ background:'none', border:'none', cursor:'pointer', color:'var(--text-faint)', padding:4 }}><Icon name="logout" size={14}/></button>

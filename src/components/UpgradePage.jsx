@@ -94,18 +94,18 @@ export default function UpgradePage() {
         <div style={{maxWidth:920,margin:'0 auto 24px',background:'var(--surface)',border:'1px solid var(--border)',borderRadius:14,padding:'16px 20px',display:'flex',alignItems:'center',justifyContent:'space-between',gap:16}}>
           <div>
             <div style={{fontSize:14,fontWeight:600,color:'var(--text-primary)',marginBottom:2}}>
-              {isPro ? '⭐ You are on the Pro plan' : '✦ You are on the Lite plan'}
+              {isPro ? 'You are on the Pro plan' : 'You are on the Lite plan'}
             </div>
             <div style={{fontSize:12,color:'var(--text-muted)'}}>Manage your subscription, update payment method, or cancel anytime.</div>
           </div>
           <button onClick={handleManageBilling} disabled={loading==='portal'} style={{padding:'10px 20px',borderRadius:10,border:'1px solid var(--border)',background:'var(--bg)',color:'var(--text-primary)',fontSize:13,fontWeight:600,cursor:'pointer',fontFamily:'inherit',whiteSpace:'nowrap',flexShrink:0}}>
-            {loading==='portal' ? 'Opening...' : '⚙️ Manage Billing →'}
+            {loading==='portal' ? 'Opening...' : 'Manage Billing →'}
           </button>
         </div>
       )}
       <div style={{textAlign:'center',marginBottom:48}}>
         <div style={{display:'inline-flex',alignItems:'center',gap:8,background:'rgba(245,158,11,0.1)',border:'1px solid rgba(245,158,11,0.2)',borderRadius:20,padding:'6px 16px',marginBottom:16}}>
-          <span style={{fontSize:14}}>⚡</span>
+          <span style={{fontSize:14}}></span>
           <span style={{fontSize:12,fontWeight:600,color:'#F59E0B'}}>CHOOSE YOUR PLAN</span>
         </div>
         <h1 style={{margin:0,fontSize:34,fontWeight:800,color:'var(--text-primary)',marginBottom:12}}>
@@ -168,7 +168,7 @@ export default function UpgradePage() {
                 {loading===plan.id ? 'Redirecting...'
                   : isCurrent ? '✓ Current Plan'
                   : plan.price===0 ? 'Free Forever'
-                  : isDowngrade ? '↓ Downgrade via Portal'
+                  : isDowngrade ? 'Downgrade'
                   : `Upgrade to ${plan.name} →`}
               </button>
 
