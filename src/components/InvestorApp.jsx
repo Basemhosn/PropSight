@@ -70,11 +70,35 @@ export default function InvestorApp({ areaData, recentRaw, core, onSwitchToBroke
     }).sort((a,b) => b.count - a.count);
   }, [areaData]);
 
-  const suggestions = useMemo(() => {
-    if (!search || search.length < 2) return [];
+  const allSearchResults = useMemo(() => {
+    if (!search || search.length < 2) return { areas: [], projects: [], developers: [], buildings: [] };
     const q = search.toLowerCase();
-    return areas.filter(a => a.name.toLowerCase().includes(q) || a.key.toLowerCase().includes(q)).slice(0,6);
-  }, [search, areas]);
+
+    const matchedAreas = areas
+      .filter(a => a.name.toLowerCase().includes(q) || a.key.toLowerCase().includes(q))
+      .slice(0, 3);
+
+    const matchedProjects = projectsData ? Object.entries(projectsData)
+      .filter(([k,v]) => k.toLowerCase().includes(q) || (v.area && na(v.area).toLowerCase().includes(q)))
+      .slice(0, 4)
+      .map(([k,v]) => ({ key: k, name: k, area: na(v.area||''), avg: v.kpis?.avg||0, count: v.kpis?.count||0 }))
+      : [];
+
+    const devData = window.__devData || [];
+    const matchedDevs = devData
+      .filter(d => d.name !== 'Other' && d.name.toLowerCase().includes(q))
+      .slice(0, 2);
+
+    const bldData = window.__bldData || [];
+    const matchedBuildings = bldData
+      .filter(b => b.name.toLowerCase().includes(q))
+      .slice(0, 4);
+
+    return { areas: matchedAreas, projects: matchedProjects, developers: matchedDevs, buildings: matchedBuildings };
+  }, [search, areas, projectsData]);
+
+  const suggestions = useMemo(() => allSearchResults.areas, [allSearchResults]);
+  const hasResults = useMemo(() => Object.values(allSearchResults).some(v => v.length > 0), [allSearchResults]);
 
   const recentSales = useMemo(() => {
     if (!recentRaw?.length) return [];
