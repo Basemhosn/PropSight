@@ -756,10 +756,10 @@ Respond ONLY with valid JSON (no markdown):
             </div>
           </div>
 
-          <div style={{maxWidth:960,margin:'0 auto',padding:'28px 24px'}}>
+          <div style={{maxWidth:960,margin:'0 auto',padding:'20px 16px'}}>
 
             {/* KPI Grid */}
-            <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:12,marginBottom:24}}>
+            <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(140px,1fr))',gap:12,marginBottom:24}}>
               {[
                 ['Avg Price',fmtAED(selectedArea.avg,true),'💰','#38BDF8'],
                 ['Price/sqft','AED '+fmtNum(selectedArea.ppsqft),'📐','#A78BFA'],
@@ -775,7 +775,7 @@ Respond ONLY with valid JSON (no markdown):
             </div>
 
             {/* Two column layout */}
-            <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16,marginBottom:20}}>
+            <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(280px,1fr))',gap:16,marginBottom:20}}>
 
               {/* Price Trend */}
               {areaData?.[selectedArea.key]?.priceTrend?.length>1 && (
@@ -824,7 +824,7 @@ Respond ONLY with valid JSON (no markdown):
             </div>
 
             {/* Transaction Types + Off-Plan Split */}
-            <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16,marginBottom:20}}>
+            <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(280px,1fr))',gap:16,marginBottom:20}}>
 
               {/* Transaction types */}
               {areaData?.[selectedArea.key]?.types && (
@@ -900,7 +900,7 @@ Respond ONLY with valid JSON (no markdown):
             {areaData?.[selectedArea.key]?.projects?.length>0 && (
               <div style={{marginBottom:20}}>
                 <div style={{fontSize:13,fontWeight:600,color:'var(--text-primary)',marginBottom:12}}>Top Projects in {selectedArea.name}</div>
-                <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(180px,1fr))',gap:10}}>
+                <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(150px,1fr))',gap:10}}>
                   {areaData[selectedArea.key].projects.slice(0,12).map((p,i)=>(
                     <div key={i} onClick={()=>{if(projectsData?.[p.project||p.name]){setSelectedProject({key:p.project||p.name,name:p.project||p.name,area:selectedArea.name,avg:p.avg||0,count:p.count||0});}}} className="inv-card" style={{background:'var(--bg)',border:'1px solid var(--border)',borderRadius:12,padding:'14px',cursor:projectsData?.[p.name]?'pointer':'default'}}>
                       <div style={{fontSize:12,fontWeight:600,color:'var(--text-primary)',marginBottom:4,lineHeight:1.3}}>{p.project||p.name||'—'}</div>
@@ -954,7 +954,7 @@ Respond ONLY with valid JSON (no markdown):
             <div style={{fontSize:13,color:'var(--text-secondary)'}}>Dubai Real Estate Developer</div>
           </div>
           <div style={{maxWidth:960,margin:'0 auto',padding:'24px'}}>
-            <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:12,marginBottom:24}}>
+            <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(140px,1fr))',gap:12,marginBottom:24}}>
               {[
                 ['Total Transactions',fmtNum(selectedDeveloper.count),'📊','#38BDF8'],
                 ['Total Value',fmtAED(selectedDeveloper.total||0,true),'💎','#22C55E'],
@@ -1010,7 +1010,7 @@ Respond ONLY with valid JSON (no markdown):
               {savedKeys.has(selectedProject.key)?'✓ Saved':'♡ Save'}
             </button>
           </div>
-          <div style={{position:'relative',height:280,overflow:'hidden',background:'var(--surface)'}}>
+          <div style={{position:'relative',height:'min(280px,35vw)',minHeight:160,overflow:'hidden',background:'var(--surface)'}}>
             {projectsData?.[selectedProject.key]?.image
               ? <img src={projectsData[selectedProject.key].image} alt={selectedProject.name} style={{width:'100%',height:'100%',objectFit:'cover'}}/>
               : <div style={{width:'100%',height:'100%',background:'linear-gradient(135deg,#0D2137,#0A3040)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:64}}>🏗️</div>
@@ -1021,8 +1021,8 @@ Respond ONLY with valid JSON (no markdown):
               <div style={{fontSize:13,color:'rgba(255,255,255,0.8)'}}>📍 {selectedProject.area}</div>
             </div>
           </div>
-          <div style={{maxWidth:900,margin:'0 auto',padding:'24px'}}>
-            <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:12,marginBottom:24}}>
+          <div style={{maxWidth:900,margin:'0 auto',padding:'20px 16px'}}>
+            <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(140px,1fr))',gap:12,marginBottom:24}}>
               {[
                 ['Avg Price',fmtAED(projectsData?.[selectedProject.key]?.kpis?.avg||selectedProject.avg,true),'💰','#38BDF8'],
                 ['Transactions',fmtNum(projectsData?.[selectedProject.key]?.kpis?.count||selectedProject.count),'📊','#22C55E'],
@@ -1088,7 +1088,7 @@ Respond ONLY with valid JSON (no markdown):
             <h1 style={{fontSize:22,fontWeight:800,color:'var(--text-primary)',margin:0}}>{selectedBuilding.name}</h1>
             <div style={{fontSize:13,color:'var(--text-secondary)'}}>📍 {na(selectedBuilding.area||'')}</div>
           </div>
-          <div style={{maxWidth:900,margin:'0 auto',padding:'24px'}}>
+          <div style={{maxWidth:900,margin:'0 auto',padding:'20px 16px'}}>
             <div style={{display:'grid',gridTemplateColumns:'repeat(2,1fr)',gap:12,marginBottom:24}}>
               {[
                 ['Total Transactions',fmtNum(selectedBuilding.count),'📊','#38BDF8'],
