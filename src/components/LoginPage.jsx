@@ -74,10 +74,10 @@ export default function LoginPage() {
       {/* Card */}
       <div style={{
         width: '100%', maxWidth: 440, zIndex: 1,
-        background: 'rgba(10, 18, 32, 0.95)',
-        border: '1px solid rgba(59,130,246,0.12)',
+        background: 'var(--surface)',
+        border: '1px solid var(--border)',
         borderRadius: 16, padding: '2rem',
-        boxShadow: '0 0 40px rgba(59,130,246,0.06), 0 24px 48px rgba(0,0,0,0.5)',
+        boxShadow: '0 0 40px rgba(59,130,246,0.06), 0 8px 24px rgba(0,0,0,0.1)',
       }}>
         {/* Tabs */}
         <div style={{ display:'flex', background:'rgba(59,130,246,0.06)',

@@ -29,6 +29,7 @@ const VERDICT_STYLE = {
 export default function InvestorApp({ areaData, recentRaw, core, onSwitchToBroker }) {
   const { user, profile, signOut } = useAuth();
   const [themeMode, setThemeMode] = useState(() => localStorage.getItem('theme') || 'dark');
+  const [showMenu, setShowMenu] = useState(false);
   const toggleTheme = () => {
     const next = themeMode === 'dark' ? 'light' : 'dark';
     document.documentElement.setAttribute('data-theme', next);
@@ -151,8 +152,18 @@ Respond ONLY with valid JSON (no markdown):
           <button onClick={toggleTheme} style={{background:'none',border:'1px solid var(--border)',borderRadius:8,padding:'5px 10px',fontSize:12,color:'var(--text-secondary)',cursor:'pointer',fontFamily:'inherit'}}>
             {themeMode === 'dark' ? '☀️' : '🌙'}
           </button>
-          <div style={{width:30,height:30,borderRadius:'50%',background:'linear-gradient(135deg,#1D4ED8,#38BDF8)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:13,fontWeight:700,cursor:'pointer'}} onClick={signOut} title="Sign out">
-            {(profile?.full_name?.[0]||user?.email?.[0]||'U').toUpperCase()}
+          <div style={{position:'relative'}}>
+            <div style={{width:30,height:30,borderRadius:'50%',background:'linear-gradient(135deg,#1D4ED8,#38BDF8)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:13,fontWeight:700,cursor:'pointer'}} onClick={()=>setShowMenu(m=>!m)}>
+              {(profile?.full_name?.[0]||user?.email?.[0]||'U').toUpperCase()}
+            </div>
+            {showMenu && (
+              <div style={{position:'absolute',right:0,top:38,background:'var(--surface)',border:'1px solid var(--border)',borderRadius:10,padding:8,minWidth:160,boxShadow:'0 8px 24px rgba(0,0,0,0.2)',zIndex:999}}>
+                <div style={{fontSize:12,color:'var(--text-muted)',padding:'4px 8px',marginBottom:4}}>{user?.email}</div>
+                <button onClick={()=>{setShowMenu(false);signOut();}} style={{width:'100%',padding:'8px',borderRadius:8,border:'none',background:'none',cursor:'pointer',fontSize:13,color:'#F87171',textAlign:'left',fontFamily:'inherit'}}>
+                  Sign out
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </nav>
