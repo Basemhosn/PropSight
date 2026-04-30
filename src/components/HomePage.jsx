@@ -370,7 +370,7 @@ export default function HomePage({ core, areaData, recentRaw, onNavigate, isPro 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 12 }}>
             {[
               {
-                bg: 'linear-gradient(135deg, #0D2137 0%, #0A3040 100%)',
+                bg: document.documentElement.getAttribute('data-theme')==='light'?'linear-gradient(135deg,#EFF6FF,#DBEAFE)':'linear-gradient(135deg, #0D2137 0%, #0A3040 100%)',
                 border: 'rgba(29,78,216,0.3)',
                 icon: '🔍',
                 big: 'AI Verdict',
@@ -381,7 +381,7 @@ export default function HomePage({ core, areaData, recentRaw, onNavigate, isPro 
                 page: 'lookup',
               },
               {
-                bg: 'linear-gradient(135deg, #1a0d37 0%, #2d1060 100%)',
+                bg: document.documentElement.getAttribute('data-theme')==='light'?'linear-gradient(135deg,#F5F3FF,#EDE9FE)':'linear-gradient(135deg, #1a0d37 0%, #2d1060 100%)',
                 border: 'rgba(124,58,237,0.3)',
                 icon: '📊',
                 big: mScore,
@@ -392,7 +392,7 @@ export default function HomePage({ core, areaData, recentRaw, onNavigate, isPro 
                 page: 'recent',
               },
               {
-                bg: 'linear-gradient(135deg, #1f1200 0%, #3d2200 100%)',
+                bg: document.documentElement.getAttribute('data-theme')==='light'?'linear-gradient(135deg,#FFFBEB,#FEF3C7)':'linear-gradient(135deg, #1f1200 0%, #3d2200 100%)',
                 border: 'rgba(245,158,11,0.3)',
                 icon: '📄',
                 big: '8 slides',
@@ -403,7 +403,7 @@ export default function HomePage({ core, areaData, recentRaw, onNavigate, isPro 
                 page: 'pdf',
               },
               {
-                bg: 'linear-gradient(135deg, #071629 0%, #0d2040 100%)',
+                bg: document.documentElement.getAttribute('data-theme')==='light'?'linear-gradient(135deg,#F0F9FF,#E0F2FE)':'linear-gradient(135deg, #071629 0%, #0d2040 100%)',
                 border: 'rgba(56,189,248,0.3)',
                 icon: '∞',
                 big: 'properties',

@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect, useRef } from 'react';
+import { useState, useMemo } from 'react';
 import { useAuth } from '../context/AuthContext';
 import MapView from './MapView';
 import { fmtAED, fmtNum } from '../utils/format';
@@ -45,19 +45,8 @@ export default function InvestorApp({ areaData, recentRaw, core, onSwitchToBroke
   const [dealLoading, setDealLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('discover');
   const [searchFocused, setSearchFocused] = useState(false);
-  const searchRef = useRef(null);
-  useEffect(() => {
-    const handler = (e) => {
-      if (searchRef.current && !searchRef.current.contains(e.target)) {
-        setSearchFocused(false);
-      }
-    };
-    document.addEventListener('mousedown', handler);
-    return () => document.removeEventListener('mousedown', handler);
-  }, []);
   const [selectedProject, setSelectedProject] = useState(null);
   const [selectedDeveloper, setSelectedDeveloper] = useState(null);
-  const [selectedBuilding, setSelectedBuilding] = useState(null);
 
   useEffect(() => {
     fetch('/data/developers.json').then(r=>r.json()).then(d=>{ window.__devData = d.developers||[]; }).catch(()=>{});
@@ -81,35 +70,11 @@ export default function InvestorApp({ areaData, recentRaw, core, onSwitchToBroke
     }).sort((a,b) => b.count - a.count);
   }, [areaData]);
 
-  const allSearchResults = useMemo(() => {
-    if (!search || search.length < 2) return { areas: [], projects: [], developers: [], buildings: [] };
+  const suggestions = useMemo(() => {
+    if (!search || search.length < 2) return [];
     const q = search.toLowerCase();
-
-    const matchedAreas = areas
-      .filter(a => a.name.toLowerCase().includes(q) || a.key.toLowerCase().includes(q))
-      .slice(0, 3);
-
-    const matchedProjects = projectsData ? Object.entries(projectsData)
-      .filter(([k,v]) => k.toLowerCase().includes(q) || (v.area && na(v.area).toLowerCase().includes(q)))
-      .slice(0, 4)
-      .map(([k,v]) => ({ key: k, name: k, area: na(v.area||''), avg: v.kpis?.avg||0, count: v.kpis?.count||0 }))
-      : [];
-
-    const devData = window.__devData || [];
-    const matchedDevs = devData
-      .filter(d => d.name !== 'Other' && d.name.toLowerCase().includes(q))
-      .slice(0, 2);
-
-    const bldData = window.__bldData || [];
-    const matchedBuildings = bldData
-      .filter(b => b.name.toLowerCase().includes(q))
-      .slice(0, 4);
-
-    return { areas: matchedAreas, projects: matchedProjects, developers: matchedDevs, buildings: matchedBuildings };
-  }, [search, areas, projectsData]);
-
-  const suggestions = useMemo(() => allSearchResults.areas, [allSearchResults]);
-  const hasResults = useMemo(() => Object.values(allSearchResults).some(v => v.length > 0), [allSearchResults]);
+    return areas.filter(a => a.name.toLowerCase().includes(q) || a.key.toLowerCase().includes(q)).slice(0,6);
+  }, [search, areas]);
 
   const recentSales = useMemo(() => {
     if (!recentRaw?.length) return [];
@@ -219,13 +184,13 @@ Respond ONLY with valid JSON (no markdown):
           <div style={{textAlign:'center',marginBottom:32}}>
             <h1 style={{fontSize:'clamp(22px,3vw,32px)',fontWeight:700,color:'var(--text-primary)',marginBottom:8,letterSpacing:'-0.02em'}}>What are you looking for?</h1>
             <p style={{fontSize:15,color:'var(--text-muted)',marginBottom:24}}>Search any area or project in Dubai</p>
-            <div ref={searchRef} style={{position:'relative',maxWidth:520,margin:'0 auto'}}>
+            <div style={{position:'relative',maxWidth:520,margin:'0 auto'}}>
               <div style={{display:'flex',alignItems:'center',gap:12,background:'var(--surface)',border:'2px solid rgba(59,130,246,0.2)',borderRadius:14,padding:'13px 18px',boxShadow:'0 4px 20px rgba(0,0,0,0.3)'}}>
                 <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#38BDF8" strokeWidth="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-                <input value={search} onChange={e=>{setSearch(e.target.value);setSelectedArea(null);}} onFocus={()=>setSearchFocused(true)} placeholder="Dubai Marina, Business Bay, Emaar..." style={{background:'none',border:'none',outline:'none',color:'var(--text-primary)',fontSize:15,flex:1,fontFamily:'inherit'}}/>
+                <input value={search} onChange={e=>{setSearch(e.target.value);setSelectedArea(null);}} placeholder="Dubai Marina, Business Bay, Emaar..." style={{background:'none',border:'none',outline:'none',color:'var(--text-primary)',fontSize:15,flex:1,fontFamily:'inherit'}}/>
                 {search && <button onClick={()=>{setSearch('');setSelectedArea(null);}} style={{background:'none',border:'none',cursor:'pointer',color:'var(--text-secondary)',fontSize:18,lineHeight:1,padding:0}}>×</button>}
               </div>
-              {search.length>1 && hasResults && searchFocused && (
+              {search.length>1 && hasResults && (
                 <div style={{position:'absolute',top:'calc(100% + 8px)',left:0,right:0,background:'var(--surface)',border:'1px solid var(--border)',borderRadius:16,zIndex:50,overflow:'hidden',boxShadow:'0 16px 48px rgba(0,0,0,0.4)',maxHeight:480,overflowY:'auto'}}>
                   
                   {/* Areas */}
@@ -257,7 +222,7 @@ Respond ONLY with valid JSON (no markdown):
                     <div>
                       <div style={{padding:'10px 16px 6px',fontSize:10,fontWeight:700,color:'var(--text-muted)',textTransform:'uppercase',letterSpacing:'0.1em',borderBottom:'1px solid var(--border)'}}>🏗️ Projects</div>
                       {allSearchResults.projects.map((p,i)=>(
-                        <button key={i} onClick={()=>{setSelectedProject(p);setSearch('');setSearchFocused(false);}} style={{display:'flex',justifyContent:'space-between',alignItems:'center',width:'100%',padding:'12px 16px',background:'none',border:'none',cursor:'pointer',fontFamily:'inherit',borderBottom:'1px solid var(--border)'}}
+                        <button key={i} onClick={()=>{setSearch(p.name);setSearchFocused(false);}} style={{display:'flex',justifyContent:'space-between',alignItems:'center',width:'100%',padding:'12px 16px',background:'none',border:'none',cursor:'pointer',fontFamily:'inherit',borderBottom:'1px solid var(--border)'}}
                           onMouseEnter={e=>e.currentTarget.style.background='rgba(59,130,246,0.06)'}
                           onMouseLeave={e=>e.currentTarget.style.background='none'}>
                           <div style={{display:'flex',alignItems:'center',gap:12}}>
@@ -281,7 +246,7 @@ Respond ONLY with valid JSON (no markdown):
                     <div>
                       <div style={{padding:'10px 16px 6px',fontSize:10,fontWeight:700,color:'var(--text-muted)',textTransform:'uppercase',letterSpacing:'0.1em',borderBottom:'1px solid var(--border)'}}>🏢 Developers</div>
                       {allSearchResults.developers.map((d,i)=>(
-                        <button key={i} onClick={()=>{setSelectedDeveloper(d);setSearch('');setSearchFocused(false);}} style={{display:'flex',justifyContent:'space-between',alignItems:'center',width:'100%',padding:'12px 16px',background:'none',border:'none',cursor:'pointer',fontFamily:'inherit',borderBottom:'1px solid var(--border)'}}
+                        <button key={i} onClick={()=>{setSearch(d.name);setSearchFocused(false);}} style={{display:'flex',justifyContent:'space-between',alignItems:'center',width:'100%',padding:'12px 16px',background:'none',border:'none',cursor:'pointer',fontFamily:'inherit',borderBottom:'1px solid var(--border)'}}
                           onMouseEnter={e=>e.currentTarget.style.background='rgba(59,130,246,0.06)'}
                           onMouseLeave={e=>e.currentTarget.style.background='none'}>
                           <div style={{display:'flex',alignItems:'center',gap:12}}>
@@ -302,7 +267,7 @@ Respond ONLY with valid JSON (no markdown):
                     <div>
                       <div style={{padding:'10px 16px 6px',fontSize:10,fontWeight:700,color:'var(--text-muted)',textTransform:'uppercase',letterSpacing:'0.1em',borderBottom:'1px solid var(--border)'}}>🏠 Buildings</div>
                       {allSearchResults.buildings.map((b,i)=>(
-                        <button key={i} onClick={()=>{setSelectedBuilding(b);setSearch('');setSearchFocused(false);}} style={{display:'flex',alignItems:'center',gap:12,width:'100%',padding:'12px 16px',background:'none',border:'none',cursor:'pointer',fontFamily:'inherit',borderBottom:i<allSearchResults.buildings.length-1?'1px solid var(--border)':'none'}}
+                        <button key={i} onClick={()=>{setSearch(b.name);setSearchFocused(false);}} style={{display:'flex',alignItems:'center',gap:12,width:'100%',padding:'12px 16px',background:'none',border:'none',cursor:'pointer',fontFamily:'inherit',borderBottom:i<allSearchResults.buildings.length-1?'1px solid var(--border)':'none'}}
                           onMouseEnter={e=>e.currentTarget.style.background='rgba(59,130,246,0.06)'}
                           onMouseLeave={e=>e.currentTarget.style.background='none'}>
                           <div style={{width:36,height:36,borderRadius:10,background:'linear-gradient(135deg,rgba(34,197,94,0.15),rgba(34,197,94,0.05))',display:'flex',alignItems:'center',justifyContent:'center',fontSize:18,flexShrink:0}}>🏠</div>
@@ -473,138 +438,13 @@ Respond ONLY with valid JSON (no markdown):
           </div>
         )}
 
-
-        {/* PROJECT PROFILE */}
-        {selectedProject && activeTab==='discover' && (
-          <div style={{background:'var(--surface)',border:'1px solid var(--border)',borderRadius:20,padding:24,marginBottom:24}}>
-            <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:20}}>
-              <div style={{display:'flex',alignItems:'center',gap:12}}>
-                <div style={{width:48,height:48,borderRadius:14,background:'linear-gradient(135deg,rgba(245,158,11,0.2),rgba(251,191,36,0.1))',display:'flex',alignItems:'center',justifyContent:'center',fontSize:24}}>🏗️</div>
-                <div>
-                  <h2 style={{fontSize:20,fontWeight:700,color:'var(--text-primary)',margin:0,marginBottom:4}}>{selectedProject.name}</h2>
-                  <div style={{fontSize:13,color:'var(--text-secondary)'}}>📍 {selectedProject.area}</div>
-                </div>
-              </div>
-              <button onClick={()=>setSelectedProject(null)} style={{background:'none',border:'1px solid var(--border)',borderRadius:8,color:'var(--text-muted)',cursor:'pointer',padding:'6px 12px',fontSize:12,fontFamily:'inherit'}}>✕ Close</button>
-            </div>
-            <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:12,marginBottom:20}}>
-              {[
-                ['Total Transactions', fmtNum(selectedProject.count), '📊'],
-                ['Avg Price', fmtAED(selectedProject.avg, true), '💰'],
-                ['Area', selectedProject.area, '📍'],
-                ['Type', 'Residential', '🏠'],
-              ].map(([l,v,icon],i)=>(
-                <div key={i} style={{background:'var(--bg)',borderRadius:12,padding:'14px',textAlign:'center',border:'1px solid var(--border)'}}>
-                  <div style={{fontSize:18,marginBottom:6}}>{icon}</div>
-                  <div style={{fontSize:10,color:'var(--text-muted)',marginBottom:4,textTransform:'uppercase',letterSpacing:'0.05em'}}>{l}</div>
-                  <div style={{fontSize:15,fontWeight:700,color:'var(--text-primary)'}}>{v}</div>
-                </div>
-              ))}
-            </div>
-            {projectsData?.[selectedProject.key]?.priceTrend?.length > 1 && (
-              <div style={{marginBottom:16}}>
-                <div style={{fontSize:11,color:'var(--text-muted)',marginBottom:8,textTransform:'uppercase',letterSpacing:'0.05em',fontWeight:600}}>Price Trend (AED/sqft)</div>
-                <div style={{display:'flex',alignItems:'flex-end',gap:3,height:48}}>
-                  {projectsData[selectedProject.key].priceTrend.slice(-12).map((p,i,arr)=>{
-                    const vals=arr.map(x=>Math.round((x.ppsqm||0)/10.764));
-                    const min=Math.min(...vals),max=Math.max(...vals);
-                    const h=max===min?100:Math.round(((vals[i]-min)/(max-min))*80)+20;
-                    return <div key={i} style={{flex:1,height:h+'%',borderRadius:'3px 3px 0 0',background:i===arr.length-1?'#38BDF8':'rgba(56,189,248,0.3)'}}/>;
-                  })}
-                </div>
-              </div>
-            )}
-            <button onClick={()=>{const a=areas.find(x=>na(x.key)===selectedProject.area||x.key===selectedProject.area);if(a){setSelectedArea(a);}setActiveTab('deal');}} style={{width:'100%',padding:'11px',borderRadius:11,border:'none',cursor:'pointer',background:'linear-gradient(135deg,#1D4ED8,#38BDF8)',color:'#fff',fontSize:14,fontWeight:600,fontFamily:'inherit'}}>
-              ⚡ Check a deal in {selectedProject.area}
-            </button>
-          </div>
-        )}
-
-        {/* DEVELOPER PROFILE */}
-        {selectedDeveloper && activeTab==='discover' && (
-          <div style={{background:'var(--surface)',border:'1px solid var(--border)',borderRadius:20,padding:24,marginBottom:24}}>
-            <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:20}}>
-              <div style={{display:'flex',alignItems:'center',gap:12}}>
-                <div style={{width:48,height:48,borderRadius:14,background:'linear-gradient(135deg,rgba(139,92,246,0.2),rgba(167,139,250,0.1))',display:'flex',alignItems:'center',justifyContent:'center',fontSize:24}}>🏢</div>
-                <div>
-                  <h2 style={{fontSize:20,fontWeight:700,color:'var(--text-primary)',margin:0,marginBottom:4}}>{selectedDeveloper.name}</h2>
-                  <div style={{fontSize:13,color:'var(--text-secondary)'}}>Dubai Real Estate Developer</div>
-                </div>
-              </div>
-              <button onClick={()=>setSelectedDeveloper(null)} style={{background:'none',border:'1px solid var(--border)',borderRadius:8,color:'var(--text-muted)',cursor:'pointer',padding:'6px 12px',fontSize:12,fontFamily:'inherit'}}>✕ Close</button>
-            </div>
-            <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:12,marginBottom:20}}>
-              {[
-                ['Total Transactions', fmtNum(selectedDeveloper.count), '📊'],
-                ['Avg Deal Size', fmtAED(selectedDeveloper.avg, true), '💰'],
-                ['Market Share', selectedDeveloper.count ? Math.round(selectedDeveloper.count/354343*100)+'%' : '—', '📈'],
-              ].map(([l,v,icon],i)=>(
-                <div key={i} style={{background:'var(--bg)',borderRadius:12,padding:'14px',textAlign:'center',border:'1px solid var(--border)'}}>
-                  <div style={{fontSize:18,marginBottom:6}}>{icon}</div>
-                  <div style={{fontSize:10,color:'var(--text-muted)',marginBottom:4,textTransform:'uppercase',letterSpacing:'0.05em'}}>{l}</div>
-                  <div style={{fontSize:15,fontWeight:700,color:'var(--text-primary)'}}>{v}</div>
-                </div>
-              ))}
-            </div>
-            {selectedDeveloper.yearly?.length > 0 && (
-              <div style={{marginBottom:16}}>
-                <div style={{fontSize:11,color:'var(--text-muted)',marginBottom:8,textTransform:'uppercase',letterSpacing:'0.05em',fontWeight:600}}>Yearly Transaction Volume</div>
-                <div style={{display:'flex',alignItems:'flex-end',gap:6,height:48}}>
-                  {selectedDeveloper.yearly.map((y,i,arr)=>{
-                    const vals=arr.map(x=>x.count);
-                    const max=Math.max(...vals);
-                    const h=Math.round((y.count/max)*100);
-                    return (
-                      <div key={i} style={{flex:1,display:'flex',flexDirection:'column',alignItems:'center',gap:4}}>
-                        <div style={{width:'100%',height:h+'%',borderRadius:'3px 3px 0 0',background:i===arr.length-1?'#A78BFA':'rgba(167,139,250,0.3)'}}/>
-                        <div style={{fontSize:9,color:'var(--text-muted)'}}>{y.year}</div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* BUILDING PROFILE */}
-        {selectedBuilding && activeTab==='discover' && (
-          <div style={{background:'var(--surface)',border:'1px solid var(--border)',borderRadius:20,padding:24,marginBottom:24}}>
-            <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:20}}>
-              <div style={{display:'flex',alignItems:'center',gap:12}}>
-                <div style={{width:48,height:48,borderRadius:14,background:'linear-gradient(135deg,rgba(34,197,94,0.15),rgba(34,197,94,0.05))',display:'flex',alignItems:'center',justifyContent:'center',fontSize:24}}>🏠</div>
-                <div>
-                  <h2 style={{fontSize:20,fontWeight:700,color:'var(--text-primary)',margin:0,marginBottom:4}}>{selectedBuilding.name}</h2>
-                  <div style={{fontSize:13,color:'var(--text-secondary)'}}>📍 {na(selectedBuilding.area||'')}</div>
-                </div>
-              </div>
-              <button onClick={()=>setSelectedBuilding(null)} style={{background:'none',border:'1px solid var(--border)',borderRadius:8,color:'var(--text-muted)',cursor:'pointer',padding:'6px 12px',fontSize:12,fontFamily:'inherit'}}>✕ Close</button>
-            </div>
-            <div style={{display:'grid',gridTemplateColumns:'repeat(2,1fr)',gap:12,marginBottom:20}}>
-              {[
-                ['Total Transactions', fmtNum(selectedBuilding.count), '📊'],
-                ['Location', na(selectedBuilding.area||''), '📍'],
-              ].map(([l,v,icon],i)=>(
-                <div key={i} style={{background:'var(--bg)',borderRadius:12,padding:'14px',textAlign:'center',border:'1px solid var(--border)'}}>
-                  <div style={{fontSize:18,marginBottom:6}}>{icon}</div>
-                  <div style={{fontSize:10,color:'var(--text-muted)',marginBottom:4,textTransform:'uppercase',letterSpacing:'0.05em'}}>{l}</div>
-                  <div style={{fontSize:15,fontWeight:700,color:'var(--text-primary)'}}>{v}</div>
-                </div>
-              ))}
-            </div>
-            <button onClick={()=>{const a=areas.find(x=>x.key===selectedBuilding.area||na(x.key)===na(selectedBuilding.area||''));if(a){setSelectedArea(a);}setActiveTab('deal');setSelectedBuilding(null);}} style={{width:'100%',padding:'11px',borderRadius:11,border:'none',cursor:'pointer',background:'linear-gradient(135deg,#1D4ED8,#38BDF8)',color:'#fff',fontSize:14,fontWeight:600,fontFamily:'inherit'}}>
-              ⚡ Check a deal in this area
-            </button>
-          </div>
-        )}
-
         {/* MAP */}
         {activeTab==='map' && (
           <div style={{height:'calc(100vh - 100px)',borderRadius:16,overflow:'hidden',border:'1px solid var(--border)'}}>
             <MapView
               onAreaClick={(area)=>{setActiveTab('discover');setSearch(area);}}
               onProjectClick={()=>{}}
-              projectsData={projectsData}
+              projectsData={null}
             />
           </div>
         )}
