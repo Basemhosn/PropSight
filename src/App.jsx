@@ -75,8 +75,8 @@ function useMobile() {
 
 
 function BrokerTopBar({ user, profile, signOut }) {
-  const [showMenu, setShowMenu] = React.useState(false);
-  const [themeMode, setThemeMode] = React.useState(() => localStorage.getItem('theme') || 'dark');
+  const [showMenu, setShowMenu] = useState(false);
+  const [themeMode, setThemeMode] = useState(() => localStorage.getItem('theme') || 'dark');
 
   const toggleTheme = () => {
     const next = themeMode === 'dark' ? 'light' : 'dark';
