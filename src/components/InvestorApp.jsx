@@ -658,71 +658,205 @@ Respond ONLY with valid JSON (no markdown):
       {/* FULL-SCREEN AREA PROFILE */}
       {selectedArea && (
         <div style={{position:'fixed',inset:0,background:'var(--bg)',zIndex:500,overflowY:'auto'}}>
+          {/* Sticky header */}
           <div style={{position:'sticky',top:0,zIndex:10,background:'var(--bg-alt)',borderBottom:'1px solid var(--border)',height:52,display:'flex',alignItems:'center',justifyContent:'space-between',padding:'0 24px'}}>
-            <button onClick={()=>setSelectedArea(null)} style={{display:'flex',alignItems:'center',gap:8,background:'none',border:'none',cursor:'pointer',color:'var(--text-primary)',fontSize:14,fontWeight:600,fontFamily:'inherit'}}>
-              ← Back to search
-            </button>
+            <button onClick={()=>setSelectedArea(null)} style={{display:'flex',alignItems:'center',gap:8,background:'none',border:'none',cursor:'pointer',color:'var(--text-primary)',fontSize:14,fontWeight:600,fontFamily:'inherit'}}>← Back to search</button>
             <button onClick={()=>saveToWatchlist('area',selectedArea.name,selectedArea.key,selectedArea.key)} disabled={savedKeys.has(selectedArea.key)} style={{display:'flex',alignItems:'center',gap:6,background:'none',border:'1px solid var(--border)',borderRadius:20,padding:'6px 14px',cursor:'pointer',fontSize:12,color:savedKeys.has(selectedArea.key)?'#22C55E':'var(--text-secondary)',fontFamily:'inherit'}}>
               {savedKeys.has(selectedArea.key)?'✓ Saved':'♡ Save'}
             </button>
           </div>
-          <div style={{height:220,background:`linear-gradient(135deg,rgba(29,78,216,0.3),rgba(56,189,248,0.15))`,display:'flex',alignItems:'center',justifyContent:'center',flexDirection:'column',gap:10,position:'relative'}}>
+
+          {/* Hero */}
+          <div style={{height:220,background:'linear-gradient(135deg,rgba(29,78,216,0.25),rgba(56,189,248,0.12))',display:'flex',alignItems:'center',justifyContent:'center',flexDirection:'column',gap:10}}>
             <div style={{fontSize:56}}>{selectedArea.emoji}</div>
-            <h1 style={{fontSize:26,fontWeight:800,color:'var(--text-primary)',margin:0,marginBottom:4}}>{selectedArea.name}</h1>
-            <div style={{display:'flex',alignItems:'center',gap:8}}>
+            <h1 style={{fontSize:28,fontWeight:800,color:'var(--text-primary)',margin:0,marginBottom:4,letterSpacing:'-0.02em'}}>{selectedArea.name}</h1>
+            <div style={{display:'flex',alignItems:'center',gap:10}}>
               <span style={{fontSize:13,color:'var(--text-secondary)'}}>{fmtNum(selectedArea.count)} transactions</span>
-              <span style={{fontSize:13,fontWeight:700,padding:'3px 10px',borderRadius:20,background:selectedArea.yoy>=0?'rgba(34,197,94,0.1)':'rgba(248,113,113,0.1)',color:selectedArea.yoy>=0?'#22C55E':'#F87171'}}>{selectedArea.yoy>=0?'+':''}{selectedArea.yoy}% YoY</span>
+              <span style={{fontSize:13,fontWeight:700,padding:'4px 12px',borderRadius:20,background:selectedArea.yoy>=0?'rgba(34,197,94,0.12)':'rgba(248,113,113,0.12)',color:selectedArea.yoy>=0?'#22C55E':'#F87171'}}>{selectedArea.yoy>=0?'+':''}{selectedArea.yoy}% YoY</span>
             </div>
           </div>
-          <div style={{maxWidth:900,margin:'0 auto',padding:'24px'}}>
+
+          <div style={{maxWidth:960,margin:'0 auto',padding:'28px 24px'}}>
+
+            {/* KPI Grid */}
             <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:12,marginBottom:24}}>
               {[
                 ['Avg Price',fmtAED(selectedArea.avg,true),'💰','#38BDF8'],
                 ['Price/sqft','AED '+fmtNum(selectedArea.ppsqft),'📐','#A78BFA'],
                 ['Off-Plan',selectedArea.offPlanPct+'%','🏗️','#F59E0B'],
-                ['YoY Growth',(selectedArea.yoy>=0?'+':'')+selectedArea.yoy+'%','📈',selectedArea.yoy>=0?'#22C55E':'#F87171'],
+                ['Total Value',fmtAED((areaData?.[selectedArea.key]?.kpis?.total)||0,true),'💎','#22C55E'],
               ].map(([l,v,icon,color],i)=>(
                 <div key={i} style={{background:'var(--surface)',border:'1px solid var(--border)',borderRadius:14,padding:'16px',textAlign:'center'}}>
                   <div style={{fontSize:20,marginBottom:6}}>{icon}</div>
-                  <div style={{fontSize:18,fontWeight:800,color,marginBottom:4}}>{v}</div>
+                  <div style={{fontSize:17,fontWeight:800,color,marginBottom:4,letterSpacing:'-0.01em'}}>{v}</div>
                   <div style={{fontSize:10,color:'var(--text-muted)',textTransform:'uppercase',letterSpacing:'0.05em'}}>{l}</div>
                 </div>
               ))}
             </div>
-            {areaData?.[selectedArea.key]?.priceTrend?.length>1 && (
+
+            {/* Two column layout */}
+            <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16,marginBottom:20}}>
+
+              {/* Price Trend */}
+              {areaData?.[selectedArea.key]?.priceTrend?.length>1 && (
+                <div style={{background:'var(--surface)',border:'1px solid var(--border)',borderRadius:14,padding:'18px'}}>
+                  <div style={{fontSize:13,fontWeight:600,color:'var(--text-primary)',marginBottom:14}}>📈 Price Trend (AED/sqft)</div>
+                  <div style={{display:'flex',alignItems:'flex-end',gap:3,height:80}}>
+                    {areaData[selectedArea.key].priceTrend.slice(-18).map((p,i,arr)=>{
+                      const vals=arr.map(x=>Math.round((x.ppsqm||0)/10.764));
+                      const min=Math.min(...vals),max=Math.max(...vals);
+                      const h=max===min?100:Math.round(((vals[i]-min)/(max-min))*80)+20;
+                      return (
+                        <div key={i} style={{flex:1,display:'flex',flexDirection:'column',alignItems:'center',gap:2}}>
+                          <div style={{width:'100%',height:h+'%',borderRadius:'3px 3px 0 0',background:i===arr.length-1?'#38BDF8':'rgba(56,189,248,0.25)'}}/>
+                          {(i===0||i===arr.length-1)&&<div style={{fontSize:8,color:'var(--text-muted)',whiteSpace:'nowrap'}}>{p.month?.slice(2,7)||''}</div>}
+                        </div>
+                      );
+                    })}
+                  </div>
+                  <div style={{marginTop:8,fontSize:12,fontWeight:700,color:'#38BDF8',textAlign:'right'}}>AED {fmtNum(selectedArea.ppsqft)}/sqft</div>
+                </div>
+              )}
+
+              {/* Bedroom Breakdown */}
+              {areaData?.[selectedArea.key]?.rooms?.length>0 && (
+                <div style={{background:'var(--surface)',border:'1px solid var(--border)',borderRadius:14,padding:'18px'}}>
+                  <div style={{fontSize:13,fontWeight:600,color:'var(--text-primary)',marginBottom:14}}>🛏️ By Bedroom Type</div>
+                  <div style={{display:'flex',flexDirection:'column',gap:8}}>
+                    {areaData[selectedArea.key].rooms.slice(0,5).map((r,i)=>{
+                      const maxCount=Math.max(...areaData[selectedArea.key].rooms.map(x=>x.count));
+                      const pct=Math.round(r.count/maxCount*100);
+                      return (
+                        <div key={i}>
+                          <div style={{display:'flex',justifyContent:'space-between',marginBottom:4}}>
+                            <span style={{fontSize:12,color:'var(--text-primary)',fontWeight:500}}>{r.rooms||r.type||'—'}</span>
+                            <span style={{fontSize:12,color:'var(--text-secondary)'}}>{fmtAED(r.avg,true)} avg · {fmtNum(r.count)} txns</span>
+                          </div>
+                          <div style={{height:6,borderRadius:3,background:'var(--border)'}}>
+                            <div style={{height:'100%',width:pct+'%',borderRadius:3,background:'linear-gradient(90deg,#1D4ED8,#38BDF8)'}}/>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Transaction Types + Off-Plan Split */}
+            <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16,marginBottom:20}}>
+
+              {/* Transaction types */}
+              {areaData?.[selectedArea.key]?.types && (
+                <div style={{background:'var(--surface)',border:'1px solid var(--border)',borderRadius:14,padding:'18px'}}>
+                  <div style={{fontSize:13,fontWeight:600,color:'var(--text-primary)',marginBottom:14}}>📋 Transaction Types</div>
+                  {Object.entries(areaData[selectedArea.key].types).map(([type,count],i)=>{
+                    const total=Object.values(areaData[selectedArea.key].types).reduce((a,b)=>a+b,0);
+                    const pct=Math.round(count/total*100);
+                    const colors={'Sale':'#38BDF8','Mortgage':'#A78BFA','Gift':'#F59E0B'};
+                    return (
+                      <div key={i} style={{marginBottom:10}}>
+                        <div style={{display:'flex',justifyContent:'space-between',marginBottom:4}}>
+                          <span style={{fontSize:12,color:'var(--text-primary)',fontWeight:500}}>{type}</span>
+                          <span style={{fontSize:12,color:'var(--text-secondary)'}}>{pct}% · {fmtNum(count)}</span>
+                        </div>
+                        <div style={{height:6,borderRadius:3,background:'var(--border)'}}>
+                          <div style={{height:'100%',width:pct+'%',borderRadius:3,background:colors[type]||'#38BDF8'}}/>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+
+              {/* Off-Plan vs Ready */}
+              {areaData?.[selectedArea.key]?.regSplit && (
+                <div style={{background:'var(--surface)',border:'1px solid var(--border)',borderRadius:14,padding:'18px'}}>
+                  <div style={{fontSize:13,fontWeight:600,color:'var(--text-primary)',marginBottom:14}}>🏗️ Off-Plan vs Ready</div>
+                  {Object.entries(areaData[selectedArea.key].regSplit).filter(([k])=>k!=='Other').map(([type,count],i)=>{
+                    const total=Object.values(areaData[selectedArea.key].regSplit).reduce((a,b)=>a+b,0);
+                    const pct=Math.round(count/total*100);
+                    return (
+                      <div key={i} style={{marginBottom:12}}>
+                        <div style={{display:'flex',justifyContent:'space-between',marginBottom:4}}>
+                          <span style={{fontSize:12,color:'var(--text-primary)',fontWeight:500}}>{type}</span>
+                          <span style={{fontSize:12,color:'var(--text-secondary)'}}>{pct}% · {fmtNum(count)}</span>
+                        </div>
+                        <div style={{height:8,borderRadius:4,background:'var(--border)'}}>
+                          <div style={{height:'100%',width:pct+'%',borderRadius:4,background:type==='Off-Plan'?'#38BDF8':'#22C55E'}}/>
+                        </div>
+                      </div>
+                    );
+                  })}
+                  <div style={{marginTop:12,padding:'10px',background:'var(--bg)',borderRadius:10,textAlign:'center'}}>
+                    <div style={{fontSize:11,color:'var(--text-muted)',marginBottom:2}}>Avg size</div>
+                    <div style={{fontSize:15,fontWeight:700,color:'var(--text-primary)'}}>{fmtNum(areaData[selectedArea.key].kpis?.avgSize||0)} sqft</div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Monthly Volume */}
+            {areaData?.[selectedArea.key]?.monthly?.length>1 && (
               <div style={{background:'var(--surface)',border:'1px solid var(--border)',borderRadius:14,padding:'18px',marginBottom:20}}>
-                <div style={{fontSize:13,fontWeight:600,color:'var(--text-primary)',marginBottom:14}}>Price Trend (AED/sqft)</div>
-                <div style={{display:'flex',alignItems:'flex-end',gap:4,height:72}}>
-                  {areaData[selectedArea.key].priceTrend.slice(-18).map((p,i,arr)=>{
-                    const vals=arr.map(x=>Math.round((x.ppsqm||0)/10.764));
-                    const min=Math.min(...vals),max=Math.max(...vals);
-                    const h=max===min?100:Math.round(((vals[i]-min)/(max-min))*80)+20;
-                    return <div key={i} style={{flex:1,height:h+'%',borderRadius:'3px 3px 0 0',background:i===arr.length-1?'#38BDF8':'rgba(56,189,248,0.25)'}}/>;
+                <div style={{fontSize:13,fontWeight:600,color:'var(--text-primary)',marginBottom:14}}>📊 Monthly Transaction Volume</div>
+                <div style={{display:'flex',alignItems:'flex-end',gap:3,height:64}}>
+                  {areaData[selectedArea.key].monthly.slice(-24).map((m,i,arr)=>{
+                    const vals=arr.map(x=>x.count||0);
+                    const max=Math.max(...vals);
+                    const h=max===0?0:Math.round((m.count/max)*100);
+                    return (
+                      <div key={i} style={{flex:1,display:'flex',flexDirection:'column',alignItems:'center',gap:2}}>
+                        <div style={{width:'100%',height:h+'%',borderRadius:'2px 2px 0 0',background:i===arr.length-1?'#F59E0B':'rgba(245,158,11,0.3)'}}/>
+                        {(i===0||i===arr.length-1)&&<div style={{fontSize:8,color:'var(--text-muted)',whiteSpace:'nowrap'}}>{m.month?.slice(2,7)||''}</div>}
+                      </div>
+                    );
                   })}
                 </div>
               </div>
             )}
-            {projectsData && (
+
+            {/* Top Projects */}
+            {areaData?.[selectedArea.key]?.projects?.length>0 && (
               <div style={{marginBottom:20}}>
-                <div style={{fontSize:13,fontWeight:600,color:'var(--text-primary)',marginBottom:12}}>Top Projects in {selectedArea.name}</div>
-                <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(200px,1fr))',gap:10}}>
-                  {Object.entries(projectsData).filter(([k,v])=>na(v.area||'')===selectedArea.name||v.area===selectedArea.key).slice(0,6).map(([k,v],i)=>(
-                    <div key={i} onClick={()=>{setSelectedProject({key:k,name:k,area:selectedArea.name,avg:v.kpis?.avg||0,count:v.kpis?.count||0});setSelectedArea(null);}} className="inv-card" style={{background:'var(--surface)',border:'1px solid var(--border)',borderRadius:12,padding:'14px',cursor:'pointer'}}>
-                      <div style={{fontSize:13,fontWeight:600,color:'var(--text-primary)',marginBottom:4}}>{k}</div>
-                      <div style={{fontSize:12,color:'#38BDF8',fontWeight:700}}>{fmtAED(v.kpis?.avg||0,true)}</div>
-                      <div style={{fontSize:11,color:'var(--text-muted)'}}>{fmtNum(v.kpis?.count||0)} txns</div>
+                <div style={{fontSize:13,fontWeight:600,color:'var(--text-primary)',marginBottom:12}}>🏗️ Top Projects in {selectedArea.name}</div>
+                <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(180px,1fr))',gap:10}}>
+                  {areaData[selectedArea.key].projects.slice(0,12).map((p,i)=>(
+                    <div key={i} onClick={()=>{if(projectsData?.[p.name]){setSelectedProject({key:p.name,name:p.name,area:selectedArea.name,avg:p.avg||0,count:p.count||0});}}} className="inv-card" style={{background:'var(--bg)',border:'1px solid var(--border)',borderRadius:12,padding:'14px',cursor:projectsData?.[p.name]?'pointer':'default'}}>
+                      <div style={{fontSize:12,fontWeight:600,color:'var(--text-primary)',marginBottom:4,lineHeight:1.3}}>{p.name}</div>
+                      <div style={{fontSize:13,fontWeight:700,color:'#38BDF8'}}>{fmtAED(p.avg||0,true)}</div>
+                      <div style={{fontSize:11,color:'var(--text-muted)'}}>{fmtNum(p.count||0)} txns</div>
                     </div>
                   ))}
                 </div>
               </div>
             )}
-            <div style={{display:'flex',gap:12}}>
-              <button onClick={()=>setActiveTab('deal')} style={{flex:1,padding:'14px',borderRadius:12,border:'none',cursor:'pointer',background:'linear-gradient(135deg,#1D4ED8,#38BDF8)',color:'#fff',fontSize:15,fontWeight:600,fontFamily:'inherit'}}>
-                ⚡ Check a deal here
-              </button>
-              <button onClick={()=>setActiveTab('feed')} style={{flex:1,padding:'14px',borderRadius:12,border:'1px solid var(--border)',cursor:'pointer',background:'var(--surface)',color:'var(--text-primary)',fontSize:15,fontWeight:600,fontFamily:'inherit'}}>
-                📋 Recent sales
-              </button>
+
+            {/* Recent Transactions */}
+            {areaData?.[selectedArea.key]?.recent?.length>0 && (
+              <div style={{background:'var(--surface)',border:'1px solid var(--border)',borderRadius:14,overflow:'hidden',marginBottom:24}}>
+                <div style={{padding:'14px 18px',borderBottom:'1px solid var(--border)',fontSize:13,fontWeight:600,color:'var(--text-primary)'}}>Recent Transactions</div>
+                {areaData[selectedArea.key].recent.slice(0,10).map((r,i,arr)=>{
+                  const ppsqft=r.s&&r.v?Math.round(r.v/r.s/10.764):0;
+                  return (
+                    <div key={i} style={{display:'grid',gridTemplateColumns:'1fr 80px 110px 75px',padding:'11px 18px',borderBottom:i<arr.length-1?'1px solid var(--border)':'none',alignItems:'center'}}>
+                      <div>
+                        <div style={{fontSize:13,fontWeight:600,color:'var(--text-primary)'}}>{r.b||r.j||'—'}</div>
+                        <div style={{fontSize:11,color:'var(--text-secondary)'}}>{r.d||''}{ppsqft?' · AED '+fmtNum(ppsqft)+'/sqft':''}</div>
+                      </div>
+                      <div style={{fontSize:11,color:'var(--text-secondary)',textAlign:'center'}}>{r.t||'Sale'}</div>
+                      <div style={{fontSize:13,fontWeight:700,color:'var(--text-primary)',textAlign:'right'}}>{r.v?fmtAED(r.v,true):'—'}</div>
+                      <div style={{textAlign:'right'}}><span style={{fontSize:10,fontWeight:600,padding:'2px 7px',borderRadius:20,background:r.r==='Off'?'rgba(59,130,246,0.1)':'rgba(34,197,94,0.1)',color:r.r==='Off'?'#38BDF8':'#22C55E'}}>{r.r==='Off'?'Off-Plan':'Ready'}</span></div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+
+            {/* CTAs */}
+            <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12}}>
+              <button onClick={()=>setActiveTab('deal')} style={{padding:'14px',borderRadius:12,border:'none',cursor:'pointer',background:'linear-gradient(135deg,#1D4ED8,#38BDF8)',color:'#fff',fontSize:15,fontWeight:600,fontFamily:'inherit'}}>⚡ Check a deal here</button>
+              <button onClick={()=>setActiveTab('feed')} style={{padding:'14px',borderRadius:12,border:'1px solid var(--border)',cursor:'pointer',background:'var(--surface)',color:'var(--text-primary)',fontSize:15,fontWeight:600,fontFamily:'inherit'}}>📋 Recent sales</button>
             </div>
           </div>
         </div>
@@ -732,63 +866,59 @@ Respond ONLY with valid JSON (no markdown):
       {selectedDeveloper && (
         <div style={{position:'fixed',inset:0,background:'var(--bg)',zIndex:500,overflowY:'auto'}}>
           <div style={{position:'sticky',top:0,zIndex:10,background:'var(--bg-alt)',borderBottom:'1px solid var(--border)',height:52,display:'flex',alignItems:'center',padding:'0 24px'}}>
-            <button onClick={()=>setSelectedDeveloper(null)} style={{display:'flex',alignItems:'center',gap:8,background:'none',border:'none',cursor:'pointer',color:'var(--text-primary)',fontSize:14,fontWeight:600,fontFamily:'inherit'}}>
-              ← Back to search
-            </button>
+            <button onClick={()=>setSelectedDeveloper(null)} style={{display:'flex',alignItems:'center',gap:8,background:'none',border:'none',cursor:'pointer',color:'var(--text-primary)',fontSize:14,fontWeight:600,fontFamily:'inherit'}}>← Back to search</button>
           </div>
           <div style={{height:200,background:'linear-gradient(135deg,rgba(139,92,246,0.2),rgba(167,139,250,0.08))',display:'flex',alignItems:'center',justifyContent:'center',flexDirection:'column',gap:10}}>
             <div style={{width:64,height:64,borderRadius:18,background:'linear-gradient(135deg,#7C3AED,#A78BFA)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:28}}>🏢</div>
             <h1 style={{fontSize:24,fontWeight:800,color:'var(--text-primary)',margin:0}}>{selectedDeveloper.name}</h1>
             <div style={{fontSize:13,color:'var(--text-secondary)'}}>Dubai Real Estate Developer</div>
           </div>
-          <div style={{maxWidth:900,margin:'0 auto',padding:'24px'}}>
+          <div style={{maxWidth:960,margin:'0 auto',padding:'24px'}}>
             <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:12,marginBottom:24}}>
               {[
                 ['Total Transactions',fmtNum(selectedDeveloper.count),'📊','#38BDF8'],
-                ['Avg Deal Size',fmtAED(selectedDeveloper.avg,true),'💰','#22C55E'],
-                ['Market Share',Math.round(selectedDeveloper.count/354343*100)+'%','📈','#A78BFA'],
+                ['Total Value',fmtAED(selectedDeveloper.total||0,true),'💎','#22C55E'],
+                ['Avg Deal Size',fmtAED(selectedDeveloper.avg,true),'💰','#A78BFA'],
               ].map(([l,v,icon,color],i)=>(
                 <div key={i} style={{background:'var(--surface)',border:'1px solid var(--border)',borderRadius:14,padding:'16px',textAlign:'center'}}>
                   <div style={{fontSize:20,marginBottom:6}}>{icon}</div>
-                  <div style={{fontSize:18,fontWeight:800,color,marginBottom:4}}>{v}</div>
+                  <div style={{fontSize:17,fontWeight:800,color,marginBottom:4}}>{v}</div>
                   <div style={{fontSize:10,color:'var(--text-muted)',textTransform:'uppercase',letterSpacing:'0.05em'}}>{l}</div>
                 </div>
               ))}
             </div>
             {selectedDeveloper.yearly?.length>0 && (
               <div style={{background:'var(--surface)',border:'1px solid var(--border)',borderRadius:14,padding:'18px',marginBottom:20}}>
-                <div style={{fontSize:13,fontWeight:600,color:'var(--text-primary)',marginBottom:14}}>Yearly Transaction Volume</div>
-                <div style={{display:'flex',alignItems:'flex-end',gap:6,height:72}}>
+                <div style={{fontSize:13,fontWeight:600,color:'var(--text-primary)',marginBottom:14}}>📊 Yearly Transaction Volume</div>
+                <div style={{display:'flex',alignItems:'flex-end',gap:8,height:80}}>
                   {selectedDeveloper.yearly.map((y,i,arr)=>{
                     const max=Math.max(...arr.map(x=>x.count));
                     const h=Math.round((y.count/max)*100);
                     return (
-                      <div key={i} style={{flex:1,display:'flex',flexDirection:'column',alignItems:'center',gap:4}}>
-                        <div style={{width:'100%',height:h+'%',borderRadius:'3px 3px 0 0',background:i===arr.length-1?'#A78BFA':'rgba(167,139,250,0.3)'}}/>
-                        <div style={{fontSize:9,color:'var(--text-muted)'}}>{y.year}</div>
+                      <div key={i} style={{flex:1,display:'flex',flexDirection:'column',alignItems:'center',gap:6}}>
+                        <div style={{fontSize:10,color:'var(--text-secondary)',fontWeight:600}}>{fmtNum(y.count)}</div>
+                        <div style={{width:'100%',height:h*0.6+'px',minHeight:4,borderRadius:'3px 3px 0 0',background:i===arr.length-1?'#A78BFA':'rgba(167,139,250,0.3)'}}/>
+                        <div style={{fontSize:10,color:'var(--text-muted)'}}>{y.year}</div>
                       </div>
                     );
                   })}
                 </div>
               </div>
             )}
-            {projectsData && Object.entries(projectsData).filter(([k,v])=>v.developer===selectedDeveloper.name).length>0 && (
-              <div>
-                <div style={{fontSize:13,fontWeight:600,color:'var(--text-primary)',marginBottom:12}}>Projects by {selectedDeveloper.name}</div>
-                <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(200px,1fr))',gap:10}}>
-                  {Object.entries(projectsData).filter(([k,v])=>v.developer===selectedDeveloper.name).slice(0,6).map(([k,v],i)=>(
-                    <div key={i} onClick={()=>{setSelectedProject({key:k,name:k,area:na(v.area||''),avg:v.kpis?.avg||0,count:v.kpis?.count||0});setSelectedDeveloper(null);}} className="inv-card" style={{background:'var(--surface)',border:'1px solid var(--border)',borderRadius:12,padding:'14px',cursor:'pointer'}}>
-                      <div style={{fontSize:13,fontWeight:600,color:'var(--text-primary)',marginBottom:4}}>{k}</div>
-                      <div style={{fontSize:12,color:'#A78BFA',fontWeight:700}}>{fmtAED(v.kpis?.avg||0,true)}</div>
-                      <div style={{fontSize:11,color:'var(--text-muted)'}}>{fmtNum(v.kpis?.count||0)} txns</div>
-                    </div>
-                  ))}
+            <div style={{background:'var(--surface)',border:'1px solid var(--border)',borderRadius:14,padding:'18px',marginBottom:20}}>
+              <div style={{fontSize:13,fontWeight:600,color:'var(--text-primary)',marginBottom:12}}>📈 Market Share</div>
+              <div style={{display:'flex',alignItems:'center',gap:16}}>
+                <div style={{flex:1,height:12,borderRadius:6,background:'var(--border)',overflow:'hidden'}}>
+                  <div style={{height:'100%',width:Math.round(selectedDeveloper.count/354343*100)+'%',background:'linear-gradient(90deg,#7C3AED,#A78BFA)',borderRadius:6}}/>
                 </div>
+                <div style={{fontSize:16,fontWeight:800,color:'#A78BFA',flexShrink:0}}>{Math.round(selectedDeveloper.count/354343*100)}%</div>
               </div>
-            )}
+              <div style={{fontSize:11,color:'var(--text-muted)',marginTop:6}}>of all Dubai transactions</div>
+            </div>
           </div>
         </div>
       )}
+
       {/* FULL-SCREEN PROJECT PROFILE */}
       {selectedProject && (
         <div style={{position:'fixed',inset:0,background:'var(--bg)',zIndex:500,overflowY:'auto'}}>
