@@ -71,10 +71,10 @@ export default function InvestorApp({ areaData, recentRaw, core, onSwitchToBroke
       return;
     }
     let results = [...(recentRaw||[])];
-    if (minPrice) results = results.filter(r => (r.v||0) >= parseInt(minPrice.replace(/,/g,''))*1000);
-    if (maxPrice) results = results.filter(r => (r.v||0) <= parseInt(maxPrice.replace(/,/g,''))*1000);
+    if (minPrice) results = results.filter(r => (r.v||0) >= parseInt(minPrice.replace(/,/g,'')));
+    if (maxPrice) results = results.filter(r => (r.v||0) <= parseInt(maxPrice.replace(/,/g,'')));
     if (bedrooms) results = results.filter(r => (r.b||'').toLowerCase().includes(bedrooms.toLowerCase()));
-    if (area) results = results.filter(r => na(r.a||'').toLowerCase().includes(area.toLowerCase()));
+    if (area) results = results.filter(r => na(r.a||'').toLowerCase().includes(area.toLowerCase()) || (r.a||'').toLowerCase().includes(area.toLowerCase()));
     if (regType) results = results.filter(r => regType==='Off-Plan' ? r.r==='Off' : r.r!=='Off');
     setFilterResults(results.slice(0,50));
     setShowFilters(false);
