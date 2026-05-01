@@ -620,6 +620,34 @@ Respond ONLY with valid JSON (no markdown):
               <button onClick={()=>setSelectedProject(null)} style={{background:'none',border:'1px solid var(--border)',borderRadius:8,color:'var(--text-muted)',cursor:'pointer',padding:'6px 12px',fontSize:12,fontFamily:'inherit'}}>✕ Close</button>
             </div>
             <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:12,marginBottom:20}}>
+              {(() => {
+                const devName = selectedProject.name || '';
+                const areaKey = Object.keys(areaScores).find(k => {
+                  const nice = {'Al Barsha South Fourth':'JVC','Burj Khalifa':'Downtown Dubai','Marsa Dubai':'Dubai Marina','Hadaeq Sheikh Mohammed Bin Rashid':'Dubai Hills','Al Thanyah Fifth':'JLT','Al Merkadh':'MBR City','Al Khairan First':'Creek Harbour','Al Hebiah Fourth':'Damac Hills'};
+                  return k === selectedProject.areaKey || nice[k] === selectedProject.area || k === selectedProject.area;
+                });
+                const dubaiAvg = core?.priceTrend?.slice(-1)[0]?.ppsqm || 15000;
+                const maxCount = 5000;
+                const ps = areaKey ? calcPropSightScore({
+                  areaKpis: areaData?.[areaKey]?.kpis || {},
+                  priceTrend: areaData?.[areaKey]?.priceTrend || [],
+                  dubaiAvgPpsqm: dubaiAvg,
+                  maxAreaCount: maxCount,
+                  developerName: devName,
+                }) : null;
+                return ps ? (
+                  <div style={{background:ps.bg,border:'1px solid '+ps.color+'30',borderRadius:12,padding:'14px 18px',marginBottom:16,display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+                    <div>
+                      <div style={{fontSize:10,color:ps.color,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.08em',marginBottom:2}}>PropSight Score</div>
+                      <div style={{fontSize:24,fontWeight:800,color:ps.color}}>{ps.total}<span style={{fontSize:12,color:'var(--text-muted)',fontWeight:400}}>/100</span></div>
+                    </div>
+                    <div style={{textAlign:'right'}}>
+                      <div style={{fontSize:18,fontWeight:700,color:ps.color}}>{ps.verdict}</div>
+                      <div style={{fontSize:11,color:'var(--text-muted)',marginTop:2}}>Project investment score</div>
+                    </div>
+                  </div>
+                ) : null;
+              })()}
               {[
                 ['Total Transactions', fmtNum(selectedProject.count), '📊'],
                 ['Avg Price', fmtAED(selectedProject.avg, true), '💰'],
@@ -794,9 +822,9 @@ Respond ONLY with valid JSON (no markdown):
             <div style={{display:'flex',alignItems:'center',gap:10}}>
               <span style={{fontSize:13,color:'var(--text-secondary)'}}>{fmtNum(selectedArea.count)} {t('transactions',lang)}</span>
               <span style={{fontSize:13,fontWeight:700,padding:'4px 12px',borderRadius:20,background:selectedArea.yoy>=0?'rgba(34,197,94,0.12)':'rgba(248,113,113,0.12)',color:selectedArea.yoy>=0?'#22C55E':'#F87171'}}>{selectedArea.yoy>=0?'+':''}{selectedArea.yoy}% YoY</span>
-              <span style={{fontSize:13,fontWeight:700,padding:'4px 12px',borderRadius:20,background:selectedArea.mScore>=8?'rgba(34,197,94,0.12)':selectedArea.mScore>=6?'rgba(245,158,11,0.12)':'rgba(100,116,139,0.12)',color:selectedArea.mScore>=8?'#22C55E':selectedArea.mScore>=6?'#F59E0B':'#94A3B8'}}>
-                {selectedArea.mScore>=8?t('Strong Buy',lang):selectedArea.mScore>=6?t('Buy',lang):t('Hold',lang)} · {selectedArea.mScore}/10
-              </span>
+{areaScores[selectedArea.key] && <span style={{fontSize:13,fontWeight:700,padding:'4px 12px',borderRadius:20,background:areaScores[selectedArea.key].bg,color:areaScores[selectedArea.key].color}}>
+                PropSight {areaScores[selectedArea.key].total}/100 · {areaScores[selectedArea.key].verdict}
+              </span>}
             </div>
           </div>
 
