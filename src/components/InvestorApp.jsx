@@ -3,6 +3,8 @@ import { t } from '../i18n';
 import { useAuth } from '../context/AuthContext';
 import MapView from './MapView';
 import { fmtAED, fmtNum } from '../utils/format';
+import PropSightScorePage, { AreaScoreCard } from './PropSightScore';
+import { calcPropSightScore } from '../utils/propSightScore';
 
 const AREA_NICE = {
   'Al Barsha South Fourth':'JVC','Burj Khalifa':'Downtown Dubai','Marsa Dubai':'Dubai Marina',
@@ -165,6 +167,23 @@ export default function InvestorApp({ areaData, recentRaw, core, onSwitchToBroke
 
   const displayAreas = search.length > 1 ? suggestions : areas.filter(a => QUICK_AREAS.includes(a.key));
 
+  // PropSight Scores for all areas
+  const areaScores = useMemo(() => {
+    if (!areaData || !core) return {};
+    const dubaiAvg = core.priceTrend?.slice(-1)[0]?.ppsqm || 15000;
+    const maxCount = Math.max(...Object.values(areaData).map(d => d.kpis?.count || 0));
+    const scores = {};
+    for (const [key, data] of Object.entries(areaData)) {
+      scores[key] = calcPropSightScore({
+        areaKpis: data.kpis || {},
+        priceTrend: data.priceTrend || [],
+        dubaiAvgPpsqm: dubaiAvg,
+        maxAreaCount: maxCount,
+      });
+    }
+    return scores;
+  }, [areaData, core]);
+
   // Sync dealAreaKey to selectedArea for the analyzer
   const dealSelectedArea = useMemo(() => {
     if (dealAreaKey) return areas.find(x => x.key === dealAreaKey) || selectedArea;
@@ -227,7 +246,7 @@ Respond ONLY with valid JSON (no markdown):
         </div>
 
         <div style={{display:'flex',gap:2,background:'rgba(255,255,255,0.04)',borderRadius:10,padding:3}}>
-          {[['discover',t('Discover',lang)],['map',t('Map',lang)],['deal',t('Deal Check',lang)],['feed',t('Recent Sales',lang)]].map(([id,lbl])=>(
+          {[['discover',t('Discover',lang)],['score','🏆 Score'],['map',t('Map',lang)],['deal',t('Deal Check',lang)],['feed',t('Recent Sales',lang)]].map(([id,lbl])=>(
             <button key={id} onClick={()=>setActiveTab(id)} className="inv-tab-btn" style={{padding:'6px 14px',borderRadius:8,fontSize:13,fontWeight:activeTab===id?600:400,background:activeTab===id?'var(--surface)':'transparent',color:activeTab===id?'var(--text-primary)':'var(--text-muted)',boxShadow:activeTab===id?'0 1px 4px rgba(0,0,0,0.3)':'none'}}>
               {lbl}
             </button>
@@ -489,9 +508,7 @@ Respond ONLY with valid JSON (no markdown):
                 <div style={{fontSize:20,fontWeight:700,color:'#38BDF8',marginBottom:2}}>AED {fmtNum(a.ppsqft)}<span style={{fontSize:10,color:'var(--text-secondary)',fontWeight:400}}>/sqft</span></div>
                 <div style={{display:'flex',alignItems:'center',justifyContent:'space-between'}}>
                   <span style={{fontSize:11,color:'var(--text-secondary)'}}>{fmtNum(a.count)} {t('txns',lang)}</span>
-                  <span style={{fontSize:10,fontWeight:700,padding:'2px 7px',borderRadius:20,background:a.mScore>=8?'rgba(34,197,94,0.12)':a.mScore>=6?'rgba(245,158,11,0.12)':'rgba(100,116,139,0.12)',color:a.mScore>=8?'#22C55E':a.mScore>=6?'#F59E0B':'#94A3B8'}}>
-                    {a.mScore>=8?t('Strong Buy',lang):a.mScore>=6?t('Buy',lang):t('Hold',lang)} {a.mScore}/10
-                  </span>
+                  {areaScores[a.key] && <span style={{fontSize:10,fontWeight:700,padding:'2px 7px',borderRadius:20,background:areaScores[a.key].bg,color:areaScores[a.key].color}}>{areaScores[a.key].total} · {areaScores[a.key].verdict}</span>}
                 </div>
               </div>
             ))}
@@ -710,6 +727,7 @@ Respond ONLY with valid JSON (no markdown):
         )}
 
         {/* RECENT SALES */}
+        {activeTab==='score' && <PropSightScorePage areaData={areaData} core={core} />}
         {activeTab==='feed' && (
           <div>
             <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:18}}>
