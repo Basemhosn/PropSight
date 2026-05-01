@@ -239,6 +239,7 @@ export default function App() {
           {page === "roi" && <ROICalculator areaData={areaData} />}
           {page === "offplan" && <PropertiesPage recentRaw={recentRaw} projectsData={projectsData} onProjectClick={(name,data)=>setSelectedProject({name,data})} />}
           {page === "recent" && <RecentTransactions recentRaw={recentRaw} />}
+        {page === "brokerprofile" && <BrokerProfile areaData={areaData} core={core} recentRaw={recentRaw} projectsData={projectsData} onNavigate={setPage} />}
           {page === "rental" && <RentalIndex areaData={areaData} />}
           {page === "pdf" && <PDFExport areaData={areaData} core={core} />}
           {page === "upgrade" && <UpgradePage />}

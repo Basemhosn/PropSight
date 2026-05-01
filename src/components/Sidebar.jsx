@@ -19,11 +19,9 @@ const NAV_SECTIONS = [
     { id:'map',        label:'Dubai Heatmap',       icon:'map',      pro:true },
     { id:'developers', label:'Developers',          icon:'building2' },
   ]},
-  { label:'MY PLATFORM', items: [
-    { id:'portfolio',  label:'My Portfolio',        icon:'briefcase', lite:true },
-    { id:'watchlist',  label:'Watchlist',           icon:'bookmark',  lite:true },
-    { id:'alerts',     label:'Price Alerts',        icon:'bell',      lite:true },
-    { id:'upgrade',    label:'Upgrade Plan',        icon:'upgrade' },
+  { label:'BROKER PROFILE', items: [
+    { id:'brokerprofile', label:'Broker Profile', icon:'briefcase', lite:true },
+    { id:'upgrade',       label:'Upgrade Plan',   icon:'upgrade' },
   ]},
   { label:'TOOLS', items: [
     { id:'roi',        label:'ROI Calculator',      icon:'calculator', lite:true },
@@ -50,6 +48,8 @@ function Icon({ name, size=15 }) {
     grid:       <svg {...p}><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>,
     upgrade:    <svg {...p}><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>,
     logout:     <svg {...p}><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>,
+    person:     <svg {...p}><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>,
+    report:     <svg {...p}><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>,
     pulse:      <svg {...p}><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>,
     live:       <svg {...p}><circle cx="12" cy="12" r="2"/><path d="M16.24 7.76a6 6 0 0 1 0 8.49"/><path d="M7.76 7.76a6 6 0 0 0 0 8.49"/></svg>,
     bell:    <svg {...p}><path d='M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9'/><path d='M13.73 21a2 2 0 0 1-3.46 0'/></svg>,
