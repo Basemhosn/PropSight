@@ -154,15 +154,64 @@ function MortgageCalculator() {
       netReturn, roi, grossYield, netYield, breakEven };
   }, [price, down, rate, years, rentalYield, appreciation]);
 
-  const Slider = ({ label, value, min, max, step, onChange, fmt }) => (
-    <div style={{ marginBottom:16 }}>
-      <div style={{ display:'flex', justifyContent:'space-between', marginBottom:5 }}>
+  const Slider = ({ label, value, min, max, step, onChange, fmt, fmtMin, fmtMax }) => (
+    <div style={{ marginBottom:18 }}>
+      <div style={{ display:'flex', justifyContent:'space-between', marginBottom:6 }}>
         <span style={{ fontSize:12, color:'var(--text-muted)' }}>{label}</span>
-        <span style={{ fontSize:13, fontWeight:600, color:'#38BDF8' }}>{fmt(value)}</span>
+        <span style={{ fontSize:13, fontWeight:700, color:'#38BDF8' }}>{fmt(value)}</span>
       </div>
+      <style>{`
+        input[type=range].smooth-slider {
+          -webkit-appearance: none;
+          appearance: none;
+          width: 100%;
+          height: 5px;
+          border-radius: 3px;
+          background: rgba(255,255,255,0.08);
+          outline: none;
+          cursor: pointer;
+        }
+        input[type=range].smooth-slider::-webkit-slider-thumb {
+          -webkit-appearance: none;
+          appearance: none;
+          width: 18px;
+          height: 18px;
+          border-radius: 50%;
+          background: linear-gradient(135deg, #1D4ED8, #38BDF8);
+          cursor: pointer;
+          box-shadow: 0 2px 8px rgba(56,189,248,0.4);
+          transition: transform 0.15s, box-shadow 0.15s;
+        }
+        input[type=range].smooth-slider::-webkit-slider-thumb:hover {
+          transform: scale(1.2);
+          box-shadow: 0 4px 16px rgba(56,189,248,0.6);
+        }
+        input[type=range].smooth-slider::-moz-range-thumb {
+          width: 18px;
+          height: 18px;
+          border-radius: 50%;
+          background: linear-gradient(135deg, #1D4ED8, #38BDF8);
+          cursor: pointer;
+          border: none;
+          box-shadow: 0 2px 8px rgba(56,189,248,0.4);
+        }
+        input[type=range].smooth-slider::-webkit-slider-runnable-track {
+          height: 5px;
+          border-radius: 3px;
+          background: rgba(255,255,255,0.08);
+        }
+      `}</style>
       <input type="range" min={min} max={max} step={step} value={value}
         onChange={e=>onChange(+e.target.value)}
-        style={{ width:'100%', accentColor:'#38BDF8' }}/>
+        className="smooth-slider"
+        style={{ width:'100%' }}/>
+      {(fmtMin || fmtMax) && (
+        <div style={{ display:'flex', justifyContent:'space-between',
+          fontSize:10, color:'var(--text-muted)', marginTop:4 }}>
+          <span>{fmtMin ? fmtMin(min) : fmt(min)}</span>
+          <span>{fmtMax ? fmtMax(max) : fmt(max)}</span>
+        </div>
+      )}
     </div>
   );
 
@@ -195,13 +244,13 @@ function MortgageCalculator() {
         </div>
       </div>
 
-      <Slider label="Property Price" value={price} min={500000} max={20000000} step={100000}
-        onChange={setPrice} fmt={v=>`AED ${fmtNum(v)}`}/>
+      <Slider label="Property Price" value={price} min={500000} max={20000000} step={50000}
+        onChange={setPrice} fmt={v=>`AED ${fmtNum(v)}`} fmtMin={()=>'AED 500K'} fmtMax={()=>'AED 20M'}/>
       <Slider label={`Down Payment — ${down}% (${fmtAED(calc.downAmt)})`}
-        value={down} min={20} max={80} step={5}
+        value={down} min={20} max={80} step={1}
         onChange={setDown} fmt={v=>`${v}%`}/>
       <Slider label={`Interest Rate — ${rate}%`}
-        value={rate} min={2.5} max={9} step={0.25}
+        value={rate} min={2.5} max={9} step={0.1}
         onChange={setRate} fmt={v=>`${v}%`}/>
       <Slider label={`Loan Term — ${years} years`}
         value={years} min={5} max={25} step={1}
@@ -214,10 +263,10 @@ function MortgageCalculator() {
           <div style={{ fontSize:12, fontWeight:600, color:'#22C55E', marginBottom:12,
             textTransform:'uppercase', letterSpacing:'0.05em' }}>ROI Assumptions</div>
           <Slider label={`Rental Yield — ${rentalYield}%`}
-            value={rentalYield} min={2} max={12} step={0.5}
+            value={rentalYield} min={2} max={12} step={0.1}
             onChange={setRentalYield} fmt={v=>`${v}%`}/>
           <Slider label={`Annual Appreciation — ${appreciation}%`}
-            value={appreciation} min={0} max={20} step={0.5}
+            value={appreciation} min={0} max={20} step={0.1}
             onChange={setAppreciation} fmt={v=>`${v}%`}/>
         </div>
       )}
