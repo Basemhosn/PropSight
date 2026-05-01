@@ -1,19 +1,24 @@
 /**
  * Dubai Data Authority (DDA) API Service
- * Portal: data.dubai
- * Token endpoint: https://apis.data.dubai/secure/sdg/ssis/gatewayoauthtoken/1.0.0/getAccessToken
- * Transactions: https://apis.data.dubai/open/dld/dld_transactions-open-api
+ * Token:  https://stg-apis.data.dubai/secure/ssis/dubaiai/gatewaytoken/1.0.0/getAccessToken
+ * Data:   https://stg-apis.data.dubai/open/dld/dld_transactions-open-api
+ * NOTE:   DDA APIs are geo-restricted to UAE IPs only.
  */
 
+const IS_STG = process.env.REACT_APP_DDA_ENV !== "production";
+
 const DDA_CONFIG = {
-  tokenUrl:   "https://apis.data.dubai/secure/sdg/ssis/gatewayoauthtoken/1.0.0/getAccessToken",
-  apiBase:    "https://apis.data.dubai/open/dld",
-  appId:      "Q-{4UkaFwR83JbNZwUmaNDNVEsnaGtnDFX5}",
-  clientId:   "3KdzL5F4KUseZG4f2m5QvkkBrQmrcamv",
-  clientSecret: "exFKDqqxSeg8KN7DmTFjm6CzQDvAjJJH",
+  tokenUrl: IS_STG
+    ? "https://stg-apis.data.dubai/secure/ssis/dubaiai/gatewaytoken/1.0.0/getAccessToken"
+    : "https://apis.data.dubai/secure/ssis/dubaiai/gatewaytoken/1.0.0/getAccessToken",
+  apiBase: IS_STG
+    ? "https://stg-apis.data.dubai/open/dld"
+    : "https://apis.data.dubai/open/dld",
+  appId:        process.env.REACT_APP_DDA_APP_ID        || "Q-4UkaFwR83JbNZwUmaNDNVEsnaGtnDFX5",
+  clientId:     process.env.REACT_APP_DDA_CLIENT_ID     || "3KdzL5F4KUseZG4f2m5QvkkBrQmrcamv",
+  clientSecret: process.env.REACT_APP_DDA_CLIENT_SECRET || "exFKDqqxSeg8KN7DmTFjm6CzQDvAjJJH",
 };
 
-// Cache token in memory — valid ~30 minutes
 let _tokenCache = { token: null, expiry: 0 };
 
 async function getToken() {
@@ -33,58 +38,110 @@ async function getToken() {
     }),
   });
   const data = await res.json();
-  if (!data.access_token) throw new Error(data.Exception || "Token request failed");
+  if (!data.access_token) throw new Error(data.Exception || "DDA token request failed");
   _tokenCache = {
     token:  data.access_token,
-    expiry: Date.now() + (data.expires_in ? data.expires_in * 1000 : 25 * 60 * 1000),
+    expiry: Date.now() + ((data.expires_in || 3600) - 60) * 1000,
   };
   return _tokenCache.token;
 }
 
 async function ddaGet(dataset, params = {}) {
   const token = await getToken();
-  const qs = new URLSearchParams(params).toString();
+  const cleanParams = Object.fromEntries(
+    Object.entries(params).filter(([, v]) => v !== undefined && v !== null && v !== "")
+  );
+  const qs = new URLSearchParams(cleanParams).toString();
   const url = `${DDA_CONFIG.apiBase}/${dataset}${qs ? "?" + qs : ""}`;
   const res = await fetch(url, {
-    headers: {
-      "Authorization": `Bearer ${token}`,
-      "x-DDA-SecurityApplicationIdentifier": DDA_CONFIG.appId,
-    },
+    headers: { "Authorization": `Bearer ${token}` },
   });
-  if (!res.ok) throw new Error(`API error ${res.status}`);
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.message || `DDA API error ${res.status}`);
+  }
   return res.json();
 }
 
-/**
- * Fetch latest transactions from DLD
- * @param {object} opts - { limit, dateFrom, dateTo, area, type }
- */
-export async function fetchLiveTransactions(opts = {}) {
-  const params = { limit: opts.limit || 100 };
-  if (opts.dateFrom) params["filter"] = `transaction_date>='${opts.dateFrom}'`;
-  if (opts.dateTo)   params["filter"] = (params["filter"] ? params["filter"] + " AND " : "") + `transaction_date<='${opts.dateTo}'`;
-  if (opts.area)     params["filter"] = (params["filter"] ? params["filter"] + " AND " : "") + `area_name_en='${opts.area}'`;
-  return ddaGet("dld_transactions-open-api", params);
+export function normalizeTx(raw) {
+  return {
+    id:              raw.transaction_id,
+    date:            raw.instance_date,
+    type:            raw.trans_group_en,
+    procedure:       raw.procedure_name_en,
+    propertyType:    raw.property_type_en,
+    subType:         raw.property_sub_type_en,
+    usage:           raw.property_usage_en,
+    regType:         raw.reg_type_en,
+    areaNbr:         raw.area_id,
+    area:            raw.area_name_en,
+    areaAr:          raw.area_name_ar,
+    building:        raw.building_name_en,
+    buildingAr:      raw.building_name_ar,
+    project:         raw.project_name_en,
+    masterProject:   raw.master_project_en,
+    masterProjectAr: raw.master_project_ar,
+    bedrooms:        raw.rooms_en,
+    hasParking:      raw.has_parking === 1,
+    sizeSqm:         raw.procedure_area,
+    price:           raw.actual_worth,
+    pricePerSqm:     raw.meter_sale_price,
+    rentValue:       raw.rent_value,
+    rentPerSqm:      raw.meter_rent_price,
+    nearestMetro:    raw.nearest_metro_en,
+    nearestMall:     raw.nearest_mall_en,
+    nearestLandmark: raw.nearest_landmark_en,
+  };
 }
 
-/**
- * Fetch today's transactions
- */
+export async function fetchTransactions(opts = {}) {
+  const {
+    page      = 1,
+    pageSize  = 100,
+    area,
+    transType,
+    propType,
+    bedrooms,
+    dateFrom,
+    dateTo,
+    orderBy   = "instance_date",
+    orderDir  = "desc",
+  } = opts;
+
+  let filter;
+  if (area)           filter = `area_name_en=${area}`;
+  else if (transType) filter = `trans_group_en=${transType}`;
+  else if (propType)  filter = `property_type_en=${propType}`;
+  else if (bedrooms)  filter = `rooms_en=${bedrooms}`;
+
+  const data = await ddaGet("dld_transactions-open-api", {
+    page, pageSize, order_by: orderBy, order_dir: orderDir, filter,
+  });
+
+  const results = (data.results || []).map(normalizeTx).filter(tx => {
+    if (dateFrom && tx.date < dateFrom) return false;
+    if (dateTo   && tx.date > dateTo)   return false;
+    return true;
+  });
+
+  return { results, raw: data };
+}
+
 export async function fetchTodayTransactions() {
   const today = new Date().toISOString().split("T")[0];
-  return fetchLiveTransactions({ dateFrom: today, dateTo: today, limit: 500 });
+  return fetchTransactions({ pageSize: 500, dateFrom: today, dateTo: today });
 }
 
-/**
- * Fetch transactions for the past N days
- */
 export async function fetchRecentTransactions(days = 7) {
-  const to   = new Date();
-  const from = new Date();
-  from.setDate(from.getDate() - days);
-  return fetchLiveTransactions({
-    dateFrom: from.toISOString().split("T")[0],
-    dateTo:   to.toISOString().split("T")[0],
-    limit: 1000,
-  });
+  const to   = new Date().toISOString().split("T")[0];
+  const from = new Date(Date.now() - days * 86400000).toISOString().split("T")[0];
+  return fetchTransactions({ pageSize: 1000, dateFrom: from, dateTo: to });
+}
+
+export async function fetchAreaTransactions(areaName, opts = {}) {
+  return fetchTransactions({ ...opts, area: areaName, pageSize: opts.pageSize || 500 });
+}
+
+export async function fetchPage(page = 1, pageSize = 1000) {
+  return fetchTransactions({ page, pageSize });
 }

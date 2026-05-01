@@ -44,6 +44,7 @@ import ShareableReport from "./components/ShareableReport";
 import PriceAlerts from "./components/PriceAlerts";
 import TransactionSearch from "./components/TransactionSearch";
 import PortfolioTracker from "./components/PortfolioTracker";
+import useLiveTransactions from "./hooks/useLiveTransactions";
 
 const DEFAULT_FILTERS = { type:"", usage:"", reg:"", propType:"", area:"", sort:"value", dateFrom:"", dateTo:"" };
 const REG_EXPAND = { Off:"Off-Plan", Rea:"Ready" };
@@ -74,8 +75,7 @@ function useMobile() {
   return m;
 }
 
-
-function BrokerTopBar({ user, profile, signOut, toggleLang, lang }) {
+function BrokerTopBar({ user, profile, signOut, toggleLang, lang, isLive, lastUpdate, liveError, onRefresh }) {
   const [showMenu, setShowMenu] = useState(false);
   const [themeMode, setThemeMode] = useState(() => localStorage.getItem('theme') || 'dark');
 
@@ -94,6 +94,16 @@ function BrokerTopBar({ user, profile, signOut, toggleLang, lang }) {
 
   return (
     <div style={{height:52,borderBottom:'1px solid var(--border)',background:'var(--bg-alt)',display:'flex',alignItems:'center',justifyContent:'flex-end',padding:'0 20px',gap:10,flexShrink:0}}>
+      {/* Live data indicator */}
+      <div
+        onClick={onRefresh}
+        title={liveError ? `Error: ${liveError}` : lastUpdate ? `Updated ${lastUpdate.toLocaleTimeString()}` : 'Loading...'}
+        style={{display:'flex',alignItems:'center',gap:6,background:isLive?'rgba(34,197,94,0.08)':'rgba(245,158,11,0.08)',border:`1px solid ${isLive?'rgba(34,197,94,0.2)':'rgba(245,158,11,0.2)'}`,borderRadius:20,padding:'4px 12px',cursor:'pointer'}}>
+        <div style={{width:6,height:6,borderRadius:'50%',background:isLive?'#22C55E':'#F59E0B',boxShadow:`0 0 6px ${isLive?'#22C55E':'#F59E0B'}`}}/>
+        <span style={{fontSize:11,fontWeight:600,color:isLive?'#22C55E':'#F59E0B'}}>
+          {isLive ? 'DDA LIVE' : liveError ? 'STATIC DATA' : 'CONNECTING...'}
+        </span>
+      </div>
       <div style={{display:'flex',alignItems:'center',gap:6,background:'rgba(245,158,11,0.08)',border:'1px solid rgba(245,158,11,0.2)',borderRadius:20,padding:'4px 12px'}}>
         <span style={{fontSize:11}}>🏢</span>
         <span style={{fontSize:11,fontWeight:600,color:'#F59E0B'}}>Broker Portal</span>
@@ -128,7 +138,7 @@ export default function App() {
   const { user, profile, loading, theme, lang, toggleLang, isPro, isLite, signOut, colors } = useAuth();
   const [core, setCore] = useState(null);
   const [areaData, setAreaData] = useState(null);
-  const [recentRaw, setRecentRaw] = useState([]);
+  const [staticRecentRaw, setStaticRecentRaw] = useState([]);
   const [dataError, setDataError] = useState(null);
   const [filters, setFilters] = useState(DEFAULT_FILTERS);
   const [page, setPage] = useState("home");
@@ -138,10 +148,17 @@ export default function App() {
   const [selectedArea, setSelectedArea] = useState(null);
   const isMobile = useMobile();
 
+  // Live DDA data — runs in browser (UAE IP), falls back to static
+  const { liveData, loading: liveLoading, error: liveError, lastUpdate, isLive, refresh } = useLiveTransactions({ days: 30 });
+
+  // Use live data if available, otherwise fall back to static recent.json
+  const recentRaw = liveData || staticRecentRaw;
+
   useEffect(() => { fetch("/data/core.json").then(r=>r.json()).then(setCore).catch(err=>setDataError(err.message)); }, []);
-  useEffect(() => { fetch("/data/recent.json").then(r=>r.json()).then(d=>setRecentRaw(d.recentRaw||[])).catch(()=>{}); }, []);
   useEffect(() => { fetch("/data/areas.json").then(r=>r.json()).then(setAreaData).catch(()=>{}); }, []);
   useEffect(() => { fetch("/data/projects.json").then(r=>r.json()).then(setProjectsData).catch(()=>{}); }, []);
+  // Static fallback — only used if DDA live fetch fails
+  useEffect(() => { fetch("/data/recent.json").then(r=>r.json()).then(d=>setStaticRecentRaw(d.recentRaw||[])).catch(()=>{}); }, []);
 
   const options = useMemo(() => {
     if (!core) return { types:[], usages:[], regs:[], propTypes:[] };
@@ -159,8 +176,7 @@ export default function App() {
   if (loading) return null;
   if (user && profile && profile.onboarded === false) return <OnboardingPage user={user} onComplete={() => window.location.reload()} />;
 
-
-  if (!user) { if (showLogin) return <LoginPage />; return <LandingPage 
+  if (!user) { if (showLogin) return <LoginPage />; return <LandingPage
         onLogin={() => setShowLogin(true)}
         onInvestorLogin={() => { setShowLogin(true); sessionStorage.setItem('intended_role','investor'); }}
         onBrokerLogin={() => { setShowLogin(true); sessionStorage.setItem('intended_role','broker'); }}
@@ -184,64 +200,63 @@ export default function App() {
     );
   }
 
-
   return (
     <div style={{display:"flex",minHeight:"100vh",background:"var(--bg)",flexDirection:isMobile?"column":"row"}} dir={lang==="ar"?"rtl":"ltr"}>
       <Sidebar page={page} setPage={setPage} />
-      {/* Broker top bar — matches investor portal nav style */}
       <div style={{display:'flex',flexDirection:'column',flex:1,overflow:'hidden',minWidth:0}}>
-        <BrokerTopBar user={user} profile={profile} signOut={signOut} toggleLang={toggleLang} lang={lang} />
+        <BrokerTopBar user={user} profile={profile} signOut={signOut} toggleLang={toggleLang} lang={lang} isLive={isLive} lastUpdate={lastUpdate} liveError={liveError} onRefresh={refresh} />
         <div style={{flex:1,display:"flex",flexDirection:"column",overflow:"hidden",minWidth:0}}>
-
-        {page === "home" && <HomePage core={core} areaData={areaData} recentRaw={recentRaw} onNavigate={setPage} isPro={isPro} isLite={isLite} />}
-        {page === "overview" && <FilterBar filters={filters} setFilters={setFilters} options={options} dateRange={dateRange} showRegFilter={true} />}
-        {page === "overview" && (
-          <div style={{flex:1,overflowY:"auto",padding:"1.25rem",background:"var(--bg)"}}>
-            <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:"1rem",marginBottom:"1.25rem"}}>
-              <KpiCard label="Transactions" value={fmtNum(kpis.count)} sub={"Data as of "+(core?.meta?.lastUpdated||"")}/>
-              <KpiCard label="Total value" value={fmtAED(kpis.total,true)} />
-              <KpiCard label="Avg deal" value={fmtAED(kpis.avg,true)} />
-              <KpiCard label="Off-plan" value={kpis.offPlanPct+"%"} />
+          {page === "home" && <HomePage core={core} areaData={areaData} recentRaw={recentRaw} onNavigate={setPage} isPro={isPro} isLite={isLite} />}
+          {page === "overview" && <FilterBar filters={filters} setFilters={setFilters} options={options} dateRange={dateRange} showRegFilter={true} />}
+          {page === "overview" && (
+            <div style={{flex:1,overflowY:"auto",padding:"1.25rem",background:"var(--bg)"}}>
+              <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:"1rem",marginBottom:"1.25rem"}}>
+                <KpiCard label="Transactions" value={fmtNum(kpis.count)} sub={"Data as of "+(core?.meta?.lastUpdated||"")}/>
+                <KpiCard label="Total value" value={fmtAED(kpis.total,true)} />
+                <KpiCard label="Avg deal" value={fmtAED(kpis.avg,true)} />
+                <KpiCard label="Off-plan" value={kpis.offPlanPct+"%"} />
+              </div>
+              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"1rem",marginBottom:"1rem"}}>
+                <ChartCard title="Monthly trend"><MonthlyTrend data={monthlyData} /></ChartCard>
+                <ChartCard title="Price trend"><PriceTrends rows={expandedRecent} priceTrend={core?.priceTrend||[]} /></ChartCard>
+              </div>
+              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"1rem",marginBottom:"1rem"}}>
+                <ChartCard title="Bedroom breakdown"><BedroomBreakdown rows={expandedRecent} /></ChartCard>
+                <ChartCard title="Off-plan vs Ready"><OffPlanReady rows={expandedRecent} areas={areas} /></ChartCard>
+              </div>
+              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"1rem",marginBottom:"1rem"}}>
+                <ChartCard title="Top areas"><AreaRanking rows={expandedRecent} areas={areas} /></ChartCard>
+                <ChartCard title="Metro premium"><MetroPremium rows={expandedRecent} /></ChartCard>
+              </div>
+              <ChartCard title="Project leaderboard">
+                <ProjectLeaderboard rows={expandedRecent} allAreas={areas} onProjectClick={(name)=>{ const d=projectsData?.[name]; if(d) setSelectedProject({name,data:d}); }} />
+              </ChartCard>
             </div>
-            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"1rem",marginBottom:"1rem"}}>
-              <ChartCard title="Monthly trend"><MonthlyTrend data={monthlyData} /></ChartCard>
-              <ChartCard title="Price trend"><PriceTrends rows={expandedRecent} priceTrend={core?.priceTrend||[]} /></ChartCard>
-            </div>
-            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"1rem",marginBottom:"1rem"}}>
-              <ChartCard title="Bedroom breakdown"><BedroomBreakdown rows={expandedRecent} /></ChartCard>
-              <ChartCard title="Off-plan vs Ready"><OffPlanReady rows={expandedRecent} areas={areas} /></ChartCard>
-            </div>
-            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"1rem",marginBottom:"1rem"}}>
-              <ChartCard title="Top areas"><AreaRanking rows={expandedRecent} areas={areas} /></ChartCard>
-              <ChartCard title="Metro premium"><MetroPremium rows={expandedRecent} /></ChartCard>
-            </div>
-            <ChartCard title="Project leaderboard">
-              <ProjectLeaderboard rows={expandedRecent} allAreas={areas} onProjectClick={(name)=>{ const d=projectsData?.[name]; if(d) setSelectedProject({name,data:d}); }} />
-            </ChartCard>
-          </div>
-        )}
-        {page === "areas" && <AreaAnalysis areaData={areaData} recentRaw={recentRaw} />}
-        {page === "map" && <div style={{height:"100vh"}}><MapView onAreaClick={(area)=>{ setSelectedArea(area); setPage("areas"); }} onProjectClick={(name,data)=>setSelectedProject({name,data})} projectsData={projectsData} /></div>}
-        {page === "roi" && <ROICalculator areaData={areaData} />}
-        {page === "offplan" && <PropertiesPage recentRaw={recentRaw} projectsData={projectsData} onProjectClick={(name,data)=>setSelectedProject({name,data})} />}
-        {page === "recent" && <RecentTransactions recentRaw={recentRaw} />}
-        {page === "rental" && <RentalIndex areaData={areaData} />}
-        {page === "pdf" && <PDFExport areaData={areaData} core={core} />}
-        {page === "upgrade" && <UpgradePage />}
-        {page === "comps" && <ComparableSales recentRaw={recentRaw} />}
-        {page === "lookup2" && <PropertyLookup recentRaw={recentRaw} />}
-        {page === "projects" && <ProjectsPage projectsData={projectsData} onProjectClick={(name,data)=>setSelectedProject({name,data})} />}
-        {page === "watchlist" && <Watchlist areaData={areaData} projectsData={projectsData} setPage={setPage} />}
-        {page === "portfolio" && <PortfolioTracker areaData={areaData} />}
-        {page === "developers" && <DeveloperTracker projectsData={projectsData} areaData={areaData} />}
-        {page === "markets" && <MarketIntelligence areaData={areaData} core={core} />}
-        {page === "lookup" && <DealAnalyzer areaData={areaData} />}
-        {page === "ai" && <AIConcierge />}
-        {page === "alerts" && <PriceAlerts areaData={areaData} />}
-        {page === "reports" && <ShareableReport areaData={areaData} core={core} />}
-        {page === "pulse" && <MarketPulse onAreaClick={()=>setPage("areas")} onProjectClick={(name,data)=>setSelectedProject({name,data})} projectsData={projectsData} core={core} areaData={areaData} />}
-        {selectedProject && <ProjectDetail project={selectedProject.name} data={selectedProject.data} onClose={()=>setSelectedProject(null)} />}
-      </div>
+          )}
+          {page === "areas" && <AreaAnalysis areaData={areaData} recentRaw={recentRaw} />}
+          {page === "map" && <div style={{height:"100vh"}}><MapView onAreaClick={(area)=>{ setSelectedArea(area); setPage("areas"); }} onProjectClick={(name,data)=>setSelectedProject({name,data})} projectsData={projectsData} /></div>}
+          {page === "roi" && <ROICalculator areaData={areaData} />}
+          {page === "offplan" && <PropertiesPage recentRaw={recentRaw} projectsData={projectsData} onProjectClick={(name,data)=>setSelectedProject({name,data})} />}
+          {page === "recent" && <RecentTransactions recentRaw={recentRaw} />}
+          {page === "rental" && <RentalIndex areaData={areaData} />}
+          {page === "pdf" && <PDFExport areaData={areaData} core={core} />}
+          {page === "upgrade" && <UpgradePage />}
+          {page === "comps" && <ComparableSales recentRaw={recentRaw} />}
+          {page === "lookup2" && <PropertyLookup recentRaw={recentRaw} />}
+          {page === "projects" && <ProjectsPage projectsData={projectsData} onProjectClick={(name,data)=>setSelectedProject({name,data})} />}
+          {page === "watchlist" && <Watchlist areaData={areaData} projectsData={projectsData} setPage={setPage} />}
+          {page === "portfolio" && <PortfolioTracker areaData={areaData} />}
+          {page === "developers" && <DeveloperTracker projectsData={projectsData} areaData={areaData} />}
+          {page === "markets" && <MarketIntelligence areaData={areaData} core={core} />}
+          {page === "lookup" && <DealAnalyzer areaData={areaData} />}
+          {page === "ai" && <AIConcierge />}
+          {page === "alerts" && <PriceAlerts areaData={areaData} />}
+          {page === "reports" && <ShareableReport areaData={areaData} core={core} />}
+          {page === "pulse" && <MarketPulse onAreaClick={()=>setPage("areas")} onProjectClick={(name,data)=>setSelectedProject({name,data})} projectsData={projectsData} core={core} areaData={areaData} />}
+          {page === "livefeed" && <LiveFeed recentRaw={recentRaw} />}
+          {page === "search" && <TransactionSearch recentRaw={recentRaw} />}
+          {selectedProject && <ProjectDetail project={selectedProject.name} data={selectedProject.data} onClose={()=>setSelectedProject(null)} />}
+        </div>
       </div>
     </div>
   );
