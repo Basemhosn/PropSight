@@ -116,10 +116,13 @@ function DLDCalculator({ areaData }) {
 // ── Mortgage Calculator ────────────────────────────────────────────────────
 function MortgageCalculator() {
   const lang = localStorage.getItem('lang') || 'en';
-  const [price, setPrice]       = useState(2000000);
-  const [down, setDown]         = useState(20);
-  const [rate, setRate]         = useState(4.5);
-  const [years, setYears]       = useState(25);
+  const [price, setPrice]         = useState(2000000);
+  const [down, setDown]           = useState(20);
+  const [rate, setRate]           = useState(4.5);
+  const [years, setYears]         = useState(25);
+  const [showROI, setShowROI]     = useState(false);
+  const [rentalYield, setRentalYield] = useState(6);
+  const [appreciation, setAppreciation] = useState(7);
 
   const calc = useMemo(() => {
     const loan = price * (1 - down/100);
@@ -130,8 +133,26 @@ function MortgageCalculator() {
       : loan / n;
     const total = monthly * n;
     const interest = total - loan;
-    return { loan, monthly, total, interest, downAmt: price * down/100 };
-  }, [price, down, rate, years]);
+    const downAmt = price * down/100;
+
+    // ROI calculations
+    const annualRent      = price * rentalYield / 100;
+    const annualMortgage  = monthly * 12;
+    const annualCashflow  = annualRent - annualMortgage;
+    const futureValue     = price * Math.pow(1 + appreciation/100, years);
+    const capitalGain     = futureValue - price;
+    const totalRent       = annualRent * years;
+    const totalMortgagePd = total;
+    const netReturn       = capitalGain + totalRent - totalMortgagePd;
+    const roi             = downAmt > 0 ? (netReturn / downAmt * 100) : 0;
+    const grossYield      = rentalYield;
+    const netYield        = ((annualRent - annualMortgage) / price * 100);
+    const breakEven       = annualCashflow > 0 ? (downAmt / annualCashflow).toFixed(1) : '—';
+
+    return { loan, monthly, total, interest, downAmt,
+      annualRent, annualCashflow, futureValue, capitalGain,
+      netReturn, roi, grossYield, netYield, breakEven };
+  }, [price, down, rate, years, rentalYield, appreciation]);
 
   const Slider = ({ label, value, min, max, step, onChange, fmt }) => (
     <div style={{ marginBottom:16 }}>
@@ -148,13 +169,29 @@ function MortgageCalculator() {
   return (
     <div style={{ background:'var(--surface)', border:'1px solid rgba(255,255,255,0.06)',
       borderRadius:16, padding:24 }}>
-      <div style={{ display:'flex', alignItems:'center', gap:10, marginBottom:20 }}>
-        <div style={{ width:36, height:36, borderRadius:10,
-          background:'linear-gradient(135deg,rgba(56,189,248,0.2),rgba(29,78,216,0.1))',
-          display:'flex', alignItems:'center', justifyContent:'center', fontSize:18 }}>🏦</div>
-        <div>
-          <div style={{ fontSize:15, fontWeight:700, color:'var(--text-primary)' }}>Mortgage Calculator</div>
-          <div style={{ fontSize:12, color:'var(--text-muted)' }}>Monthly payments & total cost</div>
+      <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:20 }}>
+        <div style={{ display:'flex', alignItems:'center', gap:10 }}>
+          <div style={{ width:36, height:36, borderRadius:10,
+            background:'linear-gradient(135deg,rgba(56,189,248,0.2),rgba(29,78,216,0.1))',
+            display:'flex', alignItems:'center', justifyContent:'center', fontSize:18 }}>🏦</div>
+          <div>
+            <div style={{ fontSize:15, fontWeight:700, color:'var(--text-primary)' }}>Mortgage Calculator</div>
+            <div style={{ fontSize:12, color:'var(--text-muted)' }}>Monthly payments & total cost</div>
+          </div>
+        </div>
+        {/* ROI Toggle */}
+        <div onClick={()=>setShowROI(v=>!v)} style={{ display:'flex', alignItems:'center',
+          gap:8, cursor:'pointer', background:showROI?'rgba(34,197,94,0.08)':'var(--bg-alt)',
+          border:`1px solid ${showROI?'rgba(34,197,94,0.3)':'rgba(255,255,255,0.06)'}`,
+          borderRadius:10, padding:'7px 14px' }}>
+          <div style={{ width:16, height:16, borderRadius:4,
+            background:showROI?'#22C55E':'rgba(255,255,255,0.1)',
+            border:`2px solid ${showROI?'#22C55E':'rgba(255,255,255,0.2)'}`,
+            display:'flex', alignItems:'center', justifyContent:'center' }}>
+            {showROI && <span style={{ fontSize:10, color:'#fff', fontWeight:700 }}>✓</span>}
+          </div>
+          <span style={{ fontSize:12, fontWeight:600,
+            color:showROI?'#22C55E':'var(--text-muted)' }}>ROI Calculator</span>
         </div>
       </div>
 
@@ -170,12 +207,28 @@ function MortgageCalculator() {
         value={years} min={5} max={25} step={1}
         onChange={setYears} fmt={v=>`${v} yrs`}/>
 
-      <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:10, marginTop:4 }}>
+      {/* ROI inputs - only shown when toggled */}
+      {showROI && (
+        <div style={{ background:'rgba(34,197,94,0.04)', border:'1px solid rgba(34,197,94,0.15)',
+          borderRadius:12, padding:'16px', marginBottom:16 }}>
+          <div style={{ fontSize:12, fontWeight:600, color:'#22C55E', marginBottom:12,
+            textTransform:'uppercase', letterSpacing:'0.05em' }}>ROI Assumptions</div>
+          <Slider label={`Rental Yield — ${rentalYield}%`}
+            value={rentalYield} min={2} max={12} step={0.5}
+            onChange={setRentalYield} fmt={v=>`${v}%`}/>
+          <Slider label={`Annual Appreciation — ${appreciation}%`}
+            value={appreciation} min={0} max={20} step={0.5}
+            onChange={setAppreciation} fmt={v=>`${v}%`}/>
+        </div>
+      )}
+
+      {/* Mortgage metrics */}
+      <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:10, marginBottom:showROI?16:0 }}>
         {[
           ['Monthly Payment', fmtAED(Math.round(calc.monthly)), '#38BDF8'],
-          ['Loan Amount', fmtAED(Math.round(calc.loan)), 'var(--text-primary)'],
-          ['Total Interest', fmtAED(Math.round(calc.interest)), '#F87171'],
-          ['Total Repayment', fmtAED(Math.round(calc.total)), '#F59E0B'],
+          ['Loan Amount',     fmtAED(Math.round(calc.loan)),    'var(--text-primary)'],
+          ['Total Interest',  fmtAED(Math.round(calc.interest)),'#F87171'],
+          ['Total Repayment', fmtAED(Math.round(calc.total)),   '#F59E0B'],
         ].map(([label, value, color]) => (
           <div key={label} style={{ background:'var(--bg-alt)', borderRadius:10, padding:'12px 14px' }}>
             <div style={{ fontSize:10, color:'var(--text-muted)', marginBottom:4,
@@ -184,8 +237,49 @@ function MortgageCalculator() {
           </div>
         ))}
       </div>
+
+      {/* ROI results */}
+      {showROI && (
+        <>
+          <div style={{ fontSize:12, fontWeight:600, color:'var(--text-muted)',
+            textTransform:'uppercase', letterSpacing:'0.05em', marginBottom:10 }}>
+            Investment Returns over {years} years
+          </div>
+          <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:10, marginBottom:12 }}>
+            {[
+              ['Annual Rent',    fmtAED(Math.round(calc.annualRent)),    '#22C55E'],
+              ['Annual Cashflow',fmtAED(Math.round(calc.annualCashflow)), calc.annualCashflow>=0?'#22C55E':'#F87171'],
+              ['Gross Yield',    calc.grossYield.toFixed(1)+'%',          '#38BDF8'],
+              ['Net Yield',      calc.netYield.toFixed(1)+'%',            calc.netYield>=0?'#22C55E':'#F87171'],
+              ['Capital Gain',   fmtAED(Math.round(calc.capitalGain)),   '#A78BFA'],
+              ['Break-even',     calc.breakEven+' yrs',                   '#F59E0B'],
+            ].map(([label,value,color])=>(
+              <div key={label} style={{ background:'var(--bg-alt)', borderRadius:10, padding:'12px 14px' }}>
+                <div style={{ fontSize:10, color:'var(--text-muted)', marginBottom:4,
+                  textTransform:'uppercase', letterSpacing:'0.05em' }}>{label}</div>
+                <div style={{ fontSize:15, fontWeight:700, color }}>{value}</div>
+              </div>
+            ))}
+          </div>
+          <div style={{ background:calc.roi>=0?'rgba(34,197,94,0.08)':'rgba(248,113,113,0.08)',
+            border:`1px solid ${calc.roi>=0?'rgba(34,197,94,0.25)':'rgba(248,113,113,0.25)'}`,
+            borderRadius:12, padding:'14px 20px', textAlign:'center' }}>
+            <div style={{ fontSize:11, color:'var(--text-muted)', marginBottom:4 }}>
+              Total ROI on Equity (after {years} years)
+            </div>
+            <div style={{ fontSize:32, fontWeight:800,
+              color:calc.roi>=0?'#22C55E':'#F87171' }}>
+              {calc.roi>=0?'+':''}{calc.roi.toFixed(1)}%
+            </div>
+            <div style={{ fontSize:12, color:'var(--text-muted)', marginTop:4 }}>
+              Net return: {fmtAED(Math.round(calc.netReturn))}
+            </div>
+          </div>
+        </>
+      )}
+
       <div style={{ marginTop:12, fontSize:10, color:'var(--text-muted)', lineHeight:1.6 }}>
-        * Based on reducing balance. UAE banks typically require 20% down for expats, 15% for UAE nationals. Rates vary by bank and applicant profile.
+        * Based on reducing balance mortgage. UAE banks typically require 20% down for expats, 15% for UAE nationals. ROI figures are estimates only.
       </div>
     </div>
   );

@@ -380,7 +380,7 @@ Respond ONLY with valid JSON (no markdown):
         </div>
 
         <div style={{display:'flex',gap:2,background:'rgba(255,255,255,0.04)',borderRadius:10,padding:3}}>
-          {[['discover',t('Discover',lang)],['map',t('Map',lang)],['deal',t('Deal Check',lang)],['insights','Insights'],['feed',t('Recent Sales',lang)],['tools','Tools'],['profile','My Profile']].map(([id,lbl])=>(
+          {[['discover',t('Discover',lang)],['map',t('Map',lang)],['deal',t('Deal Check',lang)],['insights','Insights'],['tools','Tools'],['profile','My Profile'],['feed',t('Recent Sales',lang)]].map(([id,lbl])=>(
             <button key={id} onClick={()=>setActiveTab(id)} className="inv-tab-btn" style={{padding:'6px 14px',borderRadius:8,fontSize:13,fontWeight:activeTab===id?600:400,background:activeTab===id?'var(--surface)':'transparent',color:activeTab===id?'var(--text-primary)':'var(--text-muted)',boxShadow:activeTab===id?'0 1px 4px rgba(0,0,0,0.3)':'none'}}>
               {lbl}
             </button>
