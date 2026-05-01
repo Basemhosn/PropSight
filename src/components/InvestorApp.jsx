@@ -319,11 +319,10 @@ export default function InvestorApp({ areaData, recentRaw, core, onSwitchToBroke
     return scores;
   }, [areaData, core]);
 
-  // Sync dealAreaKey to selectedArea for the analyzer
+  // Deal area is independent from selectedArea
   const dealSelectedArea = useMemo(() => {
-    if (dealAreaKey) return areas.find(x => x.key === dealAreaKey) || selectedArea;
-    return selectedArea;
-  }, [dealAreaKey, selectedArea, areas]);
+    return areas.find(x => x.key === dealAreaKey) || null;
+  }, [dealAreaKey, areas]);
 
   const analyzeDeal = async () => {
     if (!dealSelectedArea || !dealPrice) return;
@@ -661,7 +660,7 @@ Respond ONLY with valid JSON (no markdown):
             <div style={{background:'var(--surface)',border:'1px solid rgba(255,255,255,0.06)',borderRadius:18,padding:24,marginBottom:16}}>
               <div style={{marginBottom:14}}>
                 <label style={{fontSize:11,color:'var(--text-muted)',marginBottom:6,display:'block',fontWeight:600,textTransform:'uppercase',letterSpacing:'0.05em'}}>{t('Area label',lang)}</label>
-                <select value={dealAreaKey||selectedArea?.key||''} onChange={e=>{setDealAreaKey(e.target.value);const a=areas.find(x=>x.key===e.target.value);setSelectedArea(a||null);setDealResult(null);}} style={{...inp,cursor:'pointer',appearance:'none'}}>
+                <select value={dealAreaKey||selectedArea?.key||''} onChange={e=>{setDealAreaKey(e.target.value);setDealResult(null);}} style={{...inp,cursor:'pointer',appearance:'none'}}>
                   <option value="">{t('Select an area',lang)}</option>
                   {areas.map(a=><option key={a.key} value={a.key}>{a.name}</option>)}
                 </select>
