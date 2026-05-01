@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { t } from '../i18n';
 import { supabase } from '../context/AuthContext';
 
 const INVESTOR_TYPES = [
@@ -17,6 +18,7 @@ const BUDGETS = [
 const AREAS = ['Dubai Marina','Downtown Dubai','Dubai Hills Estate','Palm Jumeirah','JVC','Business Bay','MBR City','Creek Harbour','JLT','Damac Hills'];
 
 export default function OnboardingPage({ user, onComplete }) {
+  const lang = localStorage.getItem('lang') || 'en';
   const [step, setStep] = useState(1);
   const [investorType, setInvestorType] = useState('');
   const [budget, setBudget] = useState('');
@@ -47,8 +49,8 @@ export default function OnboardingPage({ user, onComplete }) {
 
           {step===1 && <>
             <div style={{textAlign:'center',marginBottom:28}}>
-              <div style={{fontSize:22,fontWeight:700,color:'var(--text-primary)',marginBottom:8}}>What best describes you?</div>
-              <div style={{fontSize:14,color:'var(--text-muted)'}}>We'll personalize PropSight for your needs</div>
+              <div style={{fontSize:22,fontWeight:700,color:'var(--text-primary)',marginBottom:8}}>{t('What describes you',lang)}</div>
+              <div style={{fontSize:14,color:'var(--text-muted)'}}>{t('Personalize for needs',lang)}</div>
             </div>
             <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12,marginBottom:28}}>
               {INVESTOR_TYPES.map(t=>(
@@ -59,13 +61,13 @@ export default function OnboardingPage({ user, onComplete }) {
                 </button>
               ))}
             </div>
-            <button onClick={()=>setStep(2)} disabled={!investorType} style={{width:'100%',padding:'13px',borderRadius:12,border:'none',cursor:'pointer',background:'linear-gradient(135deg,#1D4ED8,#38BDF8)',color:'#fff',fontSize:14,fontWeight:700,fontFamily:'system-ui',opacity:!investorType?0.4:1}}>Continue →</button>
+            <button onClick={()=>setStep(2)} disabled={!investorType} style={{width:'100%',padding:'13px',borderRadius:12,border:'none',cursor:'pointer',background:'linear-gradient(135deg,#1D4ED8,#38BDF8)',color:'#fff',fontSize:14,fontWeight:700,fontFamily:'system-ui',opacity:!investorType?0.4:1}}>{t('Continue',lang)}</button>
           </>}
 
           {step===2 && <>
             <div style={{textAlign:'center',marginBottom:28}}>
-              <div style={{fontSize:22,fontWeight:700,color:'var(--text-primary)',marginBottom:8}}>What's your budget range?</div>
-              <div style={{fontSize:14,color:'var(--text-muted)'}}>We'll show you the most relevant transactions</div>
+              <div style={{fontSize:22,fontWeight:700,color:'var(--text-primary)',marginBottom:8}}>{t('Budget range',lang)}</div>
+              <div style={{fontSize:14,color:'var(--text-muted)'}}>{t('Most relevant transactions',lang)}</div>
             </div>
             <div style={{display:'flex',flexDirection:'column',gap:10,marginBottom:28}}>
               {BUDGETS.map(b=>(
@@ -76,15 +78,15 @@ export default function OnboardingPage({ user, onComplete }) {
               ))}
             </div>
             <div style={{display:'flex',gap:10}}>
-              <button onClick={()=>setStep(1)} style={{flex:1,padding:'13px',borderRadius:12,border:'1px solid rgba(59,130,246,0.15)',background:'transparent',color:'var(--text-muted)',fontSize:13,fontWeight:600,cursor:'pointer',fontFamily:'system-ui'}}>← Back</button>
+              <button onClick={()=>setStep(1)} style={{flex:1,padding:'13px',borderRadius:12,border:'1px solid rgba(59,130,246,0.15)',background:'transparent',color:'var(--text-muted)',fontSize:13,fontWeight:600,cursor:'pointer',fontFamily:'system-ui'}}>{t('Back',lang)}</button>
               <button onClick={()=>setStep(3)} disabled={!budget} style={{flex:2,padding:'13px',borderRadius:12,border:'none',cursor:'pointer',background:'linear-gradient(135deg,#1D4ED8,#38BDF8)',color:'#fff',fontSize:14,fontWeight:700,fontFamily:'system-ui',opacity:!budget?0.4:1}}>Continue →</button>
             </div>
           </>}
 
           {step===3 && <>
             <div style={{textAlign:'center',marginBottom:28}}>
-              <div style={{fontSize:22,fontWeight:700,color:'var(--text-primary)',marginBottom:8}}>Preferred areas?</div>
-              <div style={{fontSize:14,color:'var(--text-muted)'}}>Select all that interest you (or skip)</div>
+              <div style={{fontSize:22,fontWeight:700,color:'var(--text-primary)',marginBottom:8}}>{t('Preferred areas',lang)}</div>
+              <div style={{fontSize:14,color:'var(--text-muted)'}}>{t('Select interests',lang)}</div>
             </div>
             <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10,marginBottom:28}}>
               {AREAS.map(area=>(
@@ -96,9 +98,9 @@ export default function OnboardingPage({ user, onComplete }) {
             </div>
             <div style={{display:'flex',gap:10}}>
               <button onClick={()=>setStep(2)} style={{flex:1,padding:'13px',borderRadius:12,border:'1px solid rgba(59,130,246,0.15)',background:'transparent',color:'var(--text-muted)',fontSize:13,fontWeight:600,cursor:'pointer',fontFamily:'system-ui'}}>← Back</button>
-              <button onClick={finish} disabled={saving} style={{flex:2,padding:'13px',borderRadius:12,border:'none',cursor:'pointer',background:'linear-gradient(135deg,#16A34A,#22C55E)',color:'#fff',fontSize:14,fontWeight:700,fontFamily:'system-ui'}}>{saving?'Setting up...':'🚀 Launch PropSight'}</button>
+              <button onClick={finish} disabled={saving} style={{flex:2,padding:'13px',borderRadius:12,border:'none',cursor:'pointer',background:'linear-gradient(135deg,#16A34A,#22C55E)',color:'#fff',fontSize:14,fontWeight:700,fontFamily:'system-ui'}}>{saving?t('Setting up',lang):t('Launch PropSight',lang)}</button>
             </div>
-            <button onClick={finish} style={{width:'100%',marginTop:10,background:'none',border:'none',cursor:'pointer',color:'var(--text-secondary)',fontSize:12,fontFamily:'system-ui'}}>Skip for now</button>
+            <button onClick={finish} style={{width:'100%',marginTop:10,background:'none',border:'none',cursor:'pointer',color:'var(--text-secondary)',fontSize:12,fontFamily:'system-ui'}}>{t('Skip',lang)}</button>
           </>}
         </div>
       </div>

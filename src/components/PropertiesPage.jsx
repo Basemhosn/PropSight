@@ -1,3 +1,4 @@
+import { t } from '../i18n';
 import { useState, useMemo } from 'react';
 import { fmtAED, fmtNum } from '../utils/format';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
@@ -6,6 +7,7 @@ const AN = {'Al Barsha South Fourth':'JVC','Burj Khalifa':'Downtown Dubai','Mars
 const na = a => AN[a] || a;
 
 function OffPlanReadyTab({ recentRaw }) {
+  const lang = localStorage.getItem('lang') || 'en';
   const [regFilter, setRegFilter] = useState('all');
   const [areaFilter, setAreaFilter] = useState('');
   const [visibleCount, setVisibleCount] = useState(50);
@@ -45,19 +47,19 @@ function OffPlanReadyTab({ recentRaw }) {
       )}
       <div style={{display:'flex',gap:8,marginBottom:14,alignItems:'center',flexWrap:'wrap'}}>
         <div style={{display:'flex',gap:6}}>
-          {[['all','All'],['offplan','Off-Plan'],['ready','Ready']].map(([f,l])=>(
+          {[['all',t('All projects',lang)],['offplan',t('Off-Plan',lang)],['ready',t('Ready',lang)]].map(([f,l])=>(
             <button key={f} onClick={()=>setRegFilter(f)} style={{padding:'6px 14px',borderRadius:20,border:'none',cursor:'pointer',fontSize:11,fontWeight:regFilter===f?600:400,fontFamily:'system-ui',background:regFilter===f?'linear-gradient(135deg,#1D4ED8,#38BDF8)':'rgba(59,130,246,0.06)',color:regFilter===f?'#fff':'var(--text-muted)'}}>{l}</button>
           ))}
         </div>
         <select value={areaFilter} onChange={e=>setAreaFilter(e.target.value)} style={{...inp,cursor:'pointer'}}>
-          <option value="">All areas</option>
+          <option value="">{t('All areas',lang)}</option>
           {areas.map(a=><option key={a} value={a}>{na(a)}</option>)}
         </select>
         {(areaFilter||regFilter!=='all') && <button onClick={()=>{setRegFilter('all');setAreaFilter('');}} style={{background:'none',border:'none',cursor:'pointer',color:'#F87171',fontSize:12,fontFamily:'system-ui'}}>× Clear</button>}
       </div>
       <div style={{background:'var(--surface)',border:'1px solid rgba(255,255,255,0.06)',borderRadius:14,overflow:'hidden'}}>
         <div style={{display:'grid',gridTemplateColumns:'90px 70px 70px 1fr 1fr 90px 75px',padding:'10px 20px',borderBottom:'1px solid rgba(59,130,246,0.06)',background:'rgba(59,130,246,0.02)'}}>
-          {['Date','Reg','BR','Area','Project','Value','AED/sqft'].map((h,i)=><div key={i} style={{fontSize:10,color:'var(--text-secondary)',fontWeight:600,textTransform:'uppercase',letterSpacing:'0.05em'}}>{h}</div>)}
+          {[t('Date',lang),t('Reg',lang),t('BR',lang),t('Area',lang),t('Project',lang),t('Value',lang),t('AED/sqft',lang)].map((h,i)=><div key={i} style={{fontSize:10,color:'var(--text-secondary)',fontWeight:600,textTransform:'uppercase',letterSpacing:'0.05em'}}>{h}</div>)}
         </div>
         {rows.slice(0,visibleCount).map((r,i)=>{
           const ppsqft=r.s&&r.v?Math.round(r.v/r.s/10.764):0;
@@ -66,7 +68,7 @@ function OffPlanReadyTab({ recentRaw }) {
               onMouseEnter={e=>e.currentTarget.style.background='rgba(59,130,246,0.05)'}
               onMouseLeave={e=>e.currentTarget.style.background='transparent'}>
               <div style={{fontSize:11,color:'var(--text-muted)'}}>{r.d||'—'}</div>
-              <div><span style={{fontSize:9,fontWeight:600,padding:'2px 5px',borderRadius:20,background:r.r==='Off'?'rgba(59,130,246,0.1)':'rgba(34,197,94,0.1)',color:r.r==='Off'?'#38BDF8':'#22C55E'}}>{r.r==='Off'?'Off-Plan':'Ready'}</span></div>
+              <div><span style={{fontSize:9,fontWeight:600,padding:'2px 5px',borderRadius:20,background:r.r==='Off'?'rgba(59,130,246,0.1)':'rgba(34,197,94,0.1)',color:r.r==='Off'?'#38BDF8':'#22C55E'}}>{r.r==='Off'?t('Off-Plan',lang):t('Ready',lang)}</span></div>
               <div style={{fontSize:11,color:'var(--text-secondary)'}}>{r.b||'—'}</div>
               <div style={{fontSize:11,color:'var(--text-secondary)',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{na(r.a||'')}</div>
               <div style={{fontSize:11,color:'var(--text-muted)',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{r.j||'—'}</div>
@@ -86,6 +88,7 @@ function OffPlanReadyTab({ recentRaw }) {
 }
 
 function PropertyLookupTab({ recentRaw }) {
+  const lang = localStorage.getItem('lang') || 'en';
   const [query, setQuery] = useState('');
   const [selected, setSelected] = useState(null);
   const [showSugg, setShowSugg] = useState(false);
@@ -257,7 +260,7 @@ export default function PropertiesPage({ recentRaw, projectsData, onProjectClick
             <div style={{fontSize:13,color:'var(--text-secondary)'}}>Off-plan & ready transactions · Search any building or project</div>
           </div>
           <div style={{display:'flex',gap:6,background:'var(--surface)',border:'1px solid rgba(59,130,246,0.15)',borderRadius:10,padding:4}}>
-            {[['properties','Off-Plan & Ready'],['lookup','Property Lookup']].map(([t,l])=>(
+            {[['properties',t('Off-Plan & Ready',lang)],['lookup',t('Property Lookup',lang)]].map(([t,l])=>(
               <button key={t} onClick={()=>setTab(t)} style={{padding:'8px 18px',borderRadius:8,border:'none',cursor:'pointer',fontSize:13,fontFamily:'system-ui',fontWeight:tab===t?600:400,background:tab===t?'linear-gradient(135deg,#1D4ED8,#38BDF8)':'transparent',color:tab===t?'#fff':'var(--text-muted)'}}>{l}</button>
             ))}
           </div>

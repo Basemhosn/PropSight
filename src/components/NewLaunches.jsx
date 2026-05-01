@@ -1,3 +1,4 @@
+import { t } from '../i18n';
 import { useState, useMemo } from 'react';
 import { fmtAED, fmtNum } from '../utils/format';
 
@@ -27,9 +28,9 @@ function inferDeveloper(name) {
 function inferStatus(regSplit) {
   const op = regSplit?.['Off-Plan']||0;
   const rd = regSplit?.['Ready']||0;
-  if (op > rd) return 'Under Construction';
+  if (op > rd) return t('Under Construction',lang);
   if (rd > 0 && op === 0) return 'Ready';
-  return 'Initial Stage';
+  return t('Initial Stage',lang);
 }
 
 const STATUS_COLOR = {
@@ -41,6 +42,7 @@ const STATUS_COLOR = {
 const COMPLETIONS = ['Q4 2026','Q1 2027','Q2 2027','Q3 2027','Q4 2027','Q1 2028','Q2 2028'];
 
 export default function NewLaunches({ projectsData }) {
+  const lang = localStorage.getItem('lang') || 'en';
   const [search, setSearch] = useState('');
   const [selectedDev, setSelectedDev] = useState('All');
   const [selectedStatus, setSelectedStatus] = useState('All');
@@ -55,7 +57,7 @@ export default function NewLaunches({ projectsData }) {
         area: d.area, areaDisplay: niceArea(d.area),
         developer: inferDeveloper(key),
         status,
-        completion: status==='Ready' ? 'Ready to Move' : COMPLETIONS[i % COMPLETIONS.length],
+        completion: status==='Ready' ? t('Ready to Move',lang) : COMPLETIONS[i % COMPLETIONS.length],
         minPrice: d.kpis?.minPrice||0,
         maxPrice: d.kpis?.maxPrice||0,
         avgPrice: d.kpis?.avg||0,

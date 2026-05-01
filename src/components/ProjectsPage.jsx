@@ -1,9 +1,11 @@
+import { t } from '../i18n';
 import { useState, useMemo } from "react";
 import { fmtAED, fmtNum } from "../utils/format";
 import ProjectCard from "./ProjectCard";
 
 
 export default function ProjectsPage({ projectsData, onProjectClick }) {
+  const lang = localStorage.getItem('lang') || 'en';
   const [search, setSearch] = useState("");
   const [sortBy, setSortBy] = useState("total");
   const [filterReg, setFilterReg] = useState("");
@@ -54,7 +56,7 @@ export default function ProjectsPage({ projectsData, onProjectClick }) {
       {/* Header + filters */}
       <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:"1.5rem", flexWrap:"wrap" }}>
         <div style={{ flex:1, minWidth:200 }}>
-          <div style={{ fontSize:20, fontWeight:700, color:"var(--text-primary)" }}>Projects</div>
+          <div style={{ fontSize:20, fontWeight:700, color:"var(--text-primary)" }}>{t('Projects title',lang)}</div>
           <div style={{ fontSize:12, color:"#9AA0AE", marginTop:2 }}>
             {projects.length} of 100 top projects · 2020–2026
           </div>

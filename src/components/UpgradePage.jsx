@@ -1,3 +1,4 @@
+import { t } from '../i18n';
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 
@@ -50,6 +51,7 @@ const BTN_BG = {
 };
 
 export default function UpgradePage() {
+  const lang = localStorage.getItem('lang') || 'en';
   const { user, profile, isPro, isLite } = useAuth();
   const [loading, setLoading] = useState('');
   const [error, setError] = useState('');
@@ -94,25 +96,25 @@ export default function UpgradePage() {
         <div style={{maxWidth:920,margin:'0 auto 24px',background:'var(--surface)',border:'1px solid var(--border)',borderRadius:14,padding:'16px 20px',display:'flex',alignItems:'center',justifyContent:'space-between',gap:16}}>
           <div>
             <div style={{fontSize:14,fontWeight:600,color:'var(--text-primary)',marginBottom:2}}>
-              {isPro ? 'You are on the Pro plan' : 'You are on the Lite plan'}
+              {isPro ? t('You are on Pro',lang) : t('You are on Lite',lang)}
             </div>
-            <div style={{fontSize:12,color:'var(--text-muted)'}}>Manage your subscription, update payment method, or cancel anytime.</div>
+            <div style={{fontSize:12,color:'var(--text-muted)'}}>{t('Manage subscription',lang)}</div>
           </div>
           <button onClick={handleManageBilling} disabled={loading==='portal'} style={{padding:'10px 20px',borderRadius:10,border:'1px solid var(--border)',background:'var(--bg)',color:'var(--text-primary)',fontSize:13,fontWeight:600,cursor:'pointer',fontFamily:'inherit',whiteSpace:'nowrap',flexShrink:0}}>
-            {loading==='portal' ? 'Opening...' : 'Manage Billing →'}
+            {loading==='portal' ? t('Opening',lang) : t('Manage Billing',lang)}
           </button>
         </div>
       )}
       <div style={{textAlign:'center',marginBottom:48}}>
         <div style={{display:'inline-flex',alignItems:'center',gap:8,background:'rgba(245,158,11,0.1)',border:'1px solid rgba(245,158,11,0.2)',borderRadius:20,padding:'6px 16px',marginBottom:16}}>
           <span style={{fontSize:14}}></span>
-          <span style={{fontSize:12,fontWeight:600,color:'#F59E0B'}}>CHOOSE YOUR PLAN</span>
+          <span style={{fontSize:12,fontWeight:600,color:'#F59E0B'}}>{t('Choose plan',lang)}</span>
         </div>
         <h1 style={{margin:0,fontSize:34,fontWeight:800,color:'var(--text-primary)',marginBottom:12}}>
           Simple, transparent{' '}
           <span style={{background:'linear-gradient(135deg,#38BDF8,#1D4ED8)',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent'}}>pricing</span>
         </h1>
-        <p style={{fontSize:15,color:'var(--text-muted)',margin:0}}>All prices in AED · Cancel anytime · No hidden fees</p>
+        <p style={{fontSize:15,color:'var(--text-muted)',margin:0}}>{t('Pricing subtitle',lang)}</p>
       </div>
 
       <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:20,maxWidth:920,margin:'0 auto 40px'}}>

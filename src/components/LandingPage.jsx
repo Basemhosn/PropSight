@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
+import { t } from '../i18n';
 
 const FEATURES_BENTO = {
   hero: { icon:null, title:'AI Deal Analyzer', desc:'Paste any property. Get an instant Buy/Hold/Avoid verdict with fair value, rental yield, and comparable sales — in seconds.', accent:'#38BDF8' },
@@ -65,6 +66,7 @@ function Reveal({ children, delay = 0 }) {
 }
 
 export default function LandingPage({ onLogin, onInvestorLogin, onBrokerLogin }) {
+  const lang = localStorage.getItem('lang') || 'en';
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -84,7 +86,7 @@ export default function LandingPage({ onLogin, onInvestorLogin, onBrokerLogin })
 
   const PlanCard = ({ plan, audienceLabel }) => (
     <div className="lp-card" style={{ background: plan.popular ? 'linear-gradient(160deg,#0D1929,#0A1E3D)' : '#0D1929', border: `2px solid ${plan.border}`, borderRadius: 18, padding: 24, position: 'relative', boxShadow: plan.popular ? `0 0 40px ${plan.color}1A` : 'none', display: 'flex', flexDirection: 'column' }}>
-      {plan.popular && <div style={{ position: 'absolute', top: -11, left: '50%', transform: 'translateX(-50%)', background: plan.btnBg, color: '#fff', fontSize: 10, fontWeight: 700, padding: '3px 14px', borderRadius: 20, whiteSpace: 'nowrap', letterSpacing: '0.05em' }}>MOST POPULAR</div>}
+      {plan.popular && <div style={{ position: 'absolute', top: -11, left: '50%', transform: 'translateX(-50%)', background: plan.btnBg, color: '#fff', fontSize: 10, fontWeight: 700, padding: '3px 14px', borderRadius: 20, whiteSpace: 'nowrap', letterSpacing: '0.05em' }}>{t('Most Popular',lang)}</div>}
       <div style={{ fontFamily: "'Syne',sans-serif", fontSize: 12, fontWeight: 700, color: plan.color, textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 8 }}>{plan.name}</div>
       <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 18 }}>
         <span style={{ fontFamily: "'Syne',sans-serif", fontSize: 28, fontWeight: 800, color: '#F1F5F9', letterSpacing: '-0.02em' }}>{plan.price}</span>
@@ -221,11 +223,11 @@ export default function LandingPage({ onLogin, onInvestorLogin, onBrokerLogin })
           <div className="lp-nav-links" style={{ display: 'flex', alignItems: 'center', gap: 28 }}>
             <span className="lp-nav-link" onClick={() => scrollTo('features')}>Features</span>
             <span className="lp-nav-link" onClick={() => scrollTo('pricing')}>Pricing</span>
-            <span className="lp-nav-link" onClick={() => scrollTo('agents')}>For Brokers</span>
+            <span className="lp-nav-link" onClick={() => scrollTo('agents')}>{t('For Brokers',lang)}</span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             <button onClick={onLogin} className="lp-nav-link lp-nav-links" style={{ background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'inherit', padding: '8px 14px' }}>Sign in</button>
-            <button onClick={onLogin} className="lp-btn" style={{ padding: '9px 20px', borderRadius: 10, border: 'none', cursor: 'pointer', background: 'linear-gradient(135deg,#1D4ED8,#38BDF8)', color: '#fff', fontSize: 14, fontWeight: 600, fontFamily: 'inherit' }}>Get started →</button>
+            <button onClick={onLogin} className="lp-btn" style={{ padding: '9px 20px', borderRadius: 10, border: 'none', cursor: 'pointer', background: 'linear-gradient(135deg,#1D4ED8,#38BDF8)', color: '#fff', fontSize: 14, fontWeight: 600, fontFamily: 'inherit' }}>{t('Get started',lang)}</button>
           </div>
         </div>
       </nav>

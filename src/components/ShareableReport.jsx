@@ -1,3 +1,4 @@
+import { t } from '../i18n';
 import { useState } from 'react';
 import { fmtAED, fmtNum } from '../utils/format';
 import { AreaChart, Area, ResponsiveContainer, Tooltip, CartesianGrid, XAxis, YAxis } from 'recharts';
@@ -6,6 +7,7 @@ const AREA_NICE = {'Al Barsha South Fourth':'JVC','Burj Khalifa':'Downtown Dubai
 const niceArea = a => AREA_NICE[a] || a;
 
 export default function ShareableReport({ areaData, core }) {
+  const lang = localStorage.getItem('lang') || 'en';
   const [selectedArea, setSelectedArea] = useState('');
   const [copied, setCopied] = useState(false);
   const [reportUrl, setReportUrl] = useState(null);
@@ -31,22 +33,22 @@ export default function ShareableReport({ areaData, core }) {
   return (
     <div style={{flex:1,overflowY:'auto',background:'var(--bg)',fontFamily:'system-ui',padding:'24px 28px'}}>
       <div style={{marginBottom:24}}>
-        <h1 style={{margin:0,fontSize:22,fontWeight:700,color:'var(--text-primary)',marginBottom:4}}>Shareable Reports</h1>
-        <div style={{fontSize:13,color:'var(--text-secondary)'}}>Generate a public link for any area analysis — no login required to view</div>
+        <h1 style={{margin:0,fontSize:22,fontWeight:700,color:'var(--text-primary)',marginBottom:4}}>{t('Shareable Reports',lang)}</h1>
+        <div style={{fontSize:13,color:'var(--text-secondary)'}}>{t('Shareable subtitle',lang)}</div>
       </div>
       <div style={{display:'grid',gridTemplateColumns:'320px 1fr',gap:20,alignItems:'start'}}>
         <div style={{background:'var(--surface)',border:'1px solid rgba(255,255,255,0.06)',borderRadius:14,padding:24}}>
-          <div style={{fontSize:14,fontWeight:600,color:'var(--text-primary)',marginBottom:16}}>Generate Report</div>
+          <div style={{fontSize:14,fontWeight:600,color:'var(--text-primary)',marginBottom:16}}>{t('Generate Report',lang)}</div>
           <div style={{marginBottom:16}}>
-            <div style={{fontSize:12,color:'var(--text-muted)',marginBottom:6,fontWeight:500}}>Select Area</div>
+            <div style={{fontSize:12,color:'var(--text-muted)',marginBottom:6,fontWeight:500}}>{t('Select Area',lang)}</div>
             <select value={selectedArea} onChange={e=>setSelectedArea(e.target.value)} style={{width:'100%',padding:'10px 12px',borderRadius:8,background:'var(--bg-alt)',border:'1px solid rgba(59,130,246,0.15)',color:'var(--text-primary)',fontSize:13,outline:'none',fontFamily:'system-ui',cursor:'pointer'}}>
-              <option value="">Choose an area...</option>
+              <option value="">{t('Choose an area',lang)}</option>
               {areas.map(a=><option key={a.key} value={a.key}>{a.label}</option>)}
             </select>
           </div>
           {selectedArea && (
             <div style={{background:'rgba(59,130,246,0.06)',border:'1px solid rgba(59,130,246,0.1)',borderRadius:10,padding:14,marginBottom:16}}>
-              <div style={{fontSize:11,color:'var(--text-muted)',fontWeight:600,marginBottom:8,textTransform:'uppercase',letterSpacing:'0.05em'}}>Report includes</div>
+              <div style={{fontSize:11,color:'var(--text-muted)',fontWeight:600,marginBottom:8,textTransform:'uppercase',letterSpacing:'0.05em'}}>{t('Report includes',lang)}</div>
               {['Price trend chart','Transaction volume','Off-plan vs Ready split','YoY growth','Avg deal & price/sqft','Market positioning'].map((f,i)=>(
                 <div key={i} style={{display:'flex',alignItems:'center',gap:8,padding:'4px 0',fontSize:12,color:'var(--text-secondary)'}}><span style={{color:'#22C55E'}}>✓</span>{f}</div>
               ))}
@@ -57,7 +59,7 @@ export default function ShareableReport({ areaData, core }) {
           </button>
           {reportUrl && (
             <div style={{marginTop:14}}>
-              <div style={{fontSize:11,color:'var(--text-muted)',marginBottom:6}}>Shareable link:</div>
+              <div style={{fontSize:11,color:'var(--text-muted)',marginBottom:6}}>{t('Shareable link',lang)}</div>
               <div style={{background:'var(--bg-alt)',border:'1px solid rgba(59,130,246,0.2)',borderRadius:8,padding:'10px 12px',display:'flex',gap:8,alignItems:'center'}}>
                 <div style={{flex:1,fontSize:11,color:'var(--text-muted)',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{reportUrl.slice(0,45)}...</div>
                 <button onClick={copyLink} style={{flexShrink:0,padding:'4px 10px',borderRadius:6,border:'none',cursor:'pointer',background:copied?'rgba(34,197,94,0.2)':'rgba(59,130,246,0.15)',color:copied?'#22C55E':'#38BDF8',fontSize:11,fontWeight:600,fontFamily:'system-ui'}}>{copied?'✓ Copied':'Copy'}</button>

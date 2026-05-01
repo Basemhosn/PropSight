@@ -3,6 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import PropSightLogo from './PropSightLogo';
 
 export default function LoginPage() {
+  const lang = localStorage.getItem('lang') || 'en';
   const { signInWithEmail, signUpWithEmail, signInWithGoogle } = useAuth();
   const [mode,     setMode]     = useState('signin');
   const [email,    setEmail]    = useState('');
@@ -82,7 +83,7 @@ export default function LoginPage() {
         {/* Tabs */}
         <div style={{ display:'flex', background:'rgba(59,130,246,0.06)',
           borderRadius:10, padding:3, marginBottom:'1.5rem', gap:2 }}>
-          {[['signin','Sign in'],['signup','Create account']].map(([m,label]) => (
+          {[["signin",t('Sign in tab',lang)],["signup",t('Create account',lang)]].map(([m,label]) => (
             <button key={m} onClick={() => { setMode(m); setError(''); setSuccess(''); }} style={{
               flex:1, padding:'8px', borderRadius:8, border:'none', cursor:'pointer',
               fontSize:13, fontWeight:600, transition:'all 0.15s',
@@ -116,23 +117,23 @@ export default function LoginPage() {
 
         <div style={{ display:'flex', alignItems:'center', gap:10, marginBottom:'1.25rem' }}>
           <div style={{ flex:1, height:1, background:'rgba(59,130,246,0.1)' }}/>
-          <span style={{ fontSize:11, color:'var(--text-faint)' }}>or</span>
+          <span style={{ fontSize:11, color:'var(--text-faint)' }}>{t('or divider',lang)}</span>
           <div style={{ flex:1, height:1, background:'rgba(59,130,246,0.1)' }}/>
         </div>
 
         {mode === 'signup' && (
           <input value={name} onChange={e=>setName(e.target.value)}
-            placeholder="Full name" style={inp}
+            placeholder={t("Full name",lang)} style={inp}
             onFocus={e=>e.target.style.borderColor='rgba(59,130,246,0.5)'}
             onBlur={e=>e.target.style.borderColor='rgba(59,130,246,0.15)'}/>
         )}
         <input type="email" value={email} onChange={e=>setEmail(e.target.value)}
-          placeholder="Email address" onKeyDown={e=>e.key==='Enter'&&handleSubmit()}
+          placeholder={t("Email address",lang)} onKeyDown={e=>e.key==='Enter'&&handleSubmit()}
           style={inp}
           onFocus={e=>e.target.style.borderColor='rgba(59,130,246,0.5)'}
           onBlur={e=>e.target.style.borderColor='rgba(59,130,246,0.15)'}/>
         <input type="password" value={password} onChange={e=>setPassword(e.target.value)}
-          placeholder="Password" onKeyDown={e=>e.key==='Enter'&&handleSubmit()}
+          placeholder={t("Password placeholder",lang)} onKeyDown={e=>e.key==='Enter'&&handleSubmit()}
           style={{ ...inp, marginBottom:'1.25rem' }}
           onFocus={e=>e.target.style.borderColor='rgba(59,130,246,0.5)'}
           onBlur={e=>e.target.style.borderColor='rgba(59,130,246,0.15)'}/>

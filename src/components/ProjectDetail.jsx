@@ -1,3 +1,4 @@
+import { t } from '../i18n';
 import { useState } from "react";
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
          CartesianGrid, PieChart, Pie, Cell } from "recharts";
@@ -31,6 +32,7 @@ function KPI({ label, value, sub, color="var(--text-primary)" }) {
 }
 
 export default function ProjectDetail({ project, data, onClose }) {
+  const lang = localStorage.getItem('lang') || 'en';
   const [imgSrc, setImgSrc] = useState(data.image);
   const [imgError, setImgError] = useState(false);
   const [attemptCount, setAttemptCount] = useState(0);
@@ -157,7 +159,7 @@ export default function ProjectDetail({ project, data, onClose }) {
                   <div style={{ fontSize:11,color:"#7A8499" }}>{fmtNum(kpis.offPlan)} deals</div>
                 </div>
                 <div style={{ background:"rgba(34,197,94,0.1)",borderRadius:8,padding:"0.75rem",textAlign:"center" }}>
-                  <div style={{ fontSize:11,color:"#7A8499" }}>Ready</div>
+                  <div style={{ fontSize:11,color:"#7A8499" }}>{t('Ready share',lang)}</div>
                   <div style={{ fontSize:22,fontWeight:700,color:"#22C55E" }}>{readyPct}%</div>
                   <div style={{ fontSize:11,color:"#7A8499" }}>{fmtNum(kpis.ready)} deals</div>
                 </div>
