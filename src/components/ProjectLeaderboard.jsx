@@ -1,3 +1,4 @@
+import { t } from '../i18n';
 import { useState } from "react";
 import { fmtAED, fmtNum } from "../utils/format";
 import { Trophy, Search } from "lucide-react";
@@ -14,6 +15,7 @@ const TYPE_COLOR = {
 };
 
 export default function ProjectLeaderboard({ rows, allAreas }) {
+  const lang = localStorage.getItem('lang') || 'en';
   const [metric, setMetric] = useState("count");
   // Change 2: Separate view (project/area) and metric (count/value/avg) controls
   const [view, setView] = useState("project");
@@ -118,7 +120,7 @@ export default function ProjectLeaderboard({ rows, allAreas }) {
                 color: areaSearch ? "#38BDF8" : "#9AA0AE",
                 background: "transparent", width: "100%", cursor: "pointer",
               }}>
-              <option value="">Filter by area (all areas)</option>
+              <option value="">{t('All areas',lang)}</option>
               {uniqueAreas.map(a => (
                 <option key={a} value={a}>{a}</option>
               ))}

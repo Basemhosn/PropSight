@@ -221,6 +221,16 @@ export const translations = {
     'Strong Buy': 'Strong Buy',
     'Buy': 'Buy',
     'Hold': 'Hold',
+    // ComparableSales & misc charts
+    'Select area': 'Select area...',
+    'Last 3 months': 'Last 3 months',
+    'Last 6 months': 'Last 6 months',
+    'Last 12 months': 'Last 12 months',
+    'Last 2 years': 'Last 2 years',
+    'Top': 'Top',
+    // AreaAnalysis
+    'Area Overview': 'Area Overview',
+    'Comparable Sales tab': 'Comparable Sales',
     // NewLaunches
     'New Launches': 'New Launches',
     'New Launches subtitle': 'Latest off-plan and new projects in Dubai',
@@ -635,6 +645,16 @@ export const translations = {
     'Strong Buy': 'شراء قوي',
     'Buy': 'شراء',
     'Hold': 'انتظار',
+    // ComparableSales & misc charts
+    'Select area': 'اختر منطقة...',
+    'Last 3 months': 'آخر 3 أشهر',
+    'Last 6 months': 'آخر 6 أشهر',
+    'Last 12 months': 'آخر 12 شهراً',
+    'Last 2 years': 'آخر سنتين',
+    'Top': 'أبرز',
+    // AreaAnalysis
+    'Area Overview': 'نظرة عامة على المنطقة',
+    'Comparable Sales tab': 'مقارنة المبيعات',
     // NewLaunches
     'New Launches': 'المشاريع الجديدة',
     'New Launches subtitle': 'أحدث مشاريع على الخارطة والجديدة في دبي',

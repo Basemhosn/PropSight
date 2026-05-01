@@ -1,3 +1,4 @@
+import { t } from '../i18n';
 import { useState } from "react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from "recharts";
 import { fmtAED, fmtNum } from "../utils/format";
@@ -30,6 +31,7 @@ const CustomTooltip = ({ active, payload, label, tab }) => {
 };
 
 export default function AreaBarChart({ areas, onAreaClick }) {
+  const lang = localStorage.getItem('lang') || 'en';
   const [tab, setTab] = useState("count");
   const [areaFilter, setAreaFilter] = useState("");
 
@@ -71,7 +73,7 @@ export default function AreaBarChart({ areas, onAreaClick }) {
             color: areaFilter ? "#38BDF8" : "#9AA0AE",
             background: "transparent", cursor: "pointer", width: "100%",
           }}>
-            <option value="">All areas</option>
+            <option value="">{t('All areas',lang)}</option>
             {allAreaNames.map(a => <option key={a} value={a}>{a}</option>)}
           </select>
         </div>

@@ -1,3 +1,4 @@
+import { t } from '../i18n';
 import { useState, useMemo } from 'react';
 import { fmtAED, fmtNum } from '../utils/format';
 
@@ -5,6 +6,7 @@ const AREA_NICE = {'Al Barsha South Fourth':'JVC','Burj Khalifa':'Downtown Dubai
 const niceArea = a => AREA_NICE[a] || a;
 
 export default function ComparableSales({ recentRaw }) {
+  const lang = localStorage.getItem('lang') || 'en';
   const [area, setArea] = useState('');
   const [bedrooms, setBedrooms] = useState('');
   const [minSize, setMinSize] = useState('');
@@ -64,7 +66,7 @@ export default function ComparableSales({ recentRaw }) {
           <div>
             <label style={{fontSize:11,color:'var(--text-muted)',marginBottom:5,display:'block',fontWeight:600,textTransform:'uppercase',letterSpacing:'0.05em'}}>Area *</label>
             <select value={area} onChange={e=>setArea(e.target.value)} style={{...inp,cursor:'pointer'}}>
-              <option value="">Select area...</option>
+              <option value="">{t('Select area',lang)}</option>
               {areas.map(a=><option key={a} value={a}>{niceArea(a)}</option>)}
             </select>
           </div>
@@ -87,17 +89,17 @@ export default function ComparableSales({ recentRaw }) {
             <label style={{fontSize:11,color:'var(--text-muted)',marginBottom:5,display:'block',fontWeight:600,textTransform:'uppercase',letterSpacing:'0.05em'}}>Registration</label>
             <select value={regType} onChange={e=>setRegType(e.target.value)} style={{...inp,cursor:'pointer'}}>
               <option value="">Any</option>
-              <option value="Off-Plan">Off-Plan</option>
-              <option value="Ready">Ready</option>
+              <option value="Off-Plan">{t('Off-Plan',lang)}</option>
+              <option value="Ready">{t('Ready',lang)}</option>
             </select>
           </div>
           <div>
             <label style={{fontSize:11,color:'var(--text-muted)',marginBottom:5,display:'block',fontWeight:600,textTransform:'uppercase',letterSpacing:'0.05em'}}>Period</label>
             <select value={months} onChange={e=>setMonths(e.target.value)} style={{...inp,cursor:'pointer'}}>
-              <option value="3">Last 3 months</option>
-              <option value="6">Last 6 months</option>
-              <option value="12">Last 12 months</option>
-              <option value="24">Last 2 years</option>
+              <option value="3">{t('Last 3 months',lang)}</option>
+              <option value="6">{t('Last 6 months',lang)}</option>
+              <option value="12">{t('Last 12 months',lang)}</option>
+              <option value="24">{t('Last 2 years',lang)}</option>
             </select>
           </div>
         </div>

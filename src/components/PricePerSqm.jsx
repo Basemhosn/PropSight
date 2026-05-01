@@ -1,3 +1,4 @@
+import { t } from '../i18n';
 import { useState } from "react";
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip,
@@ -25,6 +26,7 @@ const CustomTooltip = ({ active, payload, label }) => {
 };
 
 export default function PricePerSqm({ areas }) {
+  const lang = localStorage.getItem('lang') || 'en';
   const [showTop, setShowTop] = useState(15);
 
   // Only include areas with valid size data
@@ -73,7 +75,7 @@ export default function PricePerSqm({ areas }) {
               border: showTop === n ? "1px solid #185FA5" : "1px solid #E8ECF2",
               background: showTop === n ? "rgba(59,130,246,0.1)" : "var(--surface)",
               color: showTop === n ? "#38BDF8" : "#7A8499",
-            }}>Top {n}</button>
+            }}>{t('Top',lang)} {n}</button>
           ))}
         </div>
       </div>
