@@ -100,6 +100,101 @@ export const translations = {
     '3 Bedrooms': '3 Bedrooms',
     '4+ Bedrooms': '4+ Bedrooms',
 
+
+    // Investor - missing
+    'Area': 'Area',
+    'Avg size': 'Avg size',
+    'Confidence': 'Confidence',
+    'Market avg/sqft': 'Market avg/sqft',
+    'Max Price': 'Max Price (AED)',
+    'Min Price': 'Min Price (AED)',
+    'Show all': 'Show all',
+    'Size sqft': 'Size (sqft)',
+    'What to do': 'What to do',
+    'Your price/sqft': 'Your price/sqft',
+    'transactions': 'transactions',
+
+    // Sidebar
+    'Lite': 'Lite',
+    'Pro': 'Pro',
+    'Free plan': 'Free plan',
+
+    // HomePage
+    'AVG DEAL': 'AVG DEAL',
+    'AVG/SQFT': 'AVG/SQFT',
+    'Dubai avg': 'Dubai avg · AED/sqft',
+    'PropSight Pro': 'PropSight Pro',
+    'Search': 'Search',
+    'Top areas': 'Top areas by activity',
+    'Upgrade today': 'Upgrade today',
+
+    // UpgradePage
+    'Pricing subtitle': 'All prices in AED · Cancel anytime · No hidden fees',
+    'Choose plan': 'CHOOSE YOUR PLAN',
+    'Free': 'Free',
+    'Free Forever': 'Free Forever',
+    'Current Plan': '✓ Current Plan',
+    'Most Popular': 'MOST POPULAR',
+    'In addition to Free': 'In addition to Free',
+    'In addition to Free & Lite': 'In addition to Free & Lite',
+    'What you get for free': 'What you get for free',
+    'Manage Billing': 'Manage Billing →',
+    'Secure payment': 'Secure payment via Stripe · Access on any device · Cancel anytime · Data from Dubai Land Department',
+
+    // OnboardingPage
+    'Select interests': 'Select all that interest you (or skip)',
+    'Skip': 'Skip for now',
+
+    // LoginPage
+    'Welcome back': 'Welcome back',
+    'Sign in': 'Sign in',
+    'Continue with Google': 'Continue with Google',
+    'Or continue with email': 'Or continue with email',
+    'Email': 'Email address',
+    'Password': 'Password',
+    'Sign in button': 'Sign in',
+    'No account': "Don't have an account?",
+    'Sign up': 'Sign up',
+
+    // Broker - MarketIntelligence
+    'DLD LIVE': 'DLD LIVE',
+    'Intelligence': 'Intelligence',
+    'PRICE / SQFT': 'PRICE / SQFT',
+    'Price Trend AED': 'Price Trend (AED/sqft)',
+    'Top Performing Areas': 'Top Performing Areas',
+
+    // Broker - DealAnalyzer
+    'AI Deal Verdict': 'AI Deal Verdict',
+    'AI powered analysis': 'AI-powered analysis using live DLD market data',
+    'CONS': 'CONS',
+    'Deal Analyzer': 'Deal Analyzer',
+    'Developer': 'Developer',
+    'FAIR VALUE': 'FAIR VALUE',
+    'PROS': 'PROS',
+    'Project Building': 'Project / Building',
+    'Property Details': 'Property Details',
+    'Property URL': 'Property URL or Description',
+    'Type': 'Type',
+    'YOUR PRICE/SQFT': 'YOUR PRICE/SQFT',
+
+    // Broker - RecentTransactions
+    'All areas': 'All areas',
+    'All reg': 'All reg',
+    'All types': 'All types',
+    'Gift': 'Gift',
+    'LIVE DLD DATA': 'LIVE DLD DATA',
+    'Latest transactions': 'Latest transactions from Dubai Land Department',
+    'Mortgage': 'Mortgage',
+    'No results': 'No results',
+    'Sale': 'Sale',
+    'Recent Transactions broker': 'Recent Transactions',
+
+    // Broker - MarketPulse
+    'AI OUTLOOK': 'AI OUTLOOK',
+    'Market Pulse': 'Market Pulse',
+    'Monthly Volume': 'Monthly Volume',
+    'Price sqft Trend': 'Price / sqft Trend',
+    'Pulse': 'Pulse',
     // Strong Buy labels
     'Strong Buy': 'Strong Buy',
     'Buy': 'Buy',
@@ -207,6 +302,101 @@ export const translations = {
     '3 Bedrooms': '3 غرف نوم',
     '4+ Bedrooms': '4+ غرف نوم',
 
+
+    // Investor - missing
+    'Area': 'المنطقة',
+    'Avg size': 'متوسط المساحة',
+    'Confidence': 'مستوى الثقة',
+    'Market avg/sqft': 'متوسط السوق / قدم²',
+    'Max Price': 'الحد الأقصى للسعر (درهم)',
+    'Min Price': 'الحد الأدنى للسعر (درهم)',
+    'Show all': 'عرض الكل',
+    'Size sqft': 'المساحة (قدم مربع)',
+    'What to do': 'ماذا تفعل',
+    'Your price/sqft': 'سعرك / قدم²',
+    'transactions': 'معاملة',
+
+    // Sidebar
+    'Lite': 'Lite',
+    'Pro': 'Pro',
+    'Free plan': 'الخطة المجانية',
+
+    // HomePage
+    'AVG DEAL': 'متوسط الصفقة',
+    'AVG/SQFT': 'متوسط / قدم²',
+    'Dubai avg': 'متوسط دبي · درهم/قدم²',
+    'PropSight Pro': 'PropSight Pro',
+    'Search': 'بحث',
+    'Top areas': 'أبرز المناطق نشاطاً',
+    'Upgrade today': 'ترقية الآن',
+
+    // UpgradePage
+    'Pricing subtitle': 'جميع الأسعار بالدرهم · إلغاء في أي وقت · لا رسوم خفية',
+    'Choose plan': 'اختر خطتك',
+    'Free': 'مجاني',
+    'Free Forever': 'مجاني للأبد',
+    'Current Plan': '✓ خطتك الحالية',
+    'Most Popular': 'الأكثر شعبية',
+    'In addition to Free': 'بالإضافة إلى المجاني',
+    'In addition to Free & Lite': 'بالإضافة إلى المجاني و Lite',
+    'What you get for free': 'ما تحصل عليه مجاناً',
+    'Manage Billing': 'إدارة الاشتراك ←',
+    'Secure payment': 'دفع آمن عبر Stripe · الوصول من أي جهاز · إلغاء في أي وقت · بيانات دائرة الأراضي والأملاك',
+
+    // OnboardingPage
+    'Select interests': 'اختر ما يهمك (أو تخطى)',
+    'Skip': 'تخطى الآن',
+
+    // LoginPage
+    'Welcome back': 'مرحباً بعودتك',
+    'Sign in': 'تسجيل الدخول',
+    'Continue with Google': 'المتابعة مع Google',
+    'Or continue with email': 'أو تابع بالبريد الإلكتروني',
+    'Email': 'البريد الإلكتروني',
+    'Password': 'كلمة المرور',
+    'Sign in button': 'دخول',
+    'No account': 'ليس لديك حساب؟',
+    'Sign up': 'إنشاء حساب',
+
+    // Broker - MarketIntelligence
+    'DLD LIVE': 'مباشر - دائرة الأراضي',
+    'Intelligence': 'ذكاء السوق',
+    'PRICE / SQFT': 'السعر / قدم²',
+    'Price Trend AED': 'اتجاه الأسعار (درهم/قدم²)',
+    'Top Performing Areas': 'أبرز المناطق أداءً',
+
+    // Broker - DealAnalyzer
+    'AI Deal Verdict': 'حكم الذكاء الاصطناعي على الصفقة',
+    'AI powered analysis': 'تحليل مدعوم بالذكاء الاصطناعي باستخدام بيانات دائرة الأراضي',
+    'CONS': 'السلبيات',
+    'Deal Analyzer': 'محلل الصفقات',
+    'Developer': 'المطور',
+    'FAIR VALUE': 'القيمة العادلة',
+    'PROS': 'الإيجابيات',
+    'Project Building': 'المشروع / المبنى',
+    'Property Details': 'تفاصيل العقار',
+    'Property URL': 'رابط العقار أو وصفه',
+    'Type': 'النوع',
+    'YOUR PRICE/SQFT': 'سعرك / قدم²',
+
+    // Broker - RecentTransactions
+    'All areas': 'جميع المناطق',
+    'All reg': 'جميع التسجيلات',
+    'All types': 'جميع الأنواع',
+    'Gift': 'هبة',
+    'LIVE DLD DATA': 'بيانات مباشرة - دائرة الأراضي',
+    'Latest transactions': 'أحدث المعاملات من دائرة الأراضي والأملاك دبي',
+    'Mortgage': 'رهن عقاري',
+    'No results': 'لا توجد نتائج',
+    'Sale': 'بيع',
+    'Recent Transactions broker': 'أحدث المعاملات',
+
+    // Broker - MarketPulse
+    'AI OUTLOOK': 'توقعات الذكاء الاصطناعي',
+    'Market Pulse': 'نبض السوق',
+    'Monthly Volume': 'الحجم الشهري',
+    'Price sqft Trend': 'اتجاه السعر / قدم²',
+    'Pulse': 'النبض',
     // Market score
     'Strong Buy': 'شراء قوي',
     'Buy': 'شراء',

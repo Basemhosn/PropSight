@@ -295,7 +295,7 @@ Respond ONLY with valid JSON (no markdown):
                             <div style={{width:36,height:36,borderRadius:10,background:'linear-gradient(135deg,rgba(29,78,216,0.2),rgba(56,189,248,0.1))',display:'flex',alignItems:'center',justifyContent:'center',fontSize:18,flexShrink:0}}>{a.emoji}</div>
                             <div style={{textAlign:'left'}}>
                               <div style={{fontSize:14,fontWeight:600,color:'var(--text-primary)'}}>{a.name}</div>
-                              <div style={{fontSize:11,color:'var(--text-secondary)'}}>{fmtNum(a.count)} transactions</div>
+                              <div style={{fontSize:11,color:'var(--text-secondary)'}}>{fmtNum(a.count)} {t('transactions',lang)}</div>
                             </div>
                           </div>
                           <div style={{textAlign:'right'}}>
@@ -384,18 +384,18 @@ Respond ONLY with valid JSON (no markdown):
               <div style={{fontSize:13,fontWeight:600,color:'var(--text-primary)',marginBottom:16}}>{t('Filter transactions',lang)}</div>
               <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12,marginBottom:12}}>
                 <div>
-                  <label style={{fontSize:11,color:'var(--text-muted)',fontWeight:600,display:'block',marginBottom:6,textTransform:'uppercase',letterSpacing:'0.05em'}}>Min Price (AED)</label>
+                  <label style={{fontSize:11,color:'var(--text-muted)',fontWeight:600,display:'block',marginBottom:6,textTransform:'uppercase',letterSpacing:'0.05em'}}>{t('Min Price',lang)}</label>
                   <input value={filters.minPrice} onChange={e=>setFilters(f=>({...f,minPrice:e.target.value}))} placeholder="500,000" style={{width:'100%',padding:'10px 12px',borderRadius:8,border:'1px solid var(--border)',background:'var(--bg)',color:'var(--text-primary)',fontSize:13,fontFamily:'inherit',outline:'none',boxSizing:'border-box'}}/>
                 </div>
                 <div>
-                  <label style={{fontSize:11,color:'var(--text-muted)',fontWeight:600,display:'block',marginBottom:6,textTransform:'uppercase',letterSpacing:'0.05em'}}>Max Price (AED)</label>
+                  <label style={{fontSize:11,color:'var(--text-muted)',fontWeight:600,display:'block',marginBottom:6,textTransform:'uppercase',letterSpacing:'0.05em'}}>{t('Max Price',lang)}</label>
                   <input value={filters.maxPrice} onChange={e=>setFilters(f=>({...f,maxPrice:e.target.value}))} placeholder="2,000,000" style={{width:'100%',padding:'10px 12px',borderRadius:8,border:'1px solid var(--border)',background:'var(--bg)',color:'var(--text-primary)',fontSize:13,fontFamily:'inherit',outline:'none',boxSizing:'border-box'}}/>
                 </div>
                 <div>
                   <label style={{fontSize:11,color:'var(--text-muted)',fontWeight:600,display:'block',marginBottom:6,textTransform:'uppercase',letterSpacing:'0.05em'}}>Bedrooms</label>
                   <select value={filters.bedrooms} onChange={e=>setFilters(f=>({...f,bedrooms:e.target.value}))} style={{width:'100%',padding:'10px 12px',borderRadius:8,border:'1px solid var(--border)',background:'var(--bg)',color:'var(--text-primary)',fontSize:13,fontFamily:'inherit',outline:'none',boxSizing:'border-box',appearance:'none'}}>
                     <option value="">Any</option>
-                    <option value="Studio">Studio</option>
+                    <option value="Studio">{t('Studio',lang)}</option>
                     <option value="1 B/R">1 B/R</option>
                     <option value="2 B/R">2 B/R</option>
                     <option value="3 B/R">3 B/R</option>
@@ -406,13 +406,13 @@ Respond ONLY with valid JSON (no markdown):
                   <label style={{fontSize:11,color:'var(--text-muted)',fontWeight:600,display:'block',marginBottom:6,textTransform:'uppercase',letterSpacing:'0.05em'}}>Registration</label>
                   <select value={filters.regType} onChange={e=>setFilters(f=>({...f,regType:e.target.value}))} style={{width:'100%',padding:'10px 12px',borderRadius:8,border:'1px solid var(--border)',background:'var(--bg)',color:'var(--text-primary)',fontSize:13,fontFamily:'inherit',outline:'none',boxSizing:'border-box',appearance:'none'}}>
                     <option value="">Any</option>
-                    <option value="Off-Plan">Off-Plan</option>
-                    <option value="Ready">Ready</option>
+                    <option value="Off-Plan">{t('Off-Plan',lang)}</option>
+                    <option value="Ready">{t('Ready',lang)}</option>
                   </select>
                 </div>
               </div>
               <div style={{marginBottom:12}}>
-                <label style={{fontSize:11,color:'var(--text-muted)',fontWeight:600,display:'block',marginBottom:6,textTransform:'uppercase',letterSpacing:'0.05em'}}>Area</label>
+                <label style={{fontSize:11,color:'var(--text-muted)',fontWeight:600,display:'block',marginBottom:6,textTransform:'uppercase',letterSpacing:'0.05em'}}>{t('Area',lang)}</label>
                 <input value={filters.area} onChange={e=>setFilters(f=>({...f,area:e.target.value}))} placeholder="e.g. Business Bay, Marina..." style={{width:'100%',padding:'10px 12px',borderRadius:8,border:'1px solid var(--border)',background:'var(--bg)',color:'var(--text-primary)',fontSize:13,fontFamily:'inherit',outline:'none',boxSizing:'border-box'}}/>
               </div>
               <div style={{display:'flex',gap:10}}>
@@ -477,7 +477,7 @@ Respond ONLY with valid JSON (no markdown):
               <div style={{fontSize:20,color:'var(--text-muted)'}}>→</div>
             </div>
           )}
-          {!filterResults && <div style={{fontSize:12,fontWeight:600,color:'var(--text-secondary)',marginBottom:12,textTransform:'uppercase',letterSpacing:'0.07em'}}>{search.length>1?`${suggestions.length} results`:'Popular areas'}</div>}
+          {!filterResults && <div style={{fontSize:12,fontWeight:600,color:'var(--text-secondary)',marginBottom:12,textTransform:'uppercase',letterSpacing:'0.07em'}}>{search.length>1?`${suggestions.length} ${t('results',lang)}`:t('Popular areas',lang)}</div>}
           {!filterResults && <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(190px,1fr))',gap:12}}>
             {displayAreas.map((a,i)=>(
               <div key={i} className="inv-card" onClick={()=>{setSelectedArea(a);window.scrollTo({top:0,behavior:'smooth'});}} style={{background:'var(--surface)',border:'1px solid rgba(255,255,255,0.06)',borderRadius:14,padding:'16px'}}>
@@ -520,7 +520,7 @@ Respond ONLY with valid JSON (no markdown):
                   <input value={dealPrice} onChange={e=>{setDealPrice(e.target.value);setDealResult(null);}} placeholder="2,500,000" style={inp}/>
                 </div>
                 <div>
-                  <label style={{fontSize:11,color:'var(--text-muted)',marginBottom:6,display:'block',fontWeight:600,textTransform:'uppercase',letterSpacing:'0.05em'}}>Size (sqft)</label>
+                  <label style={{fontSize:11,color:'var(--text-muted)',marginBottom:6,display:'block',fontWeight:600,textTransform:'uppercase',letterSpacing:'0.05em'}}>{t('Size sqft',lang)}</label>
                   <input value={dealSize} onChange={e=>{setDealSize(e.target.value);setDealResult(null);}} placeholder="1,200" style={inp}/>
                 </div>
               </div>
@@ -547,24 +547,24 @@ Respond ONLY with valid JSON (no markdown):
                       <div style={{fontSize:16,fontWeight:800,color:'var(--text-primary)'}}>{dealResult.fairValue||'AED '+fmtNum(Math.round(parseInt(dealPrice.replace(/,/g,''))*(dealResult.verdict==='GOOD DEAL'?1.08:dealResult.verdict==='OVERPRICED'?0.92:1.0)))}</div>
                     </div>
                     <div style={{textAlign:'right'}}>
-                      <div style={{fontSize:10,color:'var(--text-muted)',marginBottom:2}}>Confidence</div>
+                      <div style={{fontSize:10,color:'var(--text-muted)',marginBottom:2}}>{t('Confidence',lang)}</div>
                       <div style={{fontSize:13,fontWeight:700,color:vs.color}}>{dealResult.confidence||'High'}</div>
                     </div>
                   </div>
                   {dealResult.ppsqft>0 && (
                     <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10,marginBottom:14}}>
                       <div style={{background:'rgba(255,255,255,0.05)',borderRadius:10,padding:'12px',textAlign:'center'}}>
-                        <div style={{fontSize:10,color:'var(--text-muted)',marginBottom:3,textTransform:'uppercase'}}>Your price/sqft</div>
+                        <div style={{fontSize:10,color:'var(--text-muted)',marginBottom:3,textTransform:'uppercase'}}>{t('Your price/sqft',lang)}</div>
                         <div style={{fontSize:17,fontWeight:700,color:'var(--text-primary)'}}>AED {fmtNum(dealResult.ppsqft)}</div>
                       </div>
                       <div style={{background:'rgba(255,255,255,0.05)',borderRadius:10,padding:'12px',textAlign:'center'}}>
-                        <div style={{fontSize:10,color:'var(--text-muted)',marginBottom:3,textTransform:'uppercase'}}>Market avg/sqft</div>
+                        <div style={{fontSize:10,color:'var(--text-muted)',marginBottom:3,textTransform:'uppercase'}}>{t('Market avg/sqft',lang)}</div>
                         <div style={{fontSize:17,fontWeight:700,color:'#38BDF8'}}>AED {fmtNum(dealResult.marketPpsqft)}</div>
                       </div>
                     </div>
                   )}
                   <div style={{background:'rgba(255,255,255,0.06)',borderRadius:10,padding:'12px',textAlign:'center'}}>
-                    <div style={{fontSize:10,color:'var(--text-muted)',marginBottom:4,textTransform:'uppercase',letterSpacing:'0.05em'}}>What to do</div>
+                    <div style={{fontSize:10,color:'var(--text-muted)',marginBottom:4,textTransform:'uppercase',letterSpacing:'0.05em'}}>{t('What to do',lang)}</div>
                     <div style={{fontSize:13,color:'var(--text-primary)',fontWeight:500}}>{dealResult.action}</div>
                   </div>
                 </div>
@@ -717,7 +717,7 @@ Respond ONLY with valid JSON (no markdown):
                 <h1 style={{fontSize:22,fontWeight:700,color:'var(--text-primary)',margin:0,marginBottom:4}}>Recent Sales</h1>
                 <div style={{fontSize:13,color:'var(--text-secondary)'}}>{selectedArea?`Latest in ${selectedArea.name}`:'Latest Dubai transactions'}</div>
               </div>
-              {selectedArea && <button onClick={()=>setSelectedArea(null)} style={{background:'none',border:'1px solid rgba(255,255,255,0.08)',borderRadius:8,color:'var(--text-secondary)',cursor:'pointer',padding:'6px 12px',fontSize:12,fontFamily:'inherit'}}>Show all</button>}
+              {selectedArea && <button onClick={()=>setSelectedArea(null)} style={{background:'none',border:'1px solid rgba(255,255,255,0.08)',borderRadius:8,color:'var(--text-secondary)',cursor:'pointer',padding:'6px 12px',fontSize:12,fontFamily:'inherit'}}>{t('Show all',lang)}</button>}
             </div>
             <div style={{background:'var(--surface)',border:'1px solid rgba(255,255,255,0.06)',borderRadius:16,overflow:'hidden'}}>
               <div style={{display:'grid',gridTemplateColumns:'1fr 1fr 75px 90px 70px',padding:'10px 18px',borderBottom:'1px solid rgba(255,255,255,0.06)'}}>
@@ -880,7 +880,7 @@ Respond ONLY with valid JSON (no markdown):
                     );
                   })}
                   <div style={{marginTop:12,padding:'10px',background:'var(--bg)',borderRadius:10,textAlign:'center'}}>
-                    <div style={{fontSize:11,color:'var(--text-muted)',marginBottom:2}}>Avg size</div>
+                    <div style={{fontSize:11,color:'var(--text-muted)',marginBottom:2}}>{t('Avg size',lang)}</div>
                     <div style={{fontSize:15,fontWeight:700,color:'var(--text-primary)'}}>{fmtNum(areaData[selectedArea.key].kpis?.avgSize||0)} sqft</div>
                   </div>
                 </div>
