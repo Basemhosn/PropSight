@@ -104,8 +104,8 @@ function BrokerTopBar({ user, profile, signOut }) {
       <button onClick={toggleTheme} style={{background:'none',border:'1px solid var(--border)',borderRadius:8,padding:'5px 8px',fontSize:13,color:'var(--text-secondary)',cursor:'pointer'}}>
         {themeMode === 'dark' ? '☀️' : '🌙'}
       </button>
-      <button onClick={()=>{const {toggleLang}=require('./context/AuthContext').useAuth?.()??{};if(toggleLang)toggleLang();window.location.reload();}} style={{background:'none',border:'1px solid var(--border)',borderRadius:8,padding:'5px 8px',fontSize:12,color:'var(--text-secondary)',cursor:'pointer'}}>
-        {localStorage.getItem('lang')==='ar'?'🇬🇧 EN':'🇦🇪 AR'}
+      <button onClick={toggleLang} style={{background:'none',border:'1px solid var(--border)',borderRadius:8,padding:'5px 8px',fontSize:12,color:'var(--text-secondary)',cursor:'pointer'}}>
+        {lang==='ar'?'🇬🇧 EN':'🇦🇪 AR'}
       </button>
       <div style={{position:'relative'}}>
         <div onClick={() => setShowMenu(m => !m)} style={{width:30,height:30,borderRadius:'50%',background:'linear-gradient(135deg,#1D4ED8,#38BDF8)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:12,fontWeight:700,color:'#fff',cursor:'pointer'}}>
@@ -125,7 +125,7 @@ function BrokerTopBar({ user, profile, signOut }) {
 }
 
 export default function App() {
-  const { user, profile, loading, theme, lang, isPro, isLite, signOut, colors } = useAuth();
+  const { user, profile, loading, theme, lang, toggleLang, isPro, isLite, signOut, colors } = useAuth();
   const [core, setCore] = useState(null);
   const [areaData, setAreaData] = useState(null);
   const [recentRaw, setRecentRaw] = useState([]);

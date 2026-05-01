@@ -277,7 +277,7 @@ Respond ONLY with valid JSON (no markdown):
             <div ref={searchRef} style={{position:'relative',flex:1}}>
               <div style={{display:'flex',alignItems:'center',gap:12,background:'var(--surface)',border:'2px solid rgba(59,130,246,0.2)',borderRadius:14,padding:'13px 18px',boxShadow:'0 4px 20px rgba(0,0,0,0.3)'}}>
                 <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#38BDF8" strokeWidth="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-                <input value={search} onChange={e=>{setSearch(e.target.value);setSelectedArea(null);}} onFocus={()=>setSearchFocused(true)} placeholder="Dubai Marina, Business Bay, Emaar..." style={{background:'none',border:'none',outline:'none',color:'var(--text-primary)',fontSize:15,flex:1,fontFamily:'inherit'}}/>
+                <input value={search} onChange={e=>{setSearch(e.target.value);setSelectedArea(null);}} onFocus={()=>setSearchFocused(true)} placeholder={t('Search placeholder',lang)} style={{background:'none',border:'none',outline:'none',color:'var(--text-primary)',fontSize:15,flex:1,fontFamily:'inherit'}}/>
                 {search && <button onClick={()=>{setSearch('');setSelectedArea(null);}} style={{background:'none',border:'none',cursor:'pointer',color:'var(--text-secondary)',fontSize:18,lineHeight:1,padding:0}}>×</button>}
               </div>
               {search.length>1 && hasResults && searchFocused && (
@@ -392,9 +392,9 @@ Respond ONLY with valid JSON (no markdown):
                   <input value={filters.maxPrice} onChange={e=>setFilters(f=>({...f,maxPrice:e.target.value}))} placeholder="2,000,000" style={{width:'100%',padding:'10px 12px',borderRadius:8,border:'1px solid var(--border)',background:'var(--bg)',color:'var(--text-primary)',fontSize:13,fontFamily:'inherit',outline:'none',boxSizing:'border-box'}}/>
                 </div>
                 <div>
-                  <label style={{fontSize:11,color:'var(--text-muted)',fontWeight:600,display:'block',marginBottom:6,textTransform:'uppercase',letterSpacing:'0.05em'}}>Bedrooms</label>
+                  <label style={{fontSize:11,color:'var(--text-muted)',fontWeight:600,display:'block',marginBottom:6,textTransform:'uppercase',letterSpacing:'0.05em'}}>{t('Bedrooms',lang)}</label>
                   <select value={filters.bedrooms} onChange={e=>setFilters(f=>({...f,bedrooms:e.target.value}))} style={{width:'100%',padding:'10px 12px',borderRadius:8,border:'1px solid var(--border)',background:'var(--bg)',color:'var(--text-primary)',fontSize:13,fontFamily:'inherit',outline:'none',boxSizing:'border-box',appearance:'none'}}>
-                    <option value="">Any</option>
+                    {/* */}<option value="">{t('Any',lang)}</option>
                     <option value="Studio">{t('Studio',lang)}</option>
                     <option value="1 B/R">1 B/R</option>
                     <option value="2 B/R">2 B/R</option>
@@ -403,9 +403,9 @@ Respond ONLY with valid JSON (no markdown):
                   </select>
                 </div>
                 <div>
-                  <label style={{fontSize:11,color:'var(--text-muted)',fontWeight:600,display:'block',marginBottom:6,textTransform:'uppercase',letterSpacing:'0.05em'}}>Registration</label>
+                  <label style={{fontSize:11,color:'var(--text-muted)',fontWeight:600,display:'block',marginBottom:6,textTransform:'uppercase',letterSpacing:'0.05em'}}>{t('Registration',lang)}</label>
                   <select value={filters.regType} onChange={e=>setFilters(f=>({...f,regType:e.target.value}))} style={{width:'100%',padding:'10px 12px',borderRadius:8,border:'1px solid var(--border)',background:'var(--bg)',color:'var(--text-primary)',fontSize:13,fontFamily:'inherit',outline:'none',boxSizing:'border-box',appearance:'none'}}>
-                    <option value="">Any</option>
+                    {/* */}<option value="">{t('Any',lang)}</option>
                     <option value="Off-Plan">{t('Off-Plan',lang)}</option>
                     <option value="Ready">{t('Ready',lang)}</option>
                   </select>
@@ -413,11 +413,11 @@ Respond ONLY with valid JSON (no markdown):
               </div>
               <div style={{marginBottom:12}}>
                 <label style={{fontSize:11,color:'var(--text-muted)',fontWeight:600,display:'block',marginBottom:6,textTransform:'uppercase',letterSpacing:'0.05em'}}>{t('Area',lang)}</label>
-                <input value={filters.area} onChange={e=>setFilters(f=>({...f,area:e.target.value}))} placeholder="e.g. Business Bay, Marina..." style={{width:'100%',padding:'10px 12px',borderRadius:8,border:'1px solid var(--border)',background:'var(--bg)',color:'var(--text-primary)',fontSize:13,fontFamily:'inherit',outline:'none',boxSizing:'border-box'}}/>
+                <input value={filters.area} onChange={e=>setFilters(f=>({...f,area:e.target.value}))} placeholder={lang==='ar'?'مثال: الخليج التجاري، مارينا...':'e.g. Business Bay, Marina...'} style={{width:'100%',padding:'10px 12px',borderRadius:8,border:'1px solid var(--border)',background:'var(--bg)',color:'var(--text-primary)',fontSize:13,fontFamily:'inherit',outline:'none',boxSizing:'border-box'}}/>
               </div>
               <div style={{display:'flex',gap:10}}>
                 <button onClick={applyFilters} style={{flex:2,padding:'11px',borderRadius:10,border:'none',cursor:'pointer',background:'linear-gradient(135deg,#1D4ED8,#38BDF8)',color:'#fff',fontSize:13,fontWeight:600,fontFamily:'inherit'}}>{t('Apply Filters',lang)}</button>
-                <button onClick={clearFilters} style={{flex:1,padding:'11px',borderRadius:10,border:'1px solid var(--border)',cursor:'pointer',background:'var(--surface)',color:'var(--text-secondary)',fontSize:13,fontFamily:'inherit'}}>Clear</button>
+                <button onClick={clearFilters} style={{flex:1,padding:'11px',borderRadius:10,border:'1px solid var(--border)',cursor:'pointer',background:'var(--surface)',color:'var(--text-secondary)',fontSize:13,fontFamily:'inherit'}}>{t('Clear',lang)}</button>
               </div>
             </div>
           )}
@@ -488,7 +488,7 @@ Respond ONLY with valid JSON (no markdown):
                 <div style={{fontSize:14,fontWeight:600,color:'var(--text-primary)',marginBottom:4}}>{a.name}</div>
                 <div style={{fontSize:20,fontWeight:700,color:'#38BDF8',marginBottom:2}}>AED {fmtNum(a.ppsqft)}<span style={{fontSize:10,color:'var(--text-secondary)',fontWeight:400}}>/sqft</span></div>
                 <div style={{display:'flex',alignItems:'center',justifyContent:'space-between'}}>
-                  <span style={{fontSize:11,color:'var(--text-secondary)'}}>{fmtNum(a.count)} txns</span>
+                  <span style={{fontSize:11,color:'var(--text-secondary)'}}>{fmtNum(a.count)} {t('txns',lang)}</span>
                   <span style={{fontSize:10,fontWeight:700,padding:'2px 7px',borderRadius:20,background:a.mScore>=8?'rgba(34,197,94,0.12)':a.mScore>=6?'rgba(245,158,11,0.12)':'rgba(100,116,139,0.12)',color:a.mScore>=8?'#22C55E':a.mScore>=6?'#F59E0B':'#94A3B8'}}>
                     {a.mScore>=8?t('Strong Buy',lang):a.mScore>=6?t('Buy',lang):t('Hold',lang)} {a.mScore}/10
                   </span>
@@ -508,24 +508,24 @@ Respond ONLY with valid JSON (no markdown):
             </div>
             <div style={{background:'var(--surface)',border:'1px solid rgba(255,255,255,0.06)',borderRadius:18,padding:24,marginBottom:16}}>
               <div style={{marginBottom:14}}>
-                <label style={{fontSize:11,color:'var(--text-muted)',marginBottom:6,display:'block',fontWeight:600,textTransform:'uppercase',letterSpacing:'0.05em'}}>Area *</label>
+                <label style={{fontSize:11,color:'var(--text-muted)',marginBottom:6,display:'block',fontWeight:600,textTransform:'uppercase',letterSpacing:'0.05em'}}>{t('Area label',lang)}</label>
                 <select value={dealAreaKey||selectedArea?.key||''} onChange={e=>{setDealAreaKey(e.target.value);const a=areas.find(x=>x.key===e.target.value);setSelectedArea(a||null);setDealResult(null);}} style={{...inp,cursor:'pointer',appearance:'none'}}>
-                  <option value="">Select an area...</option>
+                  <option value="">{t('Select an area',lang)}</option>
                   {areas.map(a=><option key={a.key} value={a.key}>{a.name}</option>)}
                 </select>
               </div>
               <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12,marginBottom:18}}>
                 <div>
-                  <label style={{fontSize:11,color:'var(--text-muted)',marginBottom:6,display:'block',fontWeight:600,textTransform:'uppercase',letterSpacing:'0.05em'}}>Asking Price (AED) *</label>
-                  <input value={dealPrice} onChange={e=>{setDealPrice(e.target.value);setDealResult(null);}} placeholder="2,500,000" style={inp}/>
+                  <label style={{fontSize:11,color:'var(--text-muted)',marginBottom:6,display:'block',fontWeight:600,textTransform:'uppercase',letterSpacing:'0.05em'}}>{t('Asking Price',lang)}</label>
+                  <input value={dealPrice} onChange={e=>{setDealPrice(e.target.value);setDealResult(null);}} placeholder={lang==='ar'?'٢٬٥٠٠٬٠٠٠':'2,500,000'} style={inp}/>
                 </div>
                 <div>
                   <label style={{fontSize:11,color:'var(--text-muted)',marginBottom:6,display:'block',fontWeight:600,textTransform:'uppercase',letterSpacing:'0.05em'}}>{t('Size sqft',lang)}</label>
-                  <input value={dealSize} onChange={e=>{setDealSize(e.target.value);setDealResult(null);}} placeholder="1,200" style={inp}/>
+                  <input value={dealSize} onChange={e=>{setDealSize(e.target.value);setDealResult(null);}} placeholder={lang==='ar'?'١٬٢٠٠':'1,200'} style={inp}/>
                 </div>
               </div>
               <button onClick={analyzeDeal} disabled={dealLoading||!dealSelectedArea||!dealPrice} style={{width:'100%',padding:'13px',borderRadius:11,border:'none',cursor:'pointer',background:'linear-gradient(135deg,#1D4ED8,#38BDF8)',color:'#fff',fontSize:15,fontWeight:600,fontFamily:'inherit',opacity:dealLoading||!selectedArea||!dealPrice?0.5:1}}>
-                {dealLoading?'Analyzing...':'Analyze this deal →'}
+                {dealLoading?t('Analyzing',lang):t('Analyze',lang)}
               </button>
             </div>
             {dealLoading && <div style={{textAlign:'center',padding:32}}><div style={{width:36,height:36,border:'3px solid rgba(59,130,246,0.2)',borderTopColor:'#38BDF8',borderRadius:'50%',animation:'spin 0.8s linear infinite',margin:'0 auto 12px'}}/><div style={{fontSize:13,color:'var(--text-muted)'}}>Analyzing with AI...</div></div>}
@@ -543,7 +543,7 @@ Respond ONLY with valid JSON (no markdown):
                   <div style={{display:'flex',alignItems:'center',justifyContent:'center',gap:10,background:'rgba(56,189,248,0.06)',border:'1px solid rgba(56,189,248,0.15)',borderRadius:14,padding:'12px 18px',marginBottom:14}}>
                     <div style={{width:32,height:32,borderRadius:8,background:'linear-gradient(135deg,#1D4ED8,#38BDF8)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:14,flexShrink:0}}></div>
                     <div style={{flex:1}}>
-                      <div style={{fontSize:10,color:'#38BDF8',fontWeight:700,textTransform:'uppercase',letterSpacing:'0.08em',marginBottom:2}}>PropSight Estimate</div>
+                      <div style={{fontSize:10,color:'#38BDF8',fontWeight:700,textTransform:'uppercase',letterSpacing:'0.08em',marginBottom:2}}>{t('PropSight Estimate',lang)}</div>
                       <div style={{fontSize:16,fontWeight:800,color:'var(--text-primary)'}}>{dealResult.fairValue||'AED '+fmtNum(Math.round(parseInt(dealPrice.replace(/,/g,''))*(dealResult.verdict==='GOOD DEAL'?1.08:dealResult.verdict==='OVERPRICED'?0.92:1.0)))}</div>
                     </div>
                     <div style={{textAlign:'right'}}>
@@ -759,7 +759,7 @@ Respond ONLY with valid JSON (no markdown):
             
             <h1 style={{fontSize:28,fontWeight:800,color:'var(--text-primary)',margin:0,marginBottom:4,letterSpacing:'-0.02em'}}>{selectedArea.name}</h1>
             <div style={{display:'flex',alignItems:'center',gap:10}}>
-              <span style={{fontSize:13,color:'var(--text-secondary)'}}>{fmtNum(selectedArea.count)} transactions</span>
+              <span style={{fontSize:13,color:'var(--text-secondary)'}}>{fmtNum(selectedArea.count)} {t('transactions',lang)}</span>
               <span style={{fontSize:13,fontWeight:700,padding:'4px 12px',borderRadius:20,background:selectedArea.yoy>=0?'rgba(34,197,94,0.12)':'rgba(248,113,113,0.12)',color:selectedArea.yoy>=0?'#22C55E':'#F87171'}}>{selectedArea.yoy>=0?'+':''}{selectedArea.yoy}% YoY</span>
               <span style={{fontSize:13,fontWeight:700,padding:'4px 12px',borderRadius:20,background:selectedArea.mScore>=8?'rgba(34,197,94,0.12)':selectedArea.mScore>=6?'rgba(245,158,11,0.12)':'rgba(100,116,139,0.12)',color:selectedArea.mScore>=8?'#22C55E':selectedArea.mScore>=6?'#F59E0B':'#94A3B8'}}>
                 {selectedArea.mScore>=8?t('Strong Buy',lang):selectedArea.mScore>=6?t('Buy',lang):t('Hold',lang)} · {selectedArea.mScore}/10
@@ -910,7 +910,7 @@ Respond ONLY with valid JSON (no markdown):
             {/* Top Projects */}
             {areaData?.[selectedArea.key]?.projects?.length>0 && (
               <div style={{marginBottom:20}}>
-                <div style={{fontSize:13,fontWeight:600,color:'var(--text-primary)',marginBottom:12}}>Top Projects in {selectedArea.name}</div>
+                <div style={{fontSize:13,fontWeight:600,color:'var(--text-primary)',marginBottom:12}}>{t('Top Projects',lang)} {selectedArea.name}</div>
                 <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(150px,1fr))',gap:10}}>
                   {areaData[selectedArea.key].projects.slice(0,12).map((p,i)=>(
                     <div key={i} onClick={()=>{if(projectsData?.[p.project||p.name]){setSelectedProject({key:p.project||p.name,name:p.project||p.name,area:selectedArea.name,avg:p.avg||0,count:p.count||0});}}} className="inv-card" style={{background:'var(--bg)',border:'1px solid var(--border)',borderRadius:12,padding:'14px',cursor:projectsData?.[p.name]?'pointer':'default'}}>
