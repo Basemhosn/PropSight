@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
+import { t } from '../i18n';
 import { useAuth } from '../context/AuthContext';
 import MapView from './MapView';
 import { fmtAED, fmtNum } from '../utils/format';
@@ -28,7 +29,7 @@ const VERDICT_STYLE = {
 };
 
 export default function InvestorApp({ areaData, recentRaw, core, onSwitchToBroker, projectsData, buildingsData }) {
-  const { user, profile, signOut } = useAuth();
+  const { user, profile, signOut, lang, toggleLang } = useAuth();
   const [themeMode, setThemeMode] = useState(() => localStorage.getItem('theme') || 'dark');
   const [showMenu, setShowMenu] = useState(false);
   const toggleTheme = () => {
@@ -226,7 +227,7 @@ Respond ONLY with valid JSON (no markdown):
         </div>
 
         <div style={{display:'flex',gap:2,background:'rgba(255,255,255,0.04)',borderRadius:10,padding:3}}>
-          {[['discover','Discover'],['map','Map'],['deal','Deal Check'],['feed','Recent Sales']].map(([id,lbl])=>(
+          {[['discover',t('Discover',lang)],['map',t('Map',lang)],['deal',t('Deal Check',lang)],['feed',t('Recent Sales',lang)]].map(([id,lbl])=>(
             <button key={id} onClick={()=>setActiveTab(id)} className="inv-tab-btn" style={{padding:'6px 14px',borderRadius:8,fontSize:13,fontWeight:activeTab===id?600:400,background:activeTab===id?'var(--surface)':'transparent',color:activeTab===id?'var(--text-primary)':'var(--text-muted)',boxShadow:activeTab===id?'0 1px 4px rgba(0,0,0,0.3)':'none'}}>
               {lbl}
             </button>
@@ -245,6 +246,9 @@ Respond ONLY with valid JSON (no markdown):
           ) : null}
           <button onClick={toggleTheme} style={{background:'none',border:'1px solid var(--border)',borderRadius:8,padding:'5px 10px',fontSize:12,color:'var(--text-secondary)',cursor:'pointer',fontFamily:'inherit'}}>
             {themeMode === 'dark' ? '☀️' : '🌙'}
+          </button>
+          <button onClick={toggleLang} style={{background:'none',border:'1px solid var(--border)',borderRadius:8,padding:'5px 10px',fontSize:12,color:'var(--text-secondary)',cursor:'pointer',fontFamily:'inherit'}}>
+            {lang === 'en' ? '🇦🇪 AR' : '🇬🇧 EN'}
           </button>
           <div style={{position:'relative'}}>
             <div style={{width:30,height:30,borderRadius:'50%',background:'linear-gradient(135deg,#1D4ED8,#38BDF8)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:13,fontWeight:700,cursor:'pointer'}} onClick={()=>setShowMenu(m=>!m)}>
@@ -267,8 +271,8 @@ Respond ONLY with valid JSON (no markdown):
         {/* DISCOVER */}
         {activeTab==='discover' && <>
           <div style={{textAlign:'center',marginBottom:32}}>
-            <h1 style={{fontSize:'clamp(22px,3vw,32px)',fontWeight:700,color:'var(--text-primary)',marginBottom:8,letterSpacing:'-0.02em'}}>What are you looking for?</h1>
-            <p style={{fontSize:15,color:'var(--text-muted)',marginBottom:24}}>Search any area or project in Dubai</p>
+            <h1 style={{fontSize:'clamp(22px,3vw,32px)',fontWeight:700,color:'var(--text-primary)',marginBottom:8,letterSpacing:'-0.02em'}}>{t('What are you looking for?',lang)}</h1>
+            <p style={{fontSize:15,color:'var(--text-muted)',marginBottom:24}}>{t('Search any area or project in Dubai',lang)}</p>
             <div style={{display:'flex',gap:10,maxWidth:620,margin:'0 auto',alignItems:'center'}}>
             <div ref={searchRef} style={{position:'relative',flex:1}}>
               <div style={{display:'flex',alignItems:'center',gap:12,background:'var(--surface)',border:'2px solid rgba(59,130,246,0.2)',borderRadius:14,padding:'13px 18px',boxShadow:'0 4px 20px rgba(0,0,0,0.3)'}}>
@@ -282,7 +286,7 @@ Respond ONLY with valid JSON (no markdown):
                   {/* Areas */}
                   {allSearchResults.areas.length > 0 && (
                     <div>
-                      <div style={{padding:'10px 16px 6px',fontSize:10,fontWeight:700,color:'var(--text-muted)',textTransform:'uppercase',letterSpacing:'0.1em',borderBottom:'1px solid var(--border)'}}>📍 Areas</div>
+                      <div style={{padding:'10px 16px 6px',fontSize:10,fontWeight:700,color:'var(--text-muted)',textTransform:'uppercase',letterSpacing:'0.1em',borderBottom:'1px solid var(--border)'}}>{t('Areas',lang)}</div>
                       {allSearchResults.areas.map((a,i)=>(
                         <button key={i} onClick={()=>{setSelectedArea(a);setSearch('');setSearchFocused(false);}} style={{display:'flex',justifyContent:'space-between',alignItems:'center',width:'100%',padding:'12px 16px',background:'none',border:'none',cursor:'pointer',fontFamily:'inherit',borderBottom:'1px solid var(--border)'}}
                           onMouseEnter={e=>e.currentTarget.style.background='rgba(59,130,246,0.06)'}
@@ -306,7 +310,7 @@ Respond ONLY with valid JSON (no markdown):
                   {/* Projects */}
                   {allSearchResults.projects.length > 0 && (
                     <div>
-                      <div style={{padding:'10px 16px 6px',fontSize:10,fontWeight:700,color:'var(--text-muted)',textTransform:'uppercase',letterSpacing:'0.1em',borderBottom:'1px solid var(--border)'}}>🏗️ Projects</div>
+                      <div style={{padding:'10px 16px 6px',fontSize:10,fontWeight:700,color:'var(--text-muted)',textTransform:'uppercase',letterSpacing:'0.1em',borderBottom:'1px solid var(--border)'}}>{t('Projects',lang)}</div>
                       {allSearchResults.projects.map((p,i)=>(
                         <button key={i} onClick={()=>{setSelectedProject(p);setSearch('');setSearchFocused(false);}} style={{display:'flex',justifyContent:'space-between',alignItems:'center',width:'100%',padding:'12px 16px',background:'none',border:'none',cursor:'pointer',fontFamily:'inherit',borderBottom:'1px solid var(--border)'}}
                           onMouseEnter={e=>e.currentTarget.style.background='rgba(59,130,246,0.06)'}
@@ -330,7 +334,7 @@ Respond ONLY with valid JSON (no markdown):
                   {/* Developers */}
                   {allSearchResults.developers.length > 0 && (
                     <div>
-                      <div style={{padding:'10px 16px 6px',fontSize:10,fontWeight:700,color:'var(--text-muted)',textTransform:'uppercase',letterSpacing:'0.1em',borderBottom:'1px solid var(--border)'}}>🏢 Developers</div>
+                      <div style={{padding:'10px 16px 6px',fontSize:10,fontWeight:700,color:'var(--text-muted)',textTransform:'uppercase',letterSpacing:'0.1em',borderBottom:'1px solid var(--border)'}}>{t('Developers',lang)}</div>
                       {allSearchResults.developers.map((d,i)=>(
                         <button key={i} onClick={()=>{setSelectedDeveloper(d);setSearch('');setSearchFocused(false);}} style={{display:'flex',justifyContent:'space-between',alignItems:'center',width:'100%',padding:'12px 16px',background:'none',border:'none',cursor:'pointer',fontFamily:'inherit',borderBottom:'1px solid var(--border)'}}
                           onMouseEnter={e=>e.currentTarget.style.background='rgba(59,130,246,0.06)'}
@@ -351,7 +355,7 @@ Respond ONLY with valid JSON (no markdown):
                   {/* Buildings */}
                   {allSearchResults.buildings.length > 0 && (
                     <div>
-                      <div style={{padding:'10px 16px 6px',fontSize:10,fontWeight:700,color:'var(--text-muted)',textTransform:'uppercase',letterSpacing:'0.1em',borderBottom:'1px solid var(--border)'}}>🏠 Buildings</div>
+                      <div style={{padding:'10px 16px 6px',fontSize:10,fontWeight:700,color:'var(--text-muted)',textTransform:'uppercase',letterSpacing:'0.1em',borderBottom:'1px solid var(--border)'}}>{t('Buildings',lang)}</div>
                       {allSearchResults.buildings.map((b,i)=>(
                         <button key={i} onClick={()=>{setSelectedBuilding(b);setSearch('');setSearchFocused(false);}} style={{display:'flex',alignItems:'center',gap:12,width:'100%',padding:'12px 16px',background:'none',border:'none',cursor:'pointer',fontFamily:'inherit',borderBottom:i<allSearchResults.buildings.length-1?'1px solid var(--border)':'none'}}
                           onMouseEnter={e=>e.currentTarget.style.background='rgba(59,130,246,0.06)'}
@@ -377,7 +381,7 @@ Respond ONLY with valid JSON (no markdown):
           {/* Filter drawer */}
           {showFilters && (
             <div style={{background:'var(--surface)',border:'1px solid var(--border)',borderRadius:16,padding:20,marginBottom:20}}>
-              <div style={{fontSize:13,fontWeight:600,color:'var(--text-primary)',marginBottom:16}}>Filter transactions</div>
+              <div style={{fontSize:13,fontWeight:600,color:'var(--text-primary)',marginBottom:16}}>{t('Filter transactions',lang)}</div>
               <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12,marginBottom:12}}>
                 <div>
                   <label style={{fontSize:11,color:'var(--text-muted)',fontWeight:600,display:'block',marginBottom:6,textTransform:'uppercase',letterSpacing:'0.05em'}}>Min Price (AED)</label>
@@ -412,7 +416,7 @@ Respond ONLY with valid JSON (no markdown):
                 <input value={filters.area} onChange={e=>setFilters(f=>({...f,area:e.target.value}))} placeholder="e.g. Business Bay, Marina..." style={{width:'100%',padding:'10px 12px',borderRadius:8,border:'1px solid var(--border)',background:'var(--bg)',color:'var(--text-primary)',fontSize:13,fontFamily:'inherit',outline:'none',boxSizing:'border-box'}}/>
               </div>
               <div style={{display:'flex',gap:10}}>
-                <button onClick={applyFilters} style={{flex:2,padding:'11px',borderRadius:10,border:'none',cursor:'pointer',background:'linear-gradient(135deg,#1D4ED8,#38BDF8)',color:'#fff',fontSize:13,fontWeight:600,fontFamily:'inherit'}}>Apply Filters</button>
+                <button onClick={applyFilters} style={{flex:2,padding:'11px',borderRadius:10,border:'none',cursor:'pointer',background:'linear-gradient(135deg,#1D4ED8,#38BDF8)',color:'#fff',fontSize:13,fontWeight:600,fontFamily:'inherit'}}>{t('Apply Filters',lang)}</button>
                 <button onClick={clearFilters} style={{flex:1,padding:'11px',borderRadius:10,border:'1px solid var(--border)',cursor:'pointer',background:'var(--surface)',color:'var(--text-secondary)',fontSize:13,fontFamily:'inherit'}}>Clear</button>
               </div>
             </div>
@@ -467,8 +471,8 @@ Respond ONLY with valid JSON (no markdown):
               onMouseLeave={e=>e.currentTarget.style.borderColor='rgba(56,189,248,0.2)'}>
               <div style={{width:44,height:44,borderRadius:12,background:'linear-gradient(135deg,#1D4ED8,#38BDF8)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:22,flexShrink:0}}>🗺️</div>
               <div style={{flex:1}}>
-                <div style={{fontSize:15,fontWeight:700,color:'var(--text-primary)',marginBottom:3}}>Explore Dubai on the Map</div>
-                <div style={{fontSize:13,color:'var(--text-secondary)'}}>Browse areas visually — see price heatmap, click any area to explore</div>
+                <div style={{fontSize:15,fontWeight:700,color:'var(--text-primary)',marginBottom:3}}>{t('Explore Dubai on the Map',lang)}</div>
+                <div style={{fontSize:13,color:'var(--text-secondary)'}}>{t('Browse areas visually',lang)}</div>
               </div>
               <div style={{fontSize:20,color:'var(--text-muted)'}}>→</div>
             </div>
@@ -486,7 +490,7 @@ Respond ONLY with valid JSON (no markdown):
                 <div style={{display:'flex',alignItems:'center',justifyContent:'space-between'}}>
                   <span style={{fontSize:11,color:'var(--text-secondary)'}}>{fmtNum(a.count)} txns</span>
                   <span style={{fontSize:10,fontWeight:700,padding:'2px 7px',borderRadius:20,background:a.mScore>=8?'rgba(34,197,94,0.12)':a.mScore>=6?'rgba(245,158,11,0.12)':'rgba(100,116,139,0.12)',color:a.mScore>=8?'#22C55E':a.mScore>=6?'#F59E0B':'#94A3B8'}}>
-                    {a.mScore>=8?'Strong Buy':a.mScore>=6?'✓ Buy':'→ Hold'} {a.mScore}/10
+                    {a.mScore>=8?t('Strong Buy',lang):a.mScore>=6?t('Buy',lang):t('Hold',lang)} {a.mScore}/10
                   </span>
                 </div>
               </div>
@@ -499,8 +503,8 @@ Respond ONLY with valid JSON (no markdown):
         {activeTab==='deal' && (
           <div style={{maxWidth:560,margin:'0 auto'}}>
             <div style={{textAlign:'center',marginBottom:28}}>
-              <h1 style={{fontSize:26,fontWeight:700,color:'var(--text-primary)',marginBottom:6}}>Deal Check</h1>
-              <p style={{fontSize:14,color:'var(--text-muted)'}}>Enter a property you are considering — get an instant AI verdict</p>
+              <h1 style={{fontSize:26,fontWeight:700,color:'var(--text-primary)',marginBottom:6}}>{t('Deal Check title',lang)}</h1>
+              <p style={{fontSize:14,color:'var(--text-muted)'}}>{t('Deal Check subtitle',lang)}</p>
             </div>
             <div style={{background:'var(--surface)',border:'1px solid rgba(255,255,255,0.06)',borderRadius:18,padding:24,marginBottom:16}}>
               <div style={{marginBottom:14}}>
@@ -599,7 +603,7 @@ Respond ONLY with valid JSON (no markdown):
             </div>
             {projectsData?.[selectedProject.key]?.priceTrend?.length > 1 && (
               <div style={{marginBottom:16}}>
-                <div style={{fontSize:11,color:'var(--text-muted)',marginBottom:8,textTransform:'uppercase',letterSpacing:'0.05em',fontWeight:600}}>Price Trend (AED/sqft)</div>
+                <div style={{fontSize:11,color:'var(--text-muted)',marginBottom:8,textTransform:'uppercase',letterSpacing:'0.05em',fontWeight:600}}>{t('Price Trend',lang)}</div>
                 <div style={{display:'flex',alignItems:'flex-end',gap:3,height:48}}>
                   {projectsData[selectedProject.key].priceTrend.slice(-12).map((p,i,arr)=>{
                     const vals=arr.map(x=>Math.round((x.ppsqm||0)/10.764));
@@ -624,7 +628,7 @@ Respond ONLY with valid JSON (no markdown):
                 <div style={{width:48,height:48,borderRadius:14,background:'linear-gradient(135deg,rgba(139,92,246,0.2),rgba(167,139,250,0.1))',display:'flex',alignItems:'center',justifyContent:'center',fontSize:24}}>🏢</div>
                 <div>
                   <h2 style={{fontSize:20,fontWeight:700,color:'var(--text-primary)',margin:0,marginBottom:4}}>{selectedDeveloper.name}</h2>
-                  <div style={{fontSize:13,color:'var(--text-secondary)'}}>Dubai Real Estate Developer</div>
+                  <div style={{fontSize:13,color:'var(--text-secondary)'}}>{t('Dubai Real Estate Developer',lang)}</div>
                 </div>
               </div>
               <button onClick={()=>setSelectedDeveloper(null)} style={{background:'none',border:'1px solid var(--border)',borderRadius:8,color:'var(--text-muted)',cursor:'pointer',padding:'6px 12px',fontSize:12,fontFamily:'inherit'}}>✕ Close</button>
@@ -644,7 +648,7 @@ Respond ONLY with valid JSON (no markdown):
             </div>
             {selectedDeveloper.yearly?.length > 0 && (
               <div style={{marginBottom:16}}>
-                <div style={{fontSize:11,color:'var(--text-muted)',marginBottom:8,textTransform:'uppercase',letterSpacing:'0.05em',fontWeight:600}}>Yearly Transaction Volume</div>
+                <div style={{fontSize:11,color:'var(--text-muted)',marginBottom:8,textTransform:'uppercase',letterSpacing:'0.05em',fontWeight:600}}>{t('Yearly Volume',lang)}</div>
                 <div style={{display:'flex',alignItems:'flex-end',gap:6,height:48}}>
                   {selectedDeveloper.yearly.map((y,i,arr)=>{
                     const vals=arr.map(x=>x.count);
@@ -744,9 +748,9 @@ Respond ONLY with valid JSON (no markdown):
         <div style={{position:'fixed',inset:0,background:'var(--bg)',zIndex:500,overflowY:'auto'}}>
           {/* Sticky header */}
           <div style={{position:'sticky',top:0,zIndex:10,background:'var(--bg-alt)',borderBottom:'1px solid var(--border)',height:52,display:'flex',alignItems:'center',justifyContent:'space-between',padding:'0 24px'}}>
-            <button onClick={()=>setSelectedArea(null)} style={{display:'flex',alignItems:'center',gap:8,background:'none',border:'none',cursor:'pointer',color:'var(--text-primary)',fontSize:14,fontWeight:600,fontFamily:'inherit'}}>← Back</button>
+            <button onClick={()=>setSelectedArea(null)} style={{display:'flex',alignItems:'center',gap:8,background:'none',border:'none',cursor:'pointer',color:'var(--text-primary)',fontSize:14,fontWeight:600,fontFamily:'inherit'}}>{t('Back',lang)}</button>
             <button onClick={()=>saveToWatchlist('area',selectedArea.name,selectedArea.key,selectedArea.key)} disabled={savedKeys.has(selectedArea.key)} style={{display:'flex',alignItems:'center',gap:6,background:'none',border:'1px solid var(--border)',borderRadius:20,padding:'6px 14px',cursor:'pointer',fontSize:12,color:savedKeys.has(selectedArea.key)?'#22C55E':'var(--text-secondary)',fontFamily:'inherit'}}>
-              {savedKeys.has(selectedArea.key)?'✓ Saved':'♡ Save'}
+              {savedKeys.has(selectedArea.key)?t('Saved',lang):t('Save',lang)}
             </button>
           </div>
 
@@ -758,7 +762,7 @@ Respond ONLY with valid JSON (no markdown):
               <span style={{fontSize:13,color:'var(--text-secondary)'}}>{fmtNum(selectedArea.count)} transactions</span>
               <span style={{fontSize:13,fontWeight:700,padding:'4px 12px',borderRadius:20,background:selectedArea.yoy>=0?'rgba(34,197,94,0.12)':'rgba(248,113,113,0.12)',color:selectedArea.yoy>=0?'#22C55E':'#F87171'}}>{selectedArea.yoy>=0?'+':''}{selectedArea.yoy}% YoY</span>
               <span style={{fontSize:13,fontWeight:700,padding:'4px 12px',borderRadius:20,background:selectedArea.mScore>=8?'rgba(34,197,94,0.12)':selectedArea.mScore>=6?'rgba(245,158,11,0.12)':'rgba(100,116,139,0.12)',color:selectedArea.mScore>=8?'#22C55E':selectedArea.mScore>=6?'#F59E0B':'#94A3B8'}}>
-                {selectedArea.mScore>=8?'Strong Buy':selectedArea.mScore>=6?'✓ Buy':'→ Hold'} · {selectedArea.mScore}/10
+                {selectedArea.mScore>=8?t('Strong Buy',lang):selectedArea.mScore>=6?t('Buy',lang):t('Hold',lang)} · {selectedArea.mScore}/10
               </span>
             </div>
           </div>
@@ -787,7 +791,7 @@ Respond ONLY with valid JSON (no markdown):
               {/* Price Trend */}
               {areaData?.[selectedArea.key]?.priceTrend?.length>1 && (
                 <div style={{background:'var(--surface)',border:'1px solid var(--border)',borderRadius:14,padding:'18px'}}>
-                  <div style={{fontSize:13,fontWeight:600,color:'var(--text-primary)',marginBottom:14}}>Price Trend (AED/sqft)</div>
+                  <div style={{fontSize:13,fontWeight:600,color:'var(--text-primary)',marginBottom:14}}>{t('Price Trend',lang)}</div>
                   <div style={{display:'flex',alignItems:'flex-end',gap:3,height:80}}>
                     {areaData[selectedArea.key].priceTrend.map((p,i,arr)=>{
                       const vals=arr.map(x=>Math.round((x.ppsqm||0)/10.764));
@@ -808,7 +812,7 @@ Respond ONLY with valid JSON (no markdown):
               {/* Bedroom Breakdown */}
               {areaData?.[selectedArea.key]?.rooms?.length>0 && (
                 <div style={{background:'var(--surface)',border:'1px solid var(--border)',borderRadius:14,padding:'18px'}}>
-                  <div style={{fontSize:13,fontWeight:600,color:'var(--text-primary)',marginBottom:14}}>By Bedroom Type</div>
+                  <div style={{fontSize:13,fontWeight:600,color:'var(--text-primary)',marginBottom:14}}>{t('By Bedroom Type',lang)}</div>
                   <div style={{display:'flex',flexDirection:'column',gap:8}}>
                     {areaData[selectedArea.key].rooms.slice(0,5).map((r,i)=>{
                       const maxCount=Math.max(...areaData[selectedArea.key].rooms.map(x=>x.count));
@@ -836,7 +840,7 @@ Respond ONLY with valid JSON (no markdown):
               {/* Transaction types */}
               {areaData?.[selectedArea.key]?.types && (
                 <div style={{background:'var(--surface)',border:'1px solid var(--border)',borderRadius:14,padding:'18px'}}>
-                  <div style={{fontSize:13,fontWeight:600,color:'var(--text-primary)',marginBottom:14}}>Transaction Types</div>
+                  <div style={{fontSize:13,fontWeight:600,color:'var(--text-primary)',marginBottom:14}}>{t('Transaction Types',lang)}</div>
                   {Object.entries(areaData[selectedArea.key].types).map(([type,count],i)=>{
                     const total=Object.values(areaData[selectedArea.key].types).reduce((a,b)=>a+b,0);
                     const pct=Math.round(count/total*100);
@@ -859,7 +863,7 @@ Respond ONLY with valid JSON (no markdown):
               {/* Off-Plan vs Ready */}
               {areaData?.[selectedArea.key]?.regSplit && (
                 <div style={{background:'var(--surface)',border:'1px solid var(--border)',borderRadius:14,padding:'18px'}}>
-                  <div style={{fontSize:13,fontWeight:600,color:'var(--text-primary)',marginBottom:14}}>Off-Plan vs Ready</div>
+                  <div style={{fontSize:13,fontWeight:600,color:'var(--text-primary)',marginBottom:14}}>{t('Off-Plan vs Ready',lang)}</div>
                   {Object.entries(areaData[selectedArea.key].regSplit).filter(([k])=>k!=='Other').map(([type,count],i)=>{
                     const total=Object.values(areaData[selectedArea.key].regSplit).reduce((a,b)=>a+b,0);
                     const pct=Math.round(count/total*100);
@@ -886,7 +890,7 @@ Respond ONLY with valid JSON (no markdown):
             {/* Monthly Volume */}
             {areaData?.[selectedArea.key]?.monthly?.length>1 && (
               <div style={{background:'var(--surface)',border:'1px solid var(--border)',borderRadius:14,padding:'18px',marginBottom:20}}>
-                <div style={{fontSize:13,fontWeight:600,color:'var(--text-primary)',marginBottom:14}}>Monthly Transaction Volume</div>
+                <div style={{fontSize:13,fontWeight:600,color:'var(--text-primary)',marginBottom:14}}>{t('Monthly Volume',lang)}</div>
                 <div style={{display:'flex',alignItems:'flex-end',gap:3,height:64}}>
                   {areaData[selectedArea.key].monthly.slice(-24).map((m,i,arr)=>{
                     const vals=arr.map(x=>x.count||0);
@@ -922,7 +926,7 @@ Respond ONLY with valid JSON (no markdown):
             {/* Recent Transactions */}
             {areaData?.[selectedArea.key]?.recent?.length>0 && (
               <div style={{background:'var(--surface)',border:'1px solid var(--border)',borderRadius:14,overflow:'hidden',marginBottom:24}}>
-                <div style={{padding:'14px 18px',borderBottom:'1px solid var(--border)',fontSize:13,fontWeight:600,color:'var(--text-primary)'}}>Recent Transactions</div>
+                <div style={{padding:'14px 18px',borderBottom:'1px solid var(--border)',fontSize:13,fontWeight:600,color:'var(--text-primary)'}}>{t('Recent Transactions',lang)}</div>
                 {areaData[selectedArea.key].recent.slice(0,10).map((r,i,arr)=>{
                   const ppsqft=r.s&&r.v?Math.round(r.v/r.s/10.764):0;
                   return (
@@ -953,12 +957,12 @@ Respond ONLY with valid JSON (no markdown):
       {selectedDeveloper && (
         <div style={{position:'fixed',inset:0,background:'var(--bg)',zIndex:500,overflowY:'auto'}}>
           <div style={{position:'sticky',top:0,zIndex:10,background:'var(--bg-alt)',borderBottom:'1px solid var(--border)',height:52,display:'flex',alignItems:'center',padding:'0 24px'}}>
-            <button onClick={()=>setSelectedDeveloper(null)} style={{display:'flex',alignItems:'center',gap:8,background:'none',border:'none',cursor:'pointer',color:'var(--text-primary)',fontSize:14,fontWeight:600,fontFamily:'inherit'}}>← Back</button>
+            <button onClick={()=>setSelectedDeveloper(null)} style={{display:'flex',alignItems:'center',gap:8,background:'none',border:'none',cursor:'pointer',color:'var(--text-primary)',fontSize:14,fontWeight:600,fontFamily:'inherit'}}>{t('Back',lang)}</button>
           </div>
           <div style={{height:200,background:'linear-gradient(135deg,rgba(139,92,246,0.2),rgba(167,139,250,0.08))',display:'flex',alignItems:'center',justifyContent:'center',flexDirection:'column',gap:10}}>
             <div style={{width:64,height:64,borderRadius:18,background:'linear-gradient(135deg,#7C3AED,#A78BFA)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:28}}>🏢</div>
             <h1 style={{fontSize:24,fontWeight:800,color:'var(--text-primary)',margin:0}}>{selectedDeveloper.name}</h1>
-            <div style={{fontSize:13,color:'var(--text-secondary)'}}>Dubai Real Estate Developer</div>
+            <div style={{fontSize:13,color:'var(--text-secondary)'}}>{t('Dubai Real Estate Developer',lang)}</div>
           </div>
           <div style={{maxWidth:960,margin:'0 auto',padding:'24px'}}>
             <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(140px,1fr))',gap:12,marginBottom:24}}>
@@ -976,7 +980,7 @@ Respond ONLY with valid JSON (no markdown):
             </div>
             {selectedDeveloper.yearly?.length>0 && (
               <div style={{background:'var(--surface)',border:'1px solid var(--border)',borderRadius:14,padding:'18px',marginBottom:20}}>
-                <div style={{fontSize:13,fontWeight:600,color:'var(--text-primary)',marginBottom:14}}>Yearly Transaction Volume</div>
+                <div style={{fontSize:13,fontWeight:600,color:'var(--text-primary)',marginBottom:14}}>{t('Yearly Volume',lang)}</div>
                 <div style={{display:'flex',alignItems:'flex-end',gap:8,height:80}}>
                   {selectedDeveloper.yearly.map((y,i,arr)=>{
                     const max=Math.max(...arr.map(x=>x.count));
@@ -993,14 +997,14 @@ Respond ONLY with valid JSON (no markdown):
               </div>
             )}
             <div style={{background:'var(--surface)',border:'1px solid var(--border)',borderRadius:14,padding:'18px',marginBottom:20}}>
-              <div style={{fontSize:13,fontWeight:600,color:'var(--text-primary)',marginBottom:12}}>Market Share</div>
+              <div style={{fontSize:13,fontWeight:600,color:'var(--text-primary)',marginBottom:12}}>{t('Market Share',lang)}</div>
               <div style={{display:'flex',alignItems:'center',gap:16}}>
                 <div style={{flex:1,height:12,borderRadius:6,background:'var(--border)',overflow:'hidden'}}>
                   <div style={{height:'100%',width:Math.round(selectedDeveloper.count/354343*100)+'%',background:'linear-gradient(90deg,#7C3AED,#A78BFA)',borderRadius:6}}/>
                 </div>
                 <div style={{fontSize:16,fontWeight:800,color:'#A78BFA',flexShrink:0}}>{Math.round(selectedDeveloper.count/354343*100)}%</div>
               </div>
-              <div style={{fontSize:11,color:'var(--text-muted)',marginTop:6}}>of all Dubai transactions</div>
+              <div style={{fontSize:11,color:'var(--text-muted)',marginTop:6}}>{t('of all Dubai transactions',lang)}</div>
             </div>
           </div>
         </div>
@@ -1014,7 +1018,7 @@ Respond ONLY with valid JSON (no markdown):
               ← Back
             </button>
             <button onClick={()=>saveToWatchlist('project',selectedProject.name,selectedProject.key,selectedProject.area)} disabled={savedKeys.has(selectedProject.key)} style={{display:'flex',alignItems:'center',gap:6,background:'none',border:'1px solid var(--border)',borderRadius:20,padding:'6px 14px',cursor:'pointer',fontSize:12,color:savedKeys.has(selectedProject.key)?'#22C55E':'var(--text-secondary)',fontFamily:'inherit'}}>
-              {savedKeys.has(selectedProject.key)?'✓ Saved':'♡ Save'}
+              {savedKeys.has(selectedProject.key)?t('Saved',lang):t('Save',lang)}
             </button>
           </div>
           <div style={{position:'relative',height:'min(280px,35vw)',minHeight:160,overflow:'hidden',background:'var(--surface)'}}>
@@ -1045,7 +1049,7 @@ Respond ONLY with valid JSON (no markdown):
             </div>
             {projectsData?.[selectedProject.key]?.priceTrend?.length>1 && (
               <div style={{background:'var(--surface)',border:'1px solid var(--border)',borderRadius:14,padding:'18px',marginBottom:20}}>
-                <div style={{fontSize:13,fontWeight:600,color:'var(--text-primary)',marginBottom:14}}>Price Trend (AED/sqft)</div>
+                <div style={{fontSize:13,fontWeight:600,color:'var(--text-primary)',marginBottom:14}}>{t('Price Trend',lang)}</div>
                 <div style={{display:'flex',alignItems:'flex-end',gap:4,height:72}}>
                   {projectsData[selectedProject.key].priceTrend.slice(-18).map((p,i,arr)=>{
                     const vals=arr.map(x=>Math.round((x.ppsqm||0)/10.764));
@@ -1058,7 +1062,7 @@ Respond ONLY with valid JSON (no markdown):
             )}
             {projectsData?.[selectedProject.key]?.recent?.length>0 && (
               <div style={{background:'var(--surface)',border:'1px solid var(--border)',borderRadius:14,overflow:'hidden',marginBottom:20}}>
-                <div style={{padding:'14px 18px',borderBottom:'1px solid var(--border)',fontSize:13,fontWeight:600,color:'var(--text-primary)'}}>Recent Transactions</div>
+                <div style={{padding:'14px 18px',borderBottom:'1px solid var(--border)',fontSize:13,fontWeight:600,color:'var(--text-primary)'}}>{t('Recent Transactions',lang)}</div>
                 {projectsData[selectedProject.key].recent.slice(0,8).map((r,i,arr)=>{
                   const ppsqft=r.s&&r.v?Math.round(r.v/r.s/10.764):0;
                   return (
@@ -1079,8 +1083,8 @@ Respond ONLY with valid JSON (no markdown):
             {projectsData?.[selectedProject.key]?.rooms?.length>0 && (
               <div style={{background:'var(--surface)',border:'1px solid var(--border)',borderRadius:14,overflow:'hidden',marginBottom:20}}>
                 <div style={{padding:'14px 18px',borderBottom:'1px solid var(--border)',display:'flex',justifyContent:'space-between',alignItems:'center'}}>
-                  <div style={{fontSize:13,fontWeight:600,color:'var(--text-primary)'}}>Comparable Sales by Bedroom</div>
-                  <div style={{fontSize:11,color:'var(--text-muted)'}}>Avg price per type</div>
+                  <div style={{fontSize:13,fontWeight:600,color:'var(--text-primary)'}}>{t('Comparable Sales',lang)}</div>
+                  <div style={{fontSize:11,color:'var(--text-muted)'}}>{t('Avg price per type',lang)}</div>
                 </div>
                 {projectsData[selectedProject.key].rooms.slice(0,5).map((r,i,arr)=>{
                   const maxAvg=Math.max(...arr.map(x=>x.avg));

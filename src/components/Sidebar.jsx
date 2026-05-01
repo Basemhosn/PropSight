@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { t } from '../i18n';
 import PropSightLogo from './PropSightLogo';
 import { useAuth, supabase } from '../context/AuthContext';
 
@@ -118,14 +119,14 @@ export default function Sidebar({ page, setPage }) {
             <div style={{ width:28, height:28, borderRadius:8, background:'linear-gradient(135deg,#7C3AED,#A78BFA)', display:'flex', alignItems:'center', justifyContent:'center' }}><Icon name="upgrade" size={14}/></div>
             <div><div style={{ fontSize:12, fontWeight:700, color:'var(--text-primary)' }}>Upgrade to Lite</div><div style={{ fontSize:10, color:'var(--text-secondary)' }}>AED 99/mo · Unlock more features</div></div>
           </div>
-          <button onClick={() => nav('upgrade')} style={{ width:'100%', padding:'8px', borderRadius:8, border:'none', background:'linear-gradient(135deg,#7C3AED,#A78BFA)', color:'#fff', fontSize:13, fontWeight:600, cursor:'pointer', fontFamily:'system-ui' }}>Upgrade to Lite →</button>
+          <button onClick={() => nav('upgrade')} style={{ width:'100%', padding:'8px', borderRadius:8, border:'none', background:'linear-gradient(135deg,#7C3AED,#A78BFA)', color:'#fff', fontSize:13, fontWeight:600, cursor:'pointer', fontFamily:'system-ui' }}>{t('Upgrade to Lite',lang)}</button>
         </div>
       )}
       {isLite && !isPro && (
         <div style={{ margin:'8px', borderRadius:10, background:'linear-gradient(135deg,rgba(245,158,11,0.2),rgba(251,191,36,0.1))', border:'1px solid rgba(245,158,11,0.3)', padding:'12px' }}>
           <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:8 }}>
             <div style={{ width:28, height:28, borderRadius:8, background:'linear-gradient(135deg,#B45309,#F59E0B)', display:'flex', alignItems:'center', justifyContent:'center' }}><Icon name="upgrade" size={14}/></div>
-            <div><div style={{ fontSize:12, fontWeight:700, color:'var(--text-primary)' }}>Upgrade to Pro</div><div style={{ fontSize:10, color:'var(--text-secondary)' }}>AED 299/mo · Unlock everything</div></div>
+            <div><div style={{ fontSize:12, fontWeight:700, color:'var(--text-primary)' }}>{t('Upgrade to Pro',lang)}</div><div style={{ fontSize:10, color:'var(--text-secondary)' }}>AED 299/mo · Unlock everything</div></div>
           </div>
           <button onClick={() => nav('upgrade')} style={{ width:'100%', padding:'8px', borderRadius:8, border:'none', background:'linear-gradient(135deg,#B45309,#F59E0B)', color:'#fff', fontSize:13, fontWeight:600, cursor:'pointer', fontFamily:'system-ui' }}>Upgrade to Pro →</button>
         </div>
@@ -137,7 +138,7 @@ export default function Sidebar({ page, setPage }) {
         }
         <div style={{ flex:1, minWidth:0 }}>
           <div style={{ fontSize:12, fontWeight:600, color:'var(--text-secondary)', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{profile?.full_name?.split(' ')[0] || user?.email?.split('@')[0] || 'User'}</div>
-          <div style={{ fontSize:10, color:'var(--text-faint)' }}>{isPro?<span style={{color:'#F59E0B',fontWeight:700}}>Pro</span>:isLite?<span style={{color:'#A78BFA',fontWeight:700}}>Lite</span>:'Free plan'}</div>
+          <div style={{ fontSize:10, color:'var(--text-faint)' }}>{isPro?<span style={{color:'#F59E0B',fontWeight:700}}>Pro</span>:isLite?<span style={{color:'#A78BFA',fontWeight:700}}>Lite</span>:t('Free plan',lang)}</div>
         </div>
         <button onClick={() => { const c=document.documentElement.getAttribute('data-theme')||'dark'; const n=c==='dark'?'light':'dark'; document.documentElement.setAttribute('data-theme',n); localStorage.setItem('theme',n); setThemeMode(n); }} style={{ background:'none', border:'none', cursor:'pointer', color:'var(--text-muted)', padding:4, fontSize:13 }}>{themeMode==='dark'?'☀️':'🌙'}</button>
         <button onClick={signOut} style={{ background:'none', border:'none', cursor:'pointer', color:'var(--text-faint)', padding:4 }}><Icon name="logout" size={14}/></button>

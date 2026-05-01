@@ -36,3 +36,12 @@
 :root[data-theme="light"] {
   --top-area-bg: linear-gradient(135deg,#ECFDF5,#D1FAE5,#A7F3D0);
 }
+
+/* Arabic font */
+:root[dir="rtl"] {
+  --font-family: 'Cairo', 'Segoe UI', sans-serif;
+}
+[dir="rtl"] * {
+  font-family: var(--font-family, inherit);
+  letter-spacing: 0 !important;
+}
