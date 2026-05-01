@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { t } from '../i18n';
 import { fmtAED, fmtNum } from '../utils/format';
 
 const AREA_NICE = {'Al Barsha South Fourth':'JVC','Burj Khalifa':'Downtown Dubai','Marsa Dubai':'Dubai Marina','Hadaeq Sheikh Mohammed Bin Rashid':'Dubai Hills','Al Thanyah Fifth':'JLT','Business Bay':'Business Bay','Palm Jumeirah':'Palm Jumeirah','Al Merkadh':'MBR City','Al Khairan First':'Creek Harbour','Al Hebiah Fourth':'Damac Hills'};
@@ -15,7 +16,8 @@ const DEV_TIERS = {
 const getDevTier = (dev) => { for (const [tier, devs] of Object.entries(DEV_TIERS)) { if (devs.some(d => dev.toLowerCase().includes(d.toLowerCase()))) return tier; } return 'Standard'; };
 const DEV_PREMIUM = { 'Ultra Premium':'+30-50%', 'Premium':'+15-25%', 'Mid-Market':'Market rate', 'Affordable Luxury':'-5-10%', 'Value':'-10-20%', 'Standard':'Varies' };
 
-export default function DealAnalyzer({ areaData, projectsData }) {
+export default function DealAnalyzer({areaData, projectsData}) {
+  const lang = localStorage.getItem('lang') || 'en';
   const [tab, setTab] = useState('manual');
   const [unit, setUnit] = useState('sqft');
   const [mode, setMode] = useState('buy'); // 'buy' or 'sell'
@@ -103,8 +105,8 @@ ${mode==='buy'?
     <div style={{flex:1,overflowY:'auto',background:'var(--bg)',fontFamily:'system-ui',padding:'24px 28px'}}>
       <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:24}}>
         <div>
-          <h1 style={{margin:0,fontSize:22,fontWeight:700,color:'var(--text-primary)',marginBottom:4}}>Deal Analyzer</h1>
-          <div style={{fontSize:13,color:'var(--text-secondary)'}}>AI-powered analysis using live DLD market data</div>
+          <h1 style={{margin:0,fontSize:22,fontWeight:700,color:'var(--text-primary)',marginBottom:4}}>{t('Deal Analyzer',lang)}</h1>
+          <div style={{fontSize:13,color:'var(--text-secondary)'}}>{t('AI powered analysis',lang)}</div>
         </div>
         <div style={{display:'flex',gap:0,background:'var(--surface)',border:'1px solid rgba(59,130,246,0.15)',borderRadius:12,padding:4}}>
           {[['buy','🔍 Buying'],['sell','💰 Selling']].map(([m,label])=>(
@@ -115,7 +117,7 @@ ${mode==='buy'?
 
       <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:20}}>
         <div style={{background:'var(--surface)',border:'1px solid rgba(255,255,255,0.06)',borderRadius:14,padding:24}}>
-          <div style={{fontSize:14,fontWeight:600,color:'var(--text-primary)',marginBottom:16}}>Property Details</div>
+          <div style={{fontSize:14,fontWeight:600,color:'var(--text-primary)',marginBottom:16}}>{t('Property Details',lang)}</div>
 
           <div style={{display:'flex',gap:6,marginBottom:16,background:'var(--bg-alt)',borderRadius:10,padding:4,width:'fit-content'}}>
             {[['manual','Enter Details'],['url','Paste URL']].map(([id,label])=>(
@@ -125,21 +127,21 @@ ${mode==='buy'?
 
           {tab==='url' && (
             <div style={{marginBottom:14}}>
-              <label style={lbl}>Property URL or Description</label>
+              <label style={lbl}>{t('Property URL',lang)}</label>
               <textarea value={form.url} onChange={e=>setForm(f=>({...f,url:e.target.value}))} placeholder="Paste property URL or description..." rows={3} style={{...inp,resize:'vertical'}}/>
             </div>
           )}
 
           <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12,marginBottom:14}}>
             <div>
-              <label style={lbl}>Developer</label>
+              <label style={lbl}>{t('Developer',lang)}</label>
               <input value={form.developer} onChange={e=>setForm(f=>({...f,developer:e.target.value}))} placeholder="e.g. Ellington, Emaar, Azizi..." style={inp}/>
               {form.developer && getDevTier(form.developer) !== 'Standard' && (
                 <div style={{fontSize:10,marginTop:4,color:'#38BDF8'}}>Tier: {getDevTier(form.developer)} · {DEV_PREMIUM[getDevTier(form.developer)]}</div>
               )}
             </div>
             <div>
-              <label style={lbl}>Project / Building</label>
+              <label style={lbl}>{t('Project Building',lang)}</label>
               <input value={form.project} onChange={e=>setForm(f=>({...f,project:e.target.value}))} placeholder="e.g. Belgravia Heights..." style={inp}/>
             </div>
           </div>
@@ -153,13 +155,13 @@ ${mode==='buy'?
 
           <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12,marginBottom:14}}>
             <div>
-              <label style={lbl}>Type</label>
+              <label style={lbl}>{t('Type',lang)}</label>
               <select value={form.type} onChange={e=>setForm(f=>({...f,type:e.target.value}))} style={{...inp,cursor:'pointer'}}>
                 {['Apartment','Villa','Townhouse','Penthouse','Studio','Office'].map(t=><option key={t}>{t}</option>)}
               </select>
             </div>
             <div>
-              <label style={lbl}>Bedrooms</label>
+              <label style={lbl}>{t('Bedrooms',lang)}</label>
               <select value={form.bedrooms} onChange={e=>setForm(f=>({...f,bedrooms:e.target.value}))} style={{...inp,cursor:'pointer'}}>
                 <option value="">Any</option>
                 {['Studio','1','2','3','4','5+'].map(b=><option key={b}>{b}</option>)}
@@ -174,7 +176,7 @@ ${mode==='buy'?
             </div>
             <div>
               <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:5}}>
-                <label style={{...lbl,marginBottom:0}}>Size</label>
+                <label style={{...lbl,marginBottom:0}}>{t('Size',lang)}</label>
                 <div style={{display:'flex',gap:4}}>
                   {['sqft','sqm'].map(u=>(
                     <button key={u} onClick={()=>setUnit(u)} style={{padding:'2px 8px',borderRadius:20,border:'none',cursor:'pointer',fontSize:10,fontWeight:unit===u?700:400,fontFamily:'system-ui',background:unit===u?'var(--border-strong)':'rgba(59,130,246,0.06)',color:unit===u?'#38BDF8':'var(--text-muted)'}}>{u}</button>
@@ -216,7 +218,7 @@ ${mode==='buy'?
           {!result&&!loading && (
             <div style={{background:'var(--surface)',border:'1px solid rgba(255,255,255,0.06)',borderRadius:14,padding:40,textAlign:'center',height:'100%',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center'}}>
               <div style={{fontSize:48,marginBottom:16}}>🤖</div>
-              <div style={{fontSize:16,fontWeight:600,color:'var(--text-primary)',marginBottom:8}}>AI Deal Verdict</div>
+              <div style={{fontSize:16,fontWeight:600,color:'var(--text-primary)',marginBottom:8}}>{t('AI Deal Verdict',lang)}</div>
               <div style={{fontSize:13,color:'var(--text-secondary)',lineHeight:1.6}}>Enter property details and click Analyze to get an AI-powered investment verdict using live Dubai market data.</div>
             </div>
           )}
@@ -247,22 +249,22 @@ ${mode==='buy'?
                 </div>
                 <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10}}>
                   <div style={{background:'rgba(59,130,246,0.06)',border:'1px solid rgba(59,130,246,0.1)',borderRadius:10,padding:14}}>
-                    <div style={{fontSize:10,color:'var(--text-muted)',marginBottom:4}}>FAIR VALUE</div>
+                    <div style={{fontSize:10,color:'var(--text-muted)',marginBottom:4}}>{t('FAIR VALUE',lang)}</div>
                     <div style={{fontSize:18,fontWeight:700,color:'var(--text-primary)'}}>{fmtAED(result.fairValue,true)}</div>
                   </div>
                   <div style={{background:'rgba(59,130,246,0.06)',border:'1px solid rgba(59,130,246,0.1)',borderRadius:10,padding:14}}>
-                    <div style={{fontSize:10,color:'var(--text-muted)',marginBottom:4}}>YOUR PRICE/SQFT</div>
+                    <div style={{fontSize:10,color:'var(--text-muted)',marginBottom:4}}>{t('YOUR PRICE/SQFT',lang)}</div>
                     <div style={{fontSize:15,fontWeight:700,color:'var(--text-primary)'}}>AED {fmtNum(result.ppsqft)}<span style={{fontSize:11,color:'var(--text-secondary)'}}> vs mkt AED {fmtNum(result.marketPpsqft)}</span></div>
                     <div style={{fontSize:12,color:'var(--text-secondary)',marginTop:2}}>AED {fmtNum(result.ppsqm)}/sqm vs mkt AED {fmtNum(result.marketPpsqm)}/sqm</div>
                   </div>
                 </div>
                 <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12}}>
                   <div style={{background:'rgba(34,197,94,0.06)',border:'1px solid rgba(34,197,94,0.15)',borderRadius:10,padding:14}}>
-                    <div style={{fontSize:11,fontWeight:600,color:'#22C55E',marginBottom:10}}>PROS</div>
+                    <div style={{fontSize:11,fontWeight:600,color:'#22C55E',marginBottom:10}}>{t('PROS',lang)}</div>
                     {result.pros?.map((p,i)=><div key={i} style={{fontSize:12,color:'var(--text-secondary)',marginBottom:6,display:'flex',gap:6}}><span style={{color:'#22C55E',flexShrink:0}}>✓</span>{p}</div>)}
                   </div>
                   <div style={{background:'rgba(248,113,113,0.06)',border:'1px solid rgba(248,113,113,0.15)',borderRadius:10,padding:14}}>
-                    <div style={{fontSize:11,fontWeight:600,color:'#F87171',marginBottom:10}}>CONS</div>
+                    <div style={{fontSize:11,fontWeight:600,color:'#F87171',marginBottom:10}}>{t('CONS',lang)}</div>
                     {result.cons?.map((c,i)=><div key={i} style={{fontSize:12,color:'var(--text-secondary)',marginBottom:6,display:'flex',gap:6}}><span style={{color:'#F87171',flexShrink:0}}>✗</span>{c}</div>)}
                   </div>
                 </div>

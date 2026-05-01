@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { t } from '../i18n';
 import { fmtAED, fmtNum } from '../utils/format';
 
 const AN = {'Al Barsha South Fourth':'JVC','Burj Khalifa':'Downtown Dubai','Marsa Dubai':'Dubai Marina','Hadaeq Sheikh Mohammed Bin Rashid':'Dubai Hills','Al Thanyah Fifth':'JLT','Business Bay':'Business Bay','Palm Jumeirah':'Palm Jumeirah','Al Merkadh':'MBR City','Al Khairan First':'Creek Harbour'};
@@ -14,7 +15,7 @@ function LiveFeedTab({ recentRaw }) {
   const rows = useMemo(()=>{
     if(!recentRaw?.length) return [];
     let r=[...recentRaw].sort((a,b)=>(b.d||'').localeCompare(a.d||''));
-    if(filter!=='all') r=r.filter(x=>(x.t||'Sale')===filter);
+    if(filter!=='all') r=r.filter(x=>(x.t||t('Sale',lang))===filter);
     if(areaFilter) r=r.filter(x=>(x.a||'')===areaFilter);
     if(minVal) r=r.filter(x=>(x.v||0)>=parseFloat(minVal)*1e6);
     return r;
@@ -39,12 +40,12 @@ function LiveFeedTab({ recentRaw }) {
       )}
       <div style={{display:'flex',gap:8,flexWrap:'wrap',alignItems:'center',marginBottom:14}}>
         <div style={{display:'flex',gap:6}}>
-          {['all','Sale','Mortgage','Gift'].map(f=>(
+          {['all',t('Sale',lang),t('Mortgage',lang),t('Gift',lang)].map(f=>(
             <button key={f} onClick={()=>setFilter(f)} style={{padding:'6px 12px',borderRadius:20,border:'none',cursor:'pointer',fontSize:11,fontWeight:filter===f?600:400,fontFamily:'system-ui',background:filter===f?'linear-gradient(135deg,#1D4ED8,#38BDF8)':'rgba(59,130,246,0.06)',color:filter===f?'#fff':'var(--text-muted)'}}>{f==='all'?'All':f}</button>
           ))}
         </div>
         <select value={areaFilter} onChange={e=>setAreaFilter(e.target.value)} style={{...inp,cursor:'pointer'}}>
-          <option value="">All areas</option>
+          <option value="">{t('All areas',lang)}</option>
           {areas.map(a=><option key={a} value={a}>{na(a)}</option>)}
         </select>
         <input value={minVal} onChange={e=>setMinVal(e.target.value)} placeholder="Min (M AED)" style={{...inp,width:110}}/>
@@ -55,7 +56,7 @@ function LiveFeedTab({ recentRaw }) {
           {['Date','Project / Area','Value','Reg','Type','Size','AED/sqft'].map((h,i)=><div key={i} style={{fontSize:10,color:'var(--text-secondary)',fontWeight:600,textTransform:'uppercase',letterSpacing:'0.05em'}}>{h}</div>)}
         </div>
         {rows.slice(0,visibleCount).map((r,i)=>{
-          const tc=TC[r.t||'Sale']||TC.Sale;
+          const tc=TC[r.t||t('Sale',lang)]||TC.Sale;
           const ppsqft=r.s&&r.v?Math.round(r.v/r.s/10.764):0;
           return (
             <div key={r.n||i} style={{display:'grid',gridTemplateColumns:'90px 1fr 90px 70px 70px 80px 75px',padding:'11px 20px',borderBottom:i<Math.min(rows.length,visibleCount)-1?'1px solid rgba(255,255,255,0.03)':'none'}}
@@ -69,8 +70,8 @@ function LiveFeedTab({ recentRaw }) {
                 <div style={{fontSize:10,color:'var(--text-secondary)'}}>{na(r.a||'')} {r.b?'· '+r.b:''}</div>
               </div>
               <div style={{fontSize:12,fontWeight:700,color:'var(--text-primary)'}}>{r.v?fmtAED(r.v,true):'—'}</div>
-              <div><span style={{fontSize:9,fontWeight:600,padding:'2px 5px',borderRadius:20,background:r.r==='Off'?'rgba(59,130,246,0.1)':'rgba(34,197,94,0.1)',color:r.r==='Off'?'#38BDF8':'#22C55E'}}>{r.r==='Off'?'Off-Plan':'Ready'}</span></div>
-              <div><span style={{fontSize:9,fontWeight:600,padding:'2px 5px',borderRadius:20,background:tc.bg,color:tc.color}}>{r.t||'Sale'}</span></div>
+              <div><span style={{fontSize:9,fontWeight:600,padding:'2px 5px',borderRadius:20,background:r.r==='Off'?'rgba(59,130,246,0.1)':'rgba(34,197,94,0.1)',color:r.r==='Off'?'#38BDF8':'#22C55E'}}>{r.r==='Off'?t('Off-Plan',lang):t('Ready',lang)}</span></div>
+              <div><span style={{fontSize:9,fontWeight:600,padding:'2px 5px',borderRadius:20,background:tc.bg,color:tc.color}}>{r.t||t('Sale',lang)}</span></div>
               <div style={{fontSize:11,color:'var(--text-muted)'}}>{r.s?fmtNum(Math.round(r.s*10.764))+' sqft':'—'}</div>
               <div style={{fontSize:11,color:'#38BDF8'}}>{ppsqft?'AED '+fmtNum(ppsqft):'—'}</div>
             </div>
@@ -96,7 +97,7 @@ function SearchTab({ recentRaw }) {
   const PER = 50;
   const rows = useMemo(()=>{
     if(!recentRaw?.length) return [];
-    return recentRaw.map(r=>({id:r.n,date:r.d,type:r.t||'Sale',reg:r.r==='Off'?'Off-Plan':'Ready',area:r.a||'',project:r.j||'',value:r.v||0,size:r.s||0,rooms:r.b||'',ppsqft:r.s>0?Math.round((r.v||0)/r.s/10.764):0}));
+    return recentRaw.map(r=>({id:r.n,date:r.d,type:r.t||t('Sale',lang),reg:r.r==='Off'?t('Off-Plan',lang):t('Ready',lang),area:r.a||'',project:r.j||'',value:r.v||0,size:r.s||0,rooms:r.b||'',ppsqft:r.s>0?Math.round((r.v||0)/r.s/10.764):0}));
   },[recentRaw]);
   const filtered = useMemo(()=>{
     let res=rows;
@@ -126,8 +127,8 @@ function SearchTab({ recentRaw }) {
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#475569" strokeWidth="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
           <input value={search} onChange={e=>{setSearch(e.target.value);setPg(1);}} placeholder="Search area or project..." style={{background:'none',border:'none',outline:'none',color:'var(--text-secondary)',fontSize:12,flex:1,fontFamily:'system-ui'}}/>
         </div>
-        <select value={typeF} onChange={e=>{setTypeF(e.target.value);setPg(1);}} style={{...inp,cursor:'pointer'}}><option value="">All types</option><option>Sale</option><option>Mortgage</option><option>Gift</option></select>
-        <select value={regF} onChange={e=>{setRegF(e.target.value);setPg(1);}} style={{...inp,cursor:'pointer'}}><option value="">All reg</option><option>Off-Plan</option><option>Ready</option></select>
+        <select value={typeF} onChange={e=>{setTypeF(e.target.value);setPg(1);}} style={{...inp,cursor:'pointer'}}><option value="">{t('All types',lang)}</option><option>Sale</option><option>Mortgage</option><option>Gift</option></select>
+        <select value={regF} onChange={e=>{setRegF(e.target.value);setPg(1);}} style={{...inp,cursor:'pointer'}}><option value="">{t('All reg',lang)}</option><option>Off-Plan</option><option>Ready</option></select>
         <input value={minVal} onChange={e=>{setMinVal(e.target.value);setPg(1);}} placeholder="Min (M AED)" style={inp}/>
         <input value={maxVal} onChange={e=>{setMaxVal(e.target.value);setPg(1);}} placeholder="Max (M AED)" style={inp}/>
       </div>
@@ -135,14 +136,14 @@ function SearchTab({ recentRaw }) {
         <div style={{display:'grid',gridTemplateColumns:'90px 70px 70px 1fr 1fr 100px 70px',padding:'10px 20px',borderBottom:'1px solid rgba(255,255,255,0.06)',background:'rgba(59,130,246,0.04)'}}>
           {['Date','Type','Reg','Area','Project','Value','AED/sqft'].map((h,i)=><div key={i} style={{fontSize:10,color:'var(--text-secondary)',fontWeight:600,textTransform:'uppercase',letterSpacing:'0.04em'}}>{h}</div>)}
         </div>
-        {paged.length===0 ? <div style={{textAlign:'center',padding:40,color:'var(--text-secondary)'}}>No results</div>
+        {paged.length===0 ? <div style={{textAlign:'center',padding:40,color:'var(--text-secondary)'}}>{t('No results',lang)}</div>
         : paged.map((r,i)=>(
           <div key={r.id||i} style={{display:'grid',gridTemplateColumns:'90px 70px 70px 1fr 1fr 100px 70px',padding:'10px 20px',borderBottom:i<paged.length-1?'1px solid rgba(255,255,255,0.03)':'none'}}
             onMouseEnter={e=>e.currentTarget.style.background='rgba(59,130,246,0.04)'}
             onMouseLeave={e=>e.currentTarget.style.background='transparent'}>
             <div style={{fontSize:11,color:'var(--text-muted)'}}>{r.date}</div>
             <div><span style={{fontSize:9,fontWeight:600,padding:'2px 5px',borderRadius:20,background:'rgba(59,130,246,0.1)',color:'#38BDF8'}}>{r.type}</span></div>
-            <div><span style={{fontSize:9,fontWeight:600,padding:'2px 5px',borderRadius:20,background:r.reg==='Off-Plan'?'rgba(59,130,246,0.1)':'rgba(34,197,94,0.1)',color:r.reg==='Off-Plan'?'#38BDF8':'#22C55E'}}>{r.reg==='Off-Plan'?'Off':'Ready'}</span></div>
+            <div><span style={{fontSize:9,fontWeight:600,padding:'2px 5px',borderRadius:20,background:r.reg===t('Off-Plan',lang)?'rgba(59,130,246,0.1)':'rgba(34,197,94,0.1)',color:r.reg===t('Off-Plan',lang)?'#38BDF8':'#22C55E'}}>{r.reg===t('Off-Plan',lang)?'Off':t('Ready',lang)}</span></div>
             <div style={{fontSize:11,color:'var(--text-secondary)',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{na(r.area)}</div>
             <div style={{fontSize:11,color:'var(--text-muted)',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{r.project||'—'}</div>
             <div style={{fontSize:12,fontWeight:600,color:'var(--text-primary)'}}>{fmtAED(r.value,true)}</div>
@@ -162,6 +163,7 @@ function SearchTab({ recentRaw }) {
 }
 
 export default function RecentTransactions({ recentRaw }) {
+  const lang = localStorage.getItem('lang') || 'en';
   const [tab, setTab] = useState('live');
   return (
     <div style={{flex:1,display:'flex',flexDirection:'column',background:'var(--bg)',fontFamily:'system-ui',overflow:'hidden'}}>
@@ -169,13 +171,13 @@ export default function RecentTransactions({ recentRaw }) {
         <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:16}}>
           <div>
             <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:4}}>
-              <h1 style={{margin:0,fontSize:22,fontWeight:700,color:'var(--text-primary)'}}>Recent Transactions</h1>
+              <h1 style={{margin:0,fontSize:22,fontWeight:700,color:'var(--text-primary)'}}>{t('Recent Transactions broker',lang)}</h1>
               <div style={{display:'flex',alignItems:'center',gap:6,background:'rgba(34,197,94,0.08)',border:'1px solid rgba(34,197,94,0.15)',borderRadius:20,padding:'4px 12px'}}>
                 <div style={{width:6,height:6,borderRadius:'50%',background:'#22C55E',boxShadow:'0 0 6px #22C55E'}}/>
-                <span style={{fontSize:11,fontWeight:600,color:'#22C55E'}}>LIVE DLD DATA</span>
+                <span style={{fontSize:11,fontWeight:600,color:'#22C55E'}}>{t('LIVE DLD DATA',lang)}</span>
               </div>
             </div>
-            <div style={{fontSize:13,color:'var(--text-secondary)'}}>Latest transactions from Dubai Land Department</div>
+            <div style={{fontSize:13,color:'var(--text-secondary)'}}>{t('Latest transactions',lang)}</div>
           </div>
           <div style={{display:'flex',gap:6,background:'var(--surface)',border:'1px solid rgba(59,130,246,0.15)',borderRadius:10,padding:4}}>
             {[['live','Live Feed'],['search','Search & Filter']].map(([t,l])=>(

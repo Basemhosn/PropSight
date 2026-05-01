@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { t } from '../i18n';
 import { AreaChart, Area, BarChart, Bar, XAxis, YAxis, Tooltip,
          ResponsiveContainer, CartesianGrid } from 'recharts';
 import { fmtAED, fmtNum } from '../utils/format';
@@ -48,7 +49,8 @@ function KPICard({ label, value, sub, subColor = '#38BDF8', trend }) {
   );
 }
 
-export default function HomePage({ core, areaData, recentRaw, onNavigate, isPro }) {
+export default function HomePage({core, areaData, recentRaw, onNavigate, isPro}) {
+  const lang = localStorage.getItem('lang') || 'en';
   const [selectedArea, setSelectedArea] = useState('All Dubai');
   const [searchQuery, setSearchQuery] = useState('');
   const [searchType, setSearchType] = useState('Sales');
@@ -104,9 +106,9 @@ export default function HomePage({ core, areaData, recentRaw, onNavigate, isPro 
             <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
           </svg>
           <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>
-            <span style={{ color: '#38BDF8', fontWeight: 600 }}>PropSight Pro</span>
+            <span style={{ color: '#38BDF8', fontWeight: 600 }}>{t('PropSight Pro',lang)}</span>
             {' '}— Market Intelligence · Deal Analyzer · Dubai Heatmap ·{' '}
-            <span style={{ color: '#F59E0B', fontWeight: 500 }}>Upgrade today</span>
+            <span style={{ color: '#F59E0B', fontWeight: 500 }}>{t('Upgrade today',lang)}</span>
           </span>
         </div>
         <button style={{
@@ -146,7 +148,7 @@ export default function HomePage({ core, areaData, recentRaw, onNavigate, isPro 
             padding: '8px 20px', borderRadius: 10, border: 'none', cursor: 'pointer',
             background: 'linear-gradient(135deg,#1D4ED8,#38BDF8)',
             color: '#fff', fontSize: 13, fontWeight: 600, fontFamily: 'system-ui',
-          }} onClick={()=>setShowResults(true)}>Search</button>
+          }} onClick={()=>setShowResults(true)}>{t('Search',lang)}</button>
           {showResults && <button onClick={()=>{setShowResults(false);setSearchQuery('');}} style={{background:'none',border:'none',cursor:'pointer',color:'#F87171',fontSize:18,padding:'0 4px'}}>×</button>}
         </div>
 
@@ -179,8 +181,8 @@ export default function HomePage({ core, areaData, recentRaw, onNavigate, isPro 
                   {isRental&&<span style={{fontSize:10,color:'#F59E0B',marginLeft:8,background:'rgba(245,158,11,0.1)',padding:'2px 8px',borderRadius:20}}>Ready residential — DLD sales data</span>}
                 </div>
                 <div style={{display:'flex',gap:16}}>
-                  {avgVal>0 && <div style={{textAlign:'right'}}><div style={{fontSize:10,color:'var(--text-secondary)'}}>AVG DEAL</div><div style={{fontSize:14,fontWeight:700,color:'#38BDF8'}}>{fmtAED(avgVal,true)}</div></div>}
-                  {avgPsqft>0 && <div style={{textAlign:'right'}}><div style={{fontSize:10,color:'var(--text-secondary)'}}>AVG/SQFT</div><div style={{fontSize:14,fontWeight:700,color:'var(--text-primary)'}}>AED {fmtNum(avgPsqft)}</div></div>}
+                  {avgVal>0 && <div style={{textAlign:'right'}}><div style={{fontSize:10,color:'var(--text-secondary)'}}>{t('AVG DEAL',lang)}</div><div style={{fontSize:14,fontWeight:700,color:'#38BDF8'}}>{fmtAED(avgVal,true)}</div></div>}
+                  {avgPsqft>0 && <div style={{textAlign:'right'}}><div style={{fontSize:10,color:'var(--text-secondary)'}}>{t('AVG/SQFT',lang)}</div><div style={{fontSize:14,fontWeight:700,color:'var(--text-primary)'}}>AED {fmtNum(avgPsqft)}</div></div>}
                 </div>
               </div>
               {results.length === 0 ? (
@@ -331,7 +333,7 @@ export default function HomePage({ core, areaData, recentRaw, onNavigate, isPro 
                 </svg>
                 <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-primary)' }}>Transaction Volume (30d)</span>
               </div>
-              <span style={{ fontSize: 11, color: '#475569' }}>Top areas by activity</span>
+              <span style={{ fontSize: 11, color: '#475569' }}>{t('Top areas',lang)}</span>
             </div>
             <ResponsiveContainer width="100%" height={180}>
               <BarChart data={areaVolumes} margin={{ top: 8, right: 4, left: 0, bottom: 0 }}>

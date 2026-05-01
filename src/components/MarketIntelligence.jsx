@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { t } from '../i18n';
 import { AreaChart, Area, ResponsiveContainer, Tooltip, LineChart, Line, CartesianGrid, XAxis, YAxis } from 'recharts';
 import { fmtAED, fmtNum } from '../utils/format';
 
@@ -35,7 +36,8 @@ function MiniChart({ data, color='#22C55E' }) {
   );
 }
 
-export default function MarketIntelligence({ areaData, core }) {
+export default function MarketIntelligence({areaData, core}) {
+  const lang = localStorage.getItem('lang') || 'en';
   const [activeTab, setActiveTab] = useState('all');
 
   const allAreas = useMemo(() => {
@@ -104,7 +106,7 @@ export default function MarketIntelligence({ areaData, core }) {
         </div>
         <div style={{ display:'flex', alignItems:'center', gap:6, background:'rgba(34,197,94,0.08)', border:'1px solid rgba(34,197,94,0.15)', borderRadius:20, padding:'6px 14px' }}>
           <div style={{ width:6, height:6, borderRadius:'50%', background:'#22C55E', boxShadow:'0 0 6px #22C55E' }}/>
-          <span style={{ fontSize:11, fontWeight:600, color:'#22C55E' }}>DLD LIVE</span>
+          <span style={{ fontSize:11, fontWeight:600, color:'#22C55E' }}>{t('DLD LIVE',lang)}</span>
         </div>
       </div>
 
@@ -141,7 +143,7 @@ export default function MarketIntelligence({ areaData, core }) {
       <div style={{ background:'var(--surface)', border:'1px solid rgba(255,255,255,0.06)', borderRadius:14, padding:20, marginBottom:20 }}>
         <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:14 }}>
           <div>
-            <div style={{ fontSize:14, fontWeight:600, color:'var(--text-primary)' }}>Price Trend (AED/sqft)</div>
+            <div style={{ fontSize:14, fontWeight:600, color:'var(--text-primary)' }}>{t('Price Trend AED',lang)}</div>
             <div style={{ fontSize:11, color:'var(--text-secondary)' }}>{activeTab==='all'?'All Dubai average':nice(activeTab)} · Yearly</div>
           </div>
         </div>
@@ -161,7 +163,7 @@ export default function MarketIntelligence({ areaData, core }) {
       <div style={{ marginBottom:20 }}>
         <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:16 }}>
           <span style={{ fontSize:16 }}>👑</span>
-          <span style={{ fontSize:15, fontWeight:700, color:'var(--text-primary)' }}>Top Performing Areas</span>
+          <span style={{ fontSize:15, fontWeight:700, color:'var(--text-primary)' }}>{t('Top Performing Areas',lang)}</span>
           <span style={{ fontSize:12, color:'var(--text-secondary)' }}>by transaction volume</span>
         </div>
 
@@ -214,7 +216,7 @@ export default function MarketIntelligence({ areaData, core }) {
               </div>
               <div style={{ fontSize:13, fontWeight:700, color:'var(--text-primary)', marginBottom:2 }}>{area.name.length>20?area.name.split(' ').slice(0,3).join(' '):area.name}</div>
               <div style={{ fontSize:11, color:'var(--text-secondary)', marginBottom:10 }}>{fmtNum(area.count)} transactions</div>
-              <div style={{ fontSize:10, color:'var(--text-muted)', marginBottom:3 }}>PRICE / SQFT</div>
+              <div style={{ fontSize:10, color:'var(--text-muted)', marginBottom:3 }}>{t('PRICE / SQFT',lang)}</div>
               <div style={{ fontSize:15, fontWeight:700, color:'var(--text-primary)' }}>AED {fmtNum(area.ppsqft)}</div>
             </div>
           ))}

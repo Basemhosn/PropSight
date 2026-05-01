@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
+import { t } from '../i18n';
 import { fmtAED, fmtNum } from '../utils/format';
 import { AreaChart, Area, ResponsiveContainer, Tooltip, CartesianGrid, XAxis, YAxis } from 'recharts';
 
 const AREA_NICE = {'Al Barsha South Fourth':'JVC','Burj Khalifa':'Downtown Dubai','Marsa Dubai':'Dubai Marina','Hadaeq Sheikh Mohammed Bin Rashid':'Dubai Hills','Al Thanyah Fifth':'JLT','Business Bay':'Business Bay','Palm Jumeirah':'Palm Jumeirah','Al Merkadh':'MBR City'};
 const niceArea = a => AREA_NICE[a] || a;
 
-export default function MarketPulse({ onAreaClick, core, areaData }) {
+export default function MarketPulse({onAreaClick, core, areaData}) {
+  const lang = localStorage.getItem('lang') || 'en';
   const [summary, setSummary] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -105,7 +107,7 @@ Respond ONLY with JSON (no markdown):
 
         <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16,marginBottom:24}}>
           <div style={{background:'var(--surface)',border:'1px solid rgba(255,255,255,0.06)',borderRadius:14,padding:20}}>
-            <div style={{fontSize:13,fontWeight:600,color:'var(--text-primary)',marginBottom:14}}>Monthly Volume</div>
+            <div style={{fontSize:13,fontWeight:600,color:'var(--text-primary)',marginBottom:14}}>{t('Monthly Volume',lang)}</div>
             <ResponsiveContainer width="100%" height={160}>
               <AreaChart data={monthly} margin={{top:4,right:4,left:0,bottom:0}}>
                 <defs><linearGradient id="mpg1" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor="#38BDF8" stopOpacity={0.15}/><stop offset="95%" stopColor="#38BDF8" stopOpacity={0}/></linearGradient></defs>
@@ -118,7 +120,7 @@ Respond ONLY with JSON (no markdown):
             </ResponsiveContainer>
           </div>
           <div style={{background:'var(--surface)',border:'1px solid rgba(255,255,255,0.06)',borderRadius:14,padding:20}}>
-            <div style={{fontSize:13,fontWeight:600,color:'var(--text-primary)',marginBottom:14}}>Price / sqft Trend</div>
+            <div style={{fontSize:13,fontWeight:600,color:'var(--text-primary)',marginBottom:14}}>{t('Price sqft Trend',lang)}</div>
             <ResponsiveContainer width="100%" height={160}>
               <AreaChart data={priceTrend} margin={{top:4,right:4,left:0,bottom:0}}>
                 <defs><linearGradient id="mpg2" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor="#22C55E" stopOpacity={0.15}/><stop offset="95%" stopColor="#22C55E" stopOpacity={0}/></linearGradient></defs>
@@ -152,7 +154,7 @@ Respond ONLY with JSON (no markdown):
 
         {summary?.outlook && (
           <div style={{background:'linear-gradient(135deg,rgba(29,78,216,0.1),rgba(56,189,248,0.05))',border:'1px solid rgba(59,130,246,0.2)',borderRadius:14,padding:20,textAlign:'center'}}>
-            <div style={{fontSize:11,color:'#38BDF8',fontWeight:600,textTransform:'uppercase',letterSpacing:'0.08em',marginBottom:8}}>AI OUTLOOK</div>
+            <div style={{fontSize:11,color:'#38BDF8',fontWeight:600,textTransform:'uppercase',letterSpacing:'0.08em',marginBottom:8}}>{t('AI OUTLOOK',lang)}</div>
             <div style={{fontSize:15,color:'var(--text-primary)',lineHeight:1.6,fontStyle:'italic'}}>"{summary.outlook}"</div>
           </div>
         )}
