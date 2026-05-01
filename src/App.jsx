@@ -75,7 +75,7 @@ function useMobile() {
 }
 
 
-function BrokerTopBar({ user, profile, signOut }) {
+function BrokerTopBar({ user, profile, signOut, toggleLang, lang }) {
   const [showMenu, setShowMenu] = useState(false);
   const [themeMode, setThemeMode] = useState(() => localStorage.getItem('theme') || 'dark');
 
@@ -190,7 +190,7 @@ export default function App() {
       <Sidebar page={page} setPage={setPage} />
       {/* Broker top bar — matches investor portal nav style */}
       <div style={{display:'flex',flexDirection:'column',flex:1,overflow:'hidden',minWidth:0}}>
-        <BrokerTopBar user={user} profile={profile} signOut={signOut} />
+        <BrokerTopBar user={user} profile={profile} signOut={signOut} toggleLang={toggleLang} lang={lang} />
         <div style={{flex:1,display:"flex",flexDirection:"column",overflow:"hidden",minWidth:0}}>
 
         {page === "home" && <HomePage core={core} areaData={areaData} recentRaw={recentRaw} onNavigate={setPage} isPro={isPro} isLite={isLite} />}
