@@ -1,3 +1,4 @@
+import { t } from '../i18n';
 import { useState, useMemo } from 'react';
 import { fmtAED, fmtNum } from '../utils/format';
 
@@ -6,6 +7,7 @@ const niceArea = a => AREA_NICE[a] || a;
 const TYPE_COLOR = {Sale:{bg:'rgba(59,130,246,0.1)',color:'#38BDF8'},Mortgage:{bg:'rgba(34,197,94,0.1)',color:'#22C55E'},Gift:{bg:'rgba(245,158,11,0.1)',color:'#F59E0B'}};
 
 export default function LiveFeed({ recentRaw }) {
+  const lang = localStorage.getItem('lang') || 'en';
   const [filter, setFilter] = useState('all');
   const [areaFilter, setAreaFilter] = useState('');
   const [minVal, setMinVal] = useState('');
@@ -44,7 +46,7 @@ export default function LiveFeed({ recentRaw }) {
         <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:16}}>
           <div>
             <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:4}}>
-              <h1 style={{margin:0,fontSize:22,fontWeight:700,color:'var(--text-primary)'}}>Live DLD Feed</h1>
+              <h1 style={{margin:0,fontSize:22,fontWeight:700,color:'var(--text-primary)'}}>{t('Live DLD Feed',lang)}</h1>
               <div style={{display:'flex',alignItems:'center',gap:6,background:'rgba(34,197,94,0.08)',border:'1px solid rgba(34,197,94,0.15)',borderRadius:20,padding:'4px 12px'}}>
                 <div style={{width:6,height:6,borderRadius:'50%',background:'#22C55E',boxShadow:'0 0 6px #22C55E'}}/>
                 <span style={{fontSize:11,fontWeight:600,color:'#22C55E'}}>LIVE</span>
@@ -55,7 +57,7 @@ export default function LiveFeed({ recentRaw }) {
         </div>
         {stats && (
           <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:12,marginBottom:16}}>
-            {[["Today's Txns",fmtNum(stats.todayCount),'var(--text-primary)'],["Today's Value",fmtAED(stats.todayValue,true),'#38BDF8'],['Feed Value',fmtAED(stats.totalShown,true),'var(--text-primary)'],['Avg Deal',fmtAED(stats.avg,true),'#22C55E']].map(([l,v,c],i)=>(
+            {[[t("Today's Txns",lang),fmtNum(stats.todayCount),'var(--text-primary)'],[t("Today's Value",lang),fmtAED(stats.todayValue,true),'#38BDF8'],[t('Feed Value',lang),fmtAED(stats.totalShown,true),'var(--text-primary)'],[t('Avg Deal',lang),fmtAED(stats.avg,true),'#22C55E']].map(([l,v,c],i)=>(
               <div key={i} style={{background:'var(--surface)',border:'1px solid rgba(255,255,255,0.06)',borderRadius:10,padding:'10px 14px'}}>
                 <div style={{fontSize:10,color:'var(--text-muted)',marginBottom:4,textTransform:'uppercase',letterSpacing:'0.05em'}}>{l}</div>
                 <div style={{fontSize:15,fontWeight:700,color:c}}>{v}</div>
@@ -70,7 +72,7 @@ export default function LiveFeed({ recentRaw }) {
             ))}
           </div>
           <select value={areaFilter} onChange={e=>setAreaFilter(e.target.value)} style={{...inp,cursor:'pointer'}}>
-            <option value="">All areas</option>
+            <option value="">{t('All areas',lang)}</option>
             {areas.map(a=><option key={a} value={a}>{niceArea(a)}</option>)}
           </select>
           <input value={minVal} onChange={e=>setMinVal(e.target.value)} placeholder="Min (M AED)" style={{...inp,width:110}}/>
@@ -79,9 +81,9 @@ export default function LiveFeed({ recentRaw }) {
       </div>
 
       <div style={{flex:1,overflowY:'auto'}}>
-        {rows.length===0 ? <div style={{textAlign:'center',padding:60,color:'var(--text-secondary)'}}>No transactions match your filters</div> : <>
+        {rows.length===0 ? <div style={{textAlign:'center',padding:60,color:'var(--text-secondary)'}}>{t('No transactions match',lang)}</div> : <>
           <div style={{display:'grid',gridTemplateColumns:'90px 1fr 90px 70px 70px 80px 75px',padding:'10px 28px',borderBottom:'1px solid rgba(59,130,246,0.06)',background:'rgba(59,130,246,0.02)',position:'sticky',top:0,zIndex:10}}>
-            {['Date','Project / Area','Value','Reg','Type','Size','Price/sqft'].map((h,i)=><div key={i} style={{fontSize:10,color:'var(--text-secondary)',fontWeight:600,textTransform:'uppercase',letterSpacing:'0.05em'}}>{h}</div>)}
+            {[t('Date',lang),t('Project / Area',lang),t('Value',lang),t('Reg',lang),t('Type',lang),t('Size',lang),t('Price/sqft',lang)].map((h,i)=><div key={i} style={{fontSize:10,color:'var(--text-secondary)',fontWeight:600,textTransform:'uppercase',letterSpacing:'0.05em'}}>{h}</div>)}
           </div>
           {rows.slice(0,visibleCount).map((r,i)=>{
             const tc=TYPE_COLOR[r.t||'Sale']||TYPE_COLOR.Sale;
@@ -99,7 +101,7 @@ export default function LiveFeed({ recentRaw }) {
                   <div style={{fontSize:10,color:'var(--text-secondary)'}}>{niceArea(r.a||'')} {r.b?'· '+r.b:''}</div>
                 </div>
                 <div style={{fontSize:12,fontWeight:700,color:'var(--text-primary)'}}>{r.v?fmtAED(r.v,true):'—'}</div>
-                <div><span style={{fontSize:9,fontWeight:600,padding:'2px 5px',borderRadius:20,background:r.r==='Off'?'rgba(59,130,246,0.1)':'rgba(34,197,94,0.1)',color:r.r==='Off'?'#38BDF8':'#22C55E'}}>{r.r==='Off'?'Off-Plan':'Ready'}</span></div>
+                <div><span style={{fontSize:9,fontWeight:600,padding:'2px 5px',borderRadius:20,background:r.r==='Off'?'rgba(59,130,246,0.1)':'rgba(34,197,94,0.1)',color:r.r==='Off'?'#38BDF8':'#22C55E'}}>{r.r==='Off'?t('Off-Plan',lang):t('Ready',lang)}</span></div>
                 <div><span style={{fontSize:9,fontWeight:600,padding:'2px 5px',borderRadius:20,background:tc.bg,color:tc.color}}>{r.t||'Sale'}</span></div>
                 <div style={{fontSize:11,color:'var(--text-muted)'}}>{r.s?fmtNum(Math.round(r.s*10.764))+' sqft':'—'}</div>
                 <div style={{fontSize:11,color:'#38BDF8'}}>{ppsqft?'AED '+fmtNum(ppsqft):'—'}</div>

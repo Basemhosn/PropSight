@@ -1,3 +1,4 @@
+import { t } from '../i18n';
 import { useState, useMemo, useCallback } from 'react';
 import { fmtAED, fmtNum } from '../utils/format';
 
@@ -5,6 +6,7 @@ const REG = { Off:'Off-Plan', Rea:'Ready', Mor:'Mortgage' };
 const USG = { Res:'Residential', Com:'Commercial', Mul:'Multi-Use', Ind:'Industrial', Hos:'Hospitality' };
 
 export default function TransactionSearch({ recentRaw }) {
+  const lang = localStorage.getItem('lang') || 'en';
   const [search, setSearch] = useState('');
   const [typeF, setTypeF] = useState('');
   const [regF, setRegF] = useState('');
@@ -53,19 +55,19 @@ export default function TransactionSearch({ recentRaw }) {
     <div style={{flex:1,overflowY:'auto',background:'var(--bg)',fontFamily:'system-ui',padding:'24px 28px'}}>
       <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:20}}>
         <div>
-          <h1 style={{margin:0,fontSize:22,fontWeight:700,color:'var(--text-primary)',marginBottom:4}}>Transaction Search</h1>
+          <h1 style={{margin:0,fontSize:22,fontWeight:700,color:'var(--text-primary)',marginBottom:4}}>{t('Transaction Search',lang)}</h1>
           <div style={{fontSize:13,color:'var(--text-secondary)'}}>{fmtNum(filtered.length)} of {fmtNum(rows.length)} transactions</div>
         </div>
-        <button onClick={exportCSV} style={{display:'flex',alignItems:'center',gap:8,padding:'9px 16px',borderRadius:10,border:'1px solid rgba(59,130,246,0.2)',background:'rgba(59,130,246,0.06)',color:'#38BDF8',cursor:'pointer',fontSize:13,fontWeight:600,fontFamily:'system-ui'}}>↓ Export CSV</button>
+        <button onClick={exportCSV} style={{display:'flex',alignItems:'center',gap:8,padding:'9px 16px',borderRadius:10,border:'1px solid rgba(59,130,246,0.2)',background:'rgba(59,130,246,0.06)',color:'#38BDF8',cursor:'pointer',fontSize:13,fontWeight:600,fontFamily:'system-ui'}}>{t('Export CSV',lang)}</button>
       </div>
       <div style={{background:'var(--surface)',border:'1px solid rgba(255,255,255,0.06)',borderRadius:12,padding:16,marginBottom:20}}>
         <div style={{display:'grid',gridTemplateColumns:'2fr 1fr 1fr 1fr 1fr',gap:10}}>
           <div style={{display:'flex',alignItems:'center',gap:8,background:'var(--bg-alt)',border:'1px solid rgba(59,130,246,0.15)',borderRadius:8,padding:'8px 12px'}}>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#475569" strokeWidth="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-            <input value={search} onChange={e=>{setSearch(e.target.value);setPg(1);}} placeholder="Search area, project, ID..." style={{background:'none',border:'none',outline:'none',color:'var(--text-secondary)',fontSize:13,flex:1,fontFamily:'system-ui'}}/>
+            <input value={search} onChange={e=>{setSearch(e.target.value);setPg(1);}} placeholder={t("Search area project",lang)} style={{background:'none',border:'none',outline:'none',color:'var(--text-secondary)',fontSize:13,flex:1,fontFamily:'system-ui'}}/>
           </div>
-          <select value={typeF} onChange={e=>{setTypeF(e.target.value);setPg(1);}} style={{...inp,cursor:'pointer'}}><option value="">All types</option><option>Sale</option><option>Mortgage</option><option>Gift</option></select>
-          <select value={regF} onChange={e=>{setRegF(e.target.value);setPg(1);}} style={{...inp,cursor:'pointer'}}><option value="">All registrations</option><option>Off-Plan</option><option>Ready</option></select>
+          <select value={typeF} onChange={e=>{setTypeF(e.target.value);setPg(1);}} style={{...inp,cursor:'pointer'}}><option value="">{t('All types',lang)}</option><option>Sale</option><option>Mortgage</option><option>Gift</option></select>
+          <select value={regF} onChange={e=>{setRegF(e.target.value);setPg(1);}} style={{...inp,cursor:'pointer'}}><option value="">{t('All registrations',lang)}</option><option>Off-Plan</option><option>Ready</option></select>
           <input value={minVal} onChange={e=>{setMinVal(e.target.value);setPg(1);}} placeholder="Min (M AED)" style={inp}/>
           <input value={maxVal} onChange={e=>{setMaxVal(e.target.value);setPg(1);}} placeholder="Max (M AED)" style={inp}/>
         </div>
@@ -73,9 +75,9 @@ export default function TransactionSearch({ recentRaw }) {
       </div>
       <div style={{background:'var(--surface)',border:'1px solid rgba(255,255,255,0.06)',borderRadius:14,overflow:'hidden'}}>
         <div style={{display:'grid',gridTemplateColumns:'130px 90px 70px 80px 1fr 1fr 100px 80px 70px',padding:'10px 16px',borderBottom:'1px solid rgba(255,255,255,0.06)',background:'rgba(59,130,246,0.04)'}}>
-          {['TXN ID','Date','Type','Reg','Area','Project','Value','Size','Price/sqft'].map((h,i)=><div key={i} style={{fontSize:10,color:'var(--text-secondary)',fontWeight:600,textTransform:'uppercase',letterSpacing:'0.06em'}}>{h}</div>)}
+          {[t('TXN ID',lang),t('Date',lang),t('Type',lang),t('Reg',lang),t('Area',lang),t('Project',lang),t('Value',lang),t('Size',lang),t('Price/sqft',lang)].map((h,i)=><div key={i} style={{fontSize:10,color:'var(--text-secondary)',fontWeight:600,textTransform:'uppercase',letterSpacing:'0.06em'}}>{h}</div>)}
         </div>
-        {paged.length===0 ? <div style={{textAlign:'center',padding:40,color:'var(--text-secondary)'}}>No transactions match filters</div>
+        {paged.length===0 ? <div style={{textAlign:'center',padding:40,color:'var(--text-secondary)'}}>{t('No transactions match filters',lang)}</div>
         : paged.map((r,i)=>{
           const tc=TC[r.type]||{bg:'rgba(100,116,139,0.1)',color:'var(--text-secondary)'};
           const rc=RC[r.reg]||{bg:'rgba(100,116,139,0.1)',color:'var(--text-secondary)'};
@@ -98,9 +100,9 @@ export default function TransactionSearch({ recentRaw }) {
       </div>
       {totalPages>1 && (
         <div style={{display:'flex',justifyContent:'center',alignItems:'center',gap:8,marginTop:20}}>
-          <button onClick={()=>setPg(p=>Math.max(1,p-1))} disabled={pg===1} style={{padding:'7px 14px',borderRadius:8,border:'1px solid rgba(59,130,246,0.2)',background:'rgba(59,130,246,0.06)',color:pg===1?'var(--text-faint)':'var(--text-muted)',cursor:pg===1?'default':'pointer',fontSize:12,fontFamily:'system-ui'}}>← Prev</button>
-          <span style={{fontSize:12,color:'var(--text-muted)'}}>Page {pg} of {totalPages}</span>
-          <button onClick={()=>setPg(p=>Math.min(totalPages,p+1))} disabled={pg===totalPages} style={{padding:'7px 14px',borderRadius:8,border:'1px solid rgba(59,130,246,0.2)',background:'rgba(59,130,246,0.06)',color:pg===totalPages?'var(--text-faint)':'var(--text-muted)',cursor:pg===totalPages?'default':'pointer',fontSize:12,fontFamily:'system-ui'}}>Next →</button>
+          <button onClick={()=>setPg(p=>Math.max(1,p-1))} disabled={pg===1} style={{padding:'7px 14px',borderRadius:8,border:'1px solid rgba(59,130,246,0.2)',background:'rgba(59,130,246,0.06)',color:pg===1?'var(--text-faint)':'var(--text-muted)',cursor:pg===1?'default':'pointer',fontSize:12,fontFamily:'system-ui'}}>{t('Prev',lang)}</button>
+          <span style={{fontSize:12,color:'var(--text-muted)'}}>{t('Page',lang)} {pg} {t('of',lang)} {totalPages}</span>
+          <button onClick={()=>setPg(p=>Math.min(totalPages,p+1))} disabled={pg===totalPages} style={{padding:'7px 14px',borderRadius:8,border:'1px solid rgba(59,130,246,0.2)',background:'rgba(59,130,246,0.06)',color:pg===totalPages?'var(--text-faint)':'var(--text-muted)',cursor:pg===totalPages?'default':'pointer',fontSize:12,fontFamily:'system-ui'}}>{t('Next',lang)}</button>
         </div>
       )}
     </div>
