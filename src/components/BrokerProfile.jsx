@@ -1,3 +1,4 @@
+import BrokerProfileEditor from './BrokerProfileEditor';
 import { useState, useMemo, useRef } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { fmtAED, fmtNum } from '../utils/format';
@@ -337,6 +338,7 @@ function WatchlistAlerts({ areaData, projectsData }) {
 
 // ── Broker Report ──────────────────────────────────────────────────────────
 function BrokerReport({ areaData, core, recentRaw }) {
+  const { profile } = useAuth();
   const [selectedArea, setSelectedArea] = useState('');
   const [bedrooms, setBedrooms] = useState('');
   const [propType, setPropType] = useState('Apartment');
@@ -478,14 +480,36 @@ function BrokerReport({ areaData, core, recentRaw }) {
               {/* Report header */}
               <div style={{ background:'linear-gradient(135deg,#0A1628,#0D2040)', padding:'32px', borderBottom:'3px solid #38BDF8' }}>
                 <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', marginBottom:24 }}>
-                  <div>
-                    <div style={{ fontSize:11, color:'#38BDF8', fontWeight:700, textTransform:'uppercase', letterSpacing:'0.12em', marginBottom:8 }}>PropSight Broker Valuation Report</div>
-                    <div style={{ fontSize:11, color:'rgba(255,255,255,0.4)' }}>Report Date: {new Date().toLocaleDateString('en-AE',{day:'numeric',month:'long',year:'numeric'})} · Powered by Dubai Land Department Data</div>
+                  <div style={{ display:'flex', alignItems:'center', gap:16 }}>
+                    {profile?.agency_logo_url && (
+                      <img src={profile.agency_logo_url} alt="Agency Logo"
+                        style={{ height:48, objectFit:'contain', borderRadius:6 }}/>
+                    )}
+                    <div>
+                      <div style={{ fontSize:11, color:'#38BDF8', fontWeight:700, textTransform:'uppercase', letterSpacing:'0.12em', marginBottom:4 }}>
+                        {profile?.agency_name || 'PropSight'} · Broker Valuation Report
+                      </div>
+                      <div style={{ fontSize:11, color:'rgba(255,255,255,0.4)' }}>
+                        Report Date: {new Date().toLocaleDateString('en-AE',{day:'numeric',month:'long',year:'numeric'})} · Powered by Dubai Land Department Data
+                      </div>
+                    </div>
                   </div>
-                  <div style={{ textAlign:'right' }}>
-                    <div style={{ fontSize:11, color:'rgba(255,255,255,0.4)', marginBottom:4 }}>Prepared for</div>
-                    <div style={{ fontSize:16, fontWeight:700, color:'#fff' }}>{clientName || 'Client'}</div>
+                  <div style={{ textAlign:'right', display:'flex', alignItems:'center', gap:14 }}>
+                    {profile?.broker_photo_url && (
+                      <img src={profile.broker_photo_url} alt="Broker"
+                        style={{ width:48, height:48, borderRadius:'50%', objectFit:'cover', border:'2px solid rgba(56,189,248,0.4)' }}/>
+                    )}
+                    <div>
+                      <div style={{ fontSize:13, fontWeight:700, color:'#fff' }}>{profile?.broker_name || profile?.full_name || 'Broker'}</div>
+                      <div style={{ fontSize:11, color:'rgba(255,255,255,0.5)' }}>{profile?.broker_title || 'Real Estate Broker'}</div>
+                      {profile?.rera_number && <div style={{ fontSize:10, color:'#38BDF8' }}>RERA: {profile.rera_number}</div>}
+                      {profile?.phone && <div style={{ fontSize:11, color:'rgba(255,255,255,0.4)' }}>{profile.phone}</div>}
+                    </div>
                   </div>
+                </div>
+                <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:0 }}>
+                  <div style={{ fontSize:11, color:'rgba(255,255,255,0.4)' }}>Prepared for: <span style={{ color:'#fff', fontWeight:600 }}>{clientName || 'Client'}</span></div>
+                  {profile?.office_address && <div style={{ fontSize:10, color:'rgba(255,255,255,0.3)' }}>📍 {profile.office_address}</div>}
                 </div>
                 <div style={{ fontSize:22, fontWeight:800, color:'#fff', marginBottom:6 }}>
                   {propertyRef || `${propType} in ${na(selectedArea)}`}
@@ -616,6 +640,21 @@ function BrokerReport({ areaData, core, recentRaw }) {
 
               {/* Disclaimer */}
               <div style={{ padding:'20px 32px', background:'rgba(59,130,246,0.02)' }}>
+                {(profile?.broker_name || profile?.agency_name) && (
+                  <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:12, paddingBottom:12, borderBottom:'1px solid rgba(255,255,255,0.06)' }}>
+                    <div style={{ display:'flex', alignItems:'center', gap:12 }}>
+                      {profile?.broker_photo_url && <img src={profile.broker_photo_url} alt="" style={{ width:32, height:32, borderRadius:'50%', objectFit:'cover' }}/>}
+                      <div>
+                        <div style={{ fontSize:12, fontWeight:600, color:'var(--text-primary)' }}>{profile?.broker_name || profile?.full_name}</div>
+                        <div style={{ fontSize:10, color:'var(--text-muted)' }}>{profile?.agency_name}{profile?.rera_number ? ' · RERA: '+profile.rera_number : ''}</div>
+                      </div>
+                    </div>
+                    <div style={{ textAlign:'right', fontSize:11, color:'var(--text-muted)' }}>
+                      {profile?.phone && <div>{profile.phone}</div>}
+                      {profile?.website && <div style={{ color:'#38BDF8' }}>{profile.website}</div>}
+                    </div>
+                  </div>
+                )}
                 <div style={{ fontSize:10, color:'var(--text-muted)', lineHeight:1.7 }}>
                   <strong style={{ color:'var(--text-secondary)' }}>Disclaimer:</strong> This report is generated using PropSight's automated valuation model based on historical Dubai Land Department transaction data. Estimated valuations are indicative only and should not be relied upon as professional valuations. PropSight is not a licensed valuer. Always seek independent professional valuation advice before making financial decisions. Data source: Dubai Land Department. Report generated: {new Date().toLocaleString('en-AE')}.
                 </div>
@@ -630,9 +669,10 @@ function BrokerReport({ areaData, core, recentRaw }) {
 
 // ── Main BrokerProfile ─────────────────────────────────────────────────────
 export default function BrokerProfile({ areaData, core, recentRaw, projectsData, onNavigate }) {
-  const [tab, setTab] = useState('portfolio');
+  const [tab, setTab] = useState('profile');
 
   const tabs = [
+    ['profile',    'My Profile'],
     ['portfolio',  'Broker Portfolio'],
     ['watchlist',  'Watchlist & Alerts'],
     ['report',     'Broker Report'],
@@ -662,6 +702,7 @@ export default function BrokerProfile({ areaData, core, recentRaw, projectsData,
         </div>
       </div>
       <div style={{ flex:1, display:'flex', flexDirection:'column', overflow:'hidden' }}>
+        {tab==='profile'    && <BrokerProfileEditor/>}
         {tab==='portfolio' && <BrokerPortfolio areaData={areaData} core={core} recentRaw={recentRaw}/>}
         {tab==='watchlist' && <WatchlistAlerts areaData={areaData} projectsData={projectsData}/>}
         {tab==='report'    && <BrokerReport areaData={areaData} core={core} recentRaw={recentRaw}/>}
