@@ -584,6 +584,21 @@ Respond ONLY with valid JSON (no markdown):
                     <div style={{fontSize:10,color:'var(--text-muted)',marginBottom:4,textTransform:'uppercase',letterSpacing:'0.05em'}}>{t('What to do',lang)}</div>
                     <div style={{fontSize:13,color:'var(--text-primary)',fontWeight:500}}>{dealResult.action}</div>
                   </div>
+                  {dealSelectedArea && areaScores[dealSelectedArea.key] && (() => {
+                    const ps = areaScores[dealSelectedArea.key];
+                    return (
+                      <div style={{marginTop:14,background:ps.bg,border:'1px solid '+ps.color+'40',borderRadius:12,padding:'14px 18px',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+                        <div>
+                          <div style={{fontSize:10,color:ps.color,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.08em',marginBottom:2}}>PropSight Score</div>
+                          <div style={{fontSize:22,fontWeight:800,color:ps.color}}>{ps.total}<span style={{fontSize:12,color:'var(--text-muted)',fontWeight:400}}>/100</span></div>
+                        </div>
+                        <div style={{textAlign:'right'}}>
+                          <div style={{fontSize:16,fontWeight:700,color:ps.color}}>{ps.verdict}</div>
+                          <div style={{fontSize:11,color:'var(--text-muted)',marginTop:2}}>Area investment score</div>
+                        </div>
+                      </div>
+                    );
+                  })()}
                 </div>
               );
             })()}
