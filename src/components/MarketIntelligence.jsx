@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import { t } from '../i18n';
 import { AreaChart, Area, ResponsiveContainer, Tooltip, LineChart, Line, CartesianGrid, XAxis, YAxis } from 'recharts';
 import { fmtAED, fmtNum } from '../utils/format';
+import { calcPropSightScore } from '../utils/propSightScore';
 
 const NICE = {
   'Al Barsha South Fourth':'Jumeirah Village Circle (JVC)',
@@ -217,22 +218,26 @@ export default function MarketIntelligence({areaData, core}) {
               <div style={{ fontSize:13, fontWeight:700, color:'var(--text-primary)', marginBottom:2 }}>{area.name.length>20?area.name.split(' ').slice(0,3).join(' '):area.name}</div>
               <div style={{ fontSize:11, color:'var(--text-secondary)', marginBottom:10 }}>{fmtNum(area.count)} transactions</div>
               <div style={{ fontSize:10, color:'var(--text-muted)', marginBottom:3 }}>{t('PRICE / SQFT',lang)}</div>
-              <div style={{ fontSize:15, fontWeight:700, color:'var(--text-primary)' }}>AED {fmtNum(area.ppsqft)}</div>
+              <div style={{ fontSize:15, fontWeight:700, color:'var(--text-primary)', marginBottom:8 }}>AED {fmtNum(area.ppsqft)}</div>
+              {areaScores[area.key] && <div style={{display:'inline-flex',alignItems:'center',gap:5,background:areaScores[area.key].bg,border:'1px solid '+areaScores[area.key].color+'40',borderRadius:20,padding:'3px 10px'}}>
+                <div style={{width:5,height:5,borderRadius:'50%',background:areaScores[area.key].color}}/>
+                <span style={{fontSize:10,fontWeight:700,color:areaScores[area.key].color}}>{areaScores[area.key].total} · {areaScores[area.key].verdict}</span>
+              </div>}
             </div>
           ))}
         </div>
 
         {/* Full table */}
         <div style={{ background:'var(--surface)', border:'1px solid rgba(255,255,255,0.06)', borderRadius:14, overflow:'hidden' }}>
-          <div style={{ display:'grid', gridTemplateColumns:'2fr 1fr 1fr 1fr 1fr 1fr 100px', padding:'12px 20px', borderBottom:'1px solid rgba(255,255,255,0.06)' }}>
-            {['Area','Price/sqft','YoY Growth','Rental Yield','Volume','Off-Plan %',''].map((h,i)=>(
+          <div style={{ display:'grid', gridTemplateColumns:'2fr 1fr 1fr 1fr 1fr 1fr 120px', padding:'12px 20px', borderBottom:'1px solid rgba(255,255,255,0.06)' }}>
+            {['Area','Price/sqft','YoY Growth','Rental Yield','Volume','Off-Plan %','Score'].map((h,i)=>(
               <div key={i} style={{ fontSize:10, color:'var(--text-secondary)', fontWeight:600, textTransform:'uppercase', letterSpacing:'0.05em' }}>{h}</div>
             ))}
           </div>
           {allAreas.map((area,i)=>{
             const opPct = area.count ? Math.round(area.offPlan/area.count*100) : 0;
             return (
-              <div key={area.key} style={{ display:'grid', gridTemplateColumns:'2fr 1fr 1fr 1fr 1fr 1fr 100px', padding:'13px 20px', borderBottom:i<allAreas.length-1?'1px solid rgba(255,255,255,0.03)':'none', cursor:'pointer', transition:'background 0.1s' }}
+              <div key={area.key} style={{ display:'grid', gridTemplateColumns:'2fr 1fr 1fr 1fr 1fr 1fr 120px', padding:'13px 20px', borderBottom:i<allAreas.length-1?'1px solid rgba(255,255,255,0.03)':'none', cursor:'pointer', transition:'background 0.1s' }}
                 onMouseEnter={e=>e.currentTarget.style.background='rgba(59,130,246,0.04)'}
                 onMouseLeave={e=>e.currentTarget.style.background='transparent'}
                 onClick={()=>setActiveTab(area.key)}
@@ -244,11 +249,9 @@ export default function MarketIntelligence({areaData, core}) {
                 <div style={{ fontSize:13, color:'var(--text-secondary)' }}>{fmtNum(area.count)}</div>
                 <div style={{ fontSize:13, color:'#38BDF8' }}>{opPct}%</div>
                 <div>
-                  <span style={{ fontSize:10, fontWeight:700, padding:'3px 10px', borderRadius:20,
-                    background:area.yoy>0?'rgba(34,197,94,0.1)':'rgba(248,113,113,0.1)',
-                    color:area.yoy>0?'#22C55E':'#F87171',
-                    border:`1px solid ${area.yoy>0?'rgba(34,197,94,0.2)':'rgba(248,113,113,0.2)'}`,
-                  }}>{area.yoy>0?'+':''}{area.yoy}% YoY</span>
+                  {areaScores[area.key] && <span style={{fontSize:10,fontWeight:700,padding:'3px 8px',borderRadius:20,background:areaScores[area.key].bg,color:areaScores[area.key].color}}>
+                    {areaScores[area.key].total} {areaScores[area.key].verdict}
+                  </span>}
                 </div>
               </div>
             );
