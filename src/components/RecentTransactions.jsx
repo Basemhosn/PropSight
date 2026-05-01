@@ -89,6 +89,7 @@ function LiveFeedTab({ recentRaw }) {
 }
 
 function SearchTab({ recentRaw }) {
+  const lang = localStorage.getItem('lang') || 'en';
   const [search, setSearch] = useState('');
   const [typeF, setTypeF] = useState('');
   const [regF, setRegF] = useState('');
