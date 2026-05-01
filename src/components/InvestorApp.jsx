@@ -40,6 +40,7 @@ export default function InvestorApp({ areaData, recentRaw, core, onSwitchToBroke
   const [search, setSearch] = useState('');
   const [selectedArea, setSelectedArea] = useState(null);
   const [dealPrice, setDealPrice] = useState('');
+  const [dealAreaKey, setDealAreaKey] = useState('');
   const [dealSize, setDealSize] = useState('');
   const [dealResult, setDealResult] = useState(null);
   const [dealLoading, setDealLoading] = useState(false);
@@ -163,13 +164,19 @@ export default function InvestorApp({ areaData, recentRaw, core, onSwitchToBroke
 
   const displayAreas = search.length > 1 ? suggestions : areas.filter(a => QUICK_AREAS.includes(a.key));
 
+  // Sync dealAreaKey to selectedArea for the analyzer
+  const dealSelectedArea = useMemo(() => {
+    if (dealAreaKey) return areas.find(x => x.key === dealAreaKey) || selectedArea;
+    return selectedArea;
+  }, [dealAreaKey, selectedArea, areas]);
+
   const analyzeDeal = async () => {
-    if (!selectedArea || !dealPrice) return;
+    if (!dealSelectedArea || !dealPrice) return;
     setDealLoading(true); setDealResult(null);
     const price = parseFloat(dealPrice.replace(/,/g,''));
     const size = parseFloat(dealSize.replace(/,/g,'')) || 0;
     const ppsqft = size > 0 ? Math.round(price/size) : 0;
-    const marketPpsqft = selectedArea.ppsqft;
+    const marketPpsqft = dealSelectedArea.ppsqft;
     const diff = marketPpsqft > 0 ? ((ppsqft - marketPpsqft)/marketPpsqft*100) : 0;
     try {
       const res = await fetch('/api/claude', {
@@ -178,11 +185,11 @@ export default function InvestorApp({ areaData, recentRaw, core, onSwitchToBroke
           model:'claude-haiku-4-5-20251001', max_tokens:500,
           messages:[{role:'user',content:`Dubai real estate deal analysis. Be brief and friendly for a regular investor.
 
-Area: ${selectedArea.name}
+Area: ${dealSelectedArea.name}
 Asking price: AED ${fmtNum(price)}
 ${size>0?`Size: ${size} sqft, Price/sqft: AED ${fmtNum(ppsqft)}`:'No size provided'}
 Market avg price/sqft: AED ${fmtNum(marketPpsqft)}
-YoY growth: ${selectedArea.yoy}%
+YoY growth: ${dealSelectedArea.yoy}%
 ${ppsqft>0?`This is ${Math.abs(diff.toFixed(1))}% ${diff>0?'above':'below'} market average`:''}
 
 Respond ONLY with valid JSON (no markdown):
@@ -498,7 +505,7 @@ Respond ONLY with valid JSON (no markdown):
             <div style={{background:'var(--surface)',border:'1px solid rgba(255,255,255,0.06)',borderRadius:18,padding:24,marginBottom:16}}>
               <div style={{marginBottom:14}}>
                 <label style={{fontSize:11,color:'var(--text-muted)',marginBottom:6,display:'block',fontWeight:600,textTransform:'uppercase',letterSpacing:'0.05em'}}>Area *</label>
-                <select value={selectedArea?.key||''} onChange={e=>{const a=areas.find(x=>x.key===e.target.value);setSelectedArea(a||null);setDealResult(null);}} style={{...inp,cursor:'pointer',appearance:'none'}}>
+                <select value={dealAreaKey||selectedArea?.key||''} onChange={e=>{setDealAreaKey(e.target.value);const a=areas.find(x=>x.key===e.target.value);setSelectedArea(a||null);setDealResult(null);}} style={{...inp,cursor:'pointer',appearance:'none'}}>
                   <option value="">Select an area...</option>
                   {areas.map(a=><option key={a.key} value={a.key}>{a.name}</option>)}
                 </select>
@@ -513,7 +520,7 @@ Respond ONLY with valid JSON (no markdown):
                   <input value={dealSize} onChange={e=>{setDealSize(e.target.value);setDealResult(null);}} placeholder="1,200" style={inp}/>
                 </div>
               </div>
-              <button onClick={analyzeDeal} disabled={dealLoading||!selectedArea||!dealPrice} style={{width:'100%',padding:'13px',borderRadius:11,border:'none',cursor:'pointer',background:'linear-gradient(135deg,#1D4ED8,#38BDF8)',color:'#fff',fontSize:15,fontWeight:600,fontFamily:'inherit',opacity:dealLoading||!selectedArea||!dealPrice?0.5:1}}>
+              <button onClick={analyzeDeal} disabled={dealLoading||!dealSelectedArea||!dealPrice} style={{width:'100%',padding:'13px',borderRadius:11,border:'none',cursor:'pointer',background:'linear-gradient(135deg,#1D4ED8,#38BDF8)',color:'#fff',fontSize:15,fontWeight:600,fontFamily:'inherit',opacity:dealLoading||!selectedArea||!dealPrice?0.5:1}}>
                 {dealLoading?'Analyzing...':'Analyze this deal →'}
               </button>
             </div>
@@ -935,7 +942,7 @@ Respond ONLY with valid JSON (no markdown):
 
             {/* CTAs */}
             <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12}}>
-              <button onClick={()=>{setActiveTab('deal');}} style={{padding:'14px',borderRadius:12,border:'none',cursor:'pointer',background:'linear-gradient(135deg,#1D4ED8,#38BDF8)',color:'#fff',fontSize:15,fontWeight:600,fontFamily:'inherit'}}>Analyze a Deal Here →</button>
+              <button onClick={()=>{if(selectedArea) setDealAreaKey(selectedArea.key); setSelectedArea(null); setActiveTab('deal');}} style={{padding:'14px',borderRadius:12,border:'none',cursor:'pointer',background:'linear-gradient(135deg,#1D4ED8,#38BDF8)',color:'#fff',fontSize:15,fontWeight:600,fontFamily:'inherit'}}>Analyze a Deal Here →</button>
               <button onClick={()=>setActiveTab('feed')} style={{padding:'14px',borderRadius:12,border:'1px solid var(--border)',cursor:'pointer',background:'var(--surface)',color:'var(--text-primary)',fontSize:15,fontWeight:600,fontFamily:'inherit'}}>Recent Sales</button>
             </div>
           </div>
@@ -1102,7 +1109,7 @@ Respond ONLY with valid JSON (no markdown):
 
             <button onClick={()=>{
               const a=areas.find(x=>x.key===selectedProject.area||na(x.key)===selectedProject.area);
-              if(a) setSelectedArea(a);
+              if(a) setDealAreaKey(a.key);
               setSelectedProject(null);
               setActiveTab('deal');
             }} style={{width:'100%',padding:'14px',borderRadius:12,border:'none',cursor:'pointer',background:'linear-gradient(135deg,#1D4ED8,#38BDF8)',color:'#fff',fontSize:15,fontWeight:600,fontFamily:'inherit'}}>
