@@ -7,6 +7,7 @@ const na = a => AN[a] || a;
 const TC = {Sale:{bg:'rgba(59,130,246,0.1)',color:'#38BDF8'},Mortgage:{bg:'rgba(34,197,94,0.1)',color:'#22C55E'},Gift:{bg:'rgba(245,158,11,0.1)',color:'#F59E0B'}};
 
 function LiveFeedTab({ recentRaw }) {
+  const lang = localStorage.getItem('lang') || 'en';
   const [filter, setFilter] = useState('all');
   const [areaFilter, setAreaFilter] = useState('');
   const [minVal, setMinVal] = useState('');
@@ -163,8 +164,6 @@ function SearchTab({ recentRaw }) {
 }
 
 export default function RecentTransactions({ recentRaw }) {
-  const lang = localStorage.getItem('lang') || 'en';
-  // lang declared at top — used in useMemo below
   const [tab, setTab] = useState('live');
   return (
     <div style={{flex:1,display:'flex',flexDirection:'column',background:'var(--bg)',fontFamily:'system-ui',overflow:'hidden'}}>
