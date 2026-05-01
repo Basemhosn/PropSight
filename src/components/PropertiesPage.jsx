@@ -260,7 +260,7 @@ export default function PropertiesPage({ recentRaw, projectsData, onProjectClick
             <div style={{fontSize:13,color:'var(--text-secondary)'}}>Off-plan & ready transactions · Search any building or project</div>
           </div>
           <div style={{display:'flex',gap:6,background:'var(--surface)',border:'1px solid rgba(59,130,246,0.15)',borderRadius:10,padding:4}}>
-            {[['properties',t('Off-Plan & Ready',lang)],['lookup',t('Property Lookup',lang)]].map(([t,l])=>(
+            {[['properties',t('Off-Plan & Ready',lang)],['lookup',t('Property Lookup',lang)]].map(([tabKey,l])=>(
               <button key={t} onClick={()=>setTab(t)} style={{padding:'8px 18px',borderRadius:8,border:'none',cursor:'pointer',fontSize:13,fontFamily:'system-ui',fontWeight:tab===t?600:400,background:tab===t?'linear-gradient(135deg,#1D4ED8,#38BDF8)':'transparent',color:tab===t?'#fff':'var(--text-muted)'}}>{l}</button>
             ))}
           </div>

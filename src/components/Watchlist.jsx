@@ -119,7 +119,7 @@ export default function Watchlist({ areaData, projectsData, setPage }) {
           <div style={{background:'var(--surface)',border:'1px solid rgba(59,130,246,0.2)',borderRadius:16,padding:28,width:'100%',maxWidth:440,fontFamily:'system-ui'}}>
             <div style={{fontSize:18,fontWeight:700,color:'var(--text-primary)',marginBottom:20}}>Add to Watchlist</div>
             <div style={{display:'flex',gap:8,marginBottom:16,background:'var(--bg-alt)',borderRadius:10,padding:4}}>
-              {[['area','Area'],['project','Project']].map(([t,l])=>(
+              {[['area','Area'],['project','Project']].map(([tabId,l])=>(
                 <button key={t} onClick={()=>{setAddType(t);setAddValue('');}} style={{flex:1,padding:'8px',borderRadius:8,border:'none',cursor:'pointer',fontSize:13,fontFamily:'system-ui',fontWeight:addType===t?600:400,background:addType===t?'linear-gradient(135deg,#1D4ED8,#38BDF8)':'transparent',color:addType===t?'#fff':'var(--text-muted)'}}>{l}</button>
               ))}
             </div>
