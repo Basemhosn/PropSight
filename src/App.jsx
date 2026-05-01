@@ -44,7 +44,8 @@ import ShareableReport from "./components/ShareableReport";
 import PriceAlerts from "./components/PriceAlerts";
 import TransactionSearch from "./components/TransactionSearch";
 import PortfolioTracker from "./components/PortfolioTracker";
-import useLiveTransactions from "./hooks/useLiveTransactions";
+import useLiveTransactions from './hooks/useLiveTransactions';
+import BrokerProfile from './components/BrokerProfile';
 
 const DEFAULT_FILTERS = { type:"", usage:"", reg:"", propType:"", area:"", sort:"value", dateFrom:"", dateTo:"" };
 const REG_EXPAND = { Off:"Off-Plan", Rea:"Ready" };
