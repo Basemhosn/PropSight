@@ -80,6 +80,22 @@ export default function MarketIntelligence({areaData, core}) {
   ];
 
   // Price trend chart
+  const areaScores = useMemo(() => {
+    if (!areaData || !core) return {};
+    const dubaiAvg = core.priceTrend?.slice(-1)[0]?.ppsqm || 15000;
+    const maxCount = Math.max(...Object.values(areaData).map(d => d.kpis?.count || 0));
+    const scores = {};
+    for (const [key, data] of Object.entries(areaData)) {
+      scores[key] = calcPropSightScore({
+        areaKpis: data.kpis || {},
+        priceTrend: data.priceTrend || [],
+        dubaiAvgPpsqm: dubaiAvg,
+        maxAreaCount: maxCount,
+      });
+    }
+    return scores;
+  }, [areaData, core]);
+
   const trendData = useMemo(()=>{
     if(activeTab==='all') return pt.map(p=>({y:p.year,v:Math.round(p.ppsqm/10.764)}));
     const a = areaData?.[activeTab];
