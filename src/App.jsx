@@ -152,7 +152,8 @@ export default function App() {
   const { liveData, loading: liveLoading, error: liveError, lastUpdate, isLive, refresh } = useLiveTransactions({ days: 30 });
 
   // Use live data if available, otherwise fall back to static recent.json
-  const recentRaw = liveData || staticRecentRaw;
+  const recentRaw = (liveData && liveData.length > 0) ? liveData : staticRecentRaw;
+  console.log("DDA liveData count:", liveData?.length, "first:", JSON.stringify(liveData?.[0]));
 
   useEffect(() => { fetch("/data/core.json").then(r=>r.json()).then(setCore).catch(err=>setDataError(err.message)); }, []);
   useEffect(() => { fetch("/data/areas.json").then(r=>r.json()).then(setAreaData).catch(()=>{}); }, []);

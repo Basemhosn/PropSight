@@ -1,19 +1,14 @@
-/**
- * useLiveTransactions — fetches live DLD data directly from DDA API
- * DDA is UAE geo-restricted, so this runs in the user's browser (UAE IP) ✅
- */
 import { useState, useEffect, useCallback } from 'react';
 import { fetchRecentTransactions } from '../services/ddaApi';
 
-const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+const CACHE_TTL = 5 * 60 * 1000;
 let _cache = { data: null, fetchedAt: 0 };
 
-// Adapts normalized DDA shape → short-key shape RecentTransactions expects
 function toRaw(tx) {
   return {
     n: tx.id,
     d: tx.date,
-    t: tx.type === 'Sales' ? 'Sale' : tx.type,   // DDA says "Sales", UI says "Sale"
+    t: tx.type === 'Sales' ? 'Sale' : tx.type,
     a: tx.area,
     v: tx.price,
     s: tx.sizeSqm,

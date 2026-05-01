@@ -1,10 +1,3 @@
-/**
- * Dubai Data Authority (DDA) API Service
- * Token:  https://stg-apis.data.dubai/secure/ssis/dubaiai/gatewaytoken/1.0.0/getAccessToken
- * Data:   https://stg-apis.data.dubai/open/dld/dld_transactions-open-api
- * NOTE:   DDA APIs are geo-restricted to UAE IPs only.
- */
-
 const IS_STG = process.env.REACT_APP_DDA_ENV !== "production";
 
 const DDA_CONFIG = {
@@ -97,13 +90,11 @@ export function normalizeTx(raw) {
 export async function fetchTransactions(opts = {}) {
   const {
     page      = 1,
-    pageSize  = 100,
+    pageSize  = 1000,
     area,
     transType,
     propType,
     bedrooms,
-    dateFrom,
-    dateTo,
     orderBy   = "instance_date",
     orderDir  = "desc",
   } = opts;
@@ -118,24 +109,13 @@ export async function fetchTransactions(opts = {}) {
     page, pageSize, order_by: orderBy, order_dir: orderDir, filter,
   });
 
-  const results = (data.results || []).map(normalizeTx).filter(tx => {
-    if (dateFrom && tx.date < dateFrom) return false;
-    if (dateTo   && tx.date > dateTo)   return false;
-    return true;
-  });
-
+  const results = (data.results || []).map(normalizeTx);
   return { results, raw: data };
 }
 
-export async function fetchTodayTransactions() {
-  const today = new Date().toISOString().split("T")[0];
-  return fetchTransactions({ pageSize: 500, dateFrom: today, dateTo: today });
-}
-
-export async function fetchRecentTransactions(days = 7) {
-  const to   = new Date().toISOString().split("T")[0];
-  const from = new Date(Date.now() - days * 86400000).toISOString().split("T")[0];
-  return fetchTransactions({ pageSize: 1000, dateFrom: from, dateTo: to });
+// Fetch latest 1000 transactions sorted by date — no date filter since STG data is historical
+export async function fetchRecentTransactions(days = 30) {
+  return fetchTransactions({ pageSize: 1000, orderBy: "instance_date", orderDir: "desc" });
 }
 
 export async function fetchAreaTransactions(areaName, opts = {}) {
