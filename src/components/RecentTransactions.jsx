@@ -165,6 +165,7 @@ function SearchTab({ recentRaw }) {
 }
 
 export default function RecentTransactions({ recentRaw }) {
+  const lang = localStorage.getItem('lang') || 'en';
   const [tab, setTab] = useState('live');
   return (
     <div style={{flex:1,display:'flex',flexDirection:'column',background:'var(--bg)',fontFamily:'system-ui',overflow:'hidden'}}>
