@@ -35,6 +35,136 @@ const VERDICT_STYLE = {
   'ERROR':{bg:'rgba(100,116,139,0.1)',border:'rgba(100,116,139,0.2)',color:'var(--text-muted)'},
 };
 
+
+// ── Insights Tab (Score + Score Card) ─────────────────────────────────────
+function InsightsTab({ areaData, core }) {
+  const lang = localStorage.getItem('lang') || 'en';
+  const [view, setView] = useState('score');
+  return (
+    <div style={{flex:1,display:'flex',flexDirection:'column',overflow:'hidden'}}>
+      <div style={{padding:'12px 20px 0',display:'flex',justifyContent:'flex-end'}}>
+        <div style={{display:'flex',gap:4,background:'rgba(255,255,255,0.04)',borderRadius:10,padding:3,marginBottom:12}}>
+          {[['score','Area Scores'],['scorecard','Score Card']].map(([id,lbl])=>(
+            <button key={id} onClick={()=>setView(id)} style={{padding:'7px 18px',borderRadius:8,border:'none',cursor:'pointer',fontSize:13,fontFamily:'system-ui',fontWeight:view===id?600:400,background:view===id?'var(--surface)':'transparent',color:view===id?'var(--text-primary)':'var(--text-muted)',boxShadow:view===id?'0 1px 4px rgba(0,0,0,0.3)':'none'}}>
+              {lbl}
+            </button>
+          ))}
+        </div>
+      </div>
+      <div style={{flex:1,overflowY:'auto'}}>
+        {view==='score' && <PropSightScorePage areaData={areaData} core={core} />}
+        {view==='scorecard' && <InvestmentScoreCard areaData={areaData} core={core} />}
+      </div>
+    </div>
+  );
+}
+
+// ── Profile Tab (Portfolio + Watchlist + Alerts + Upgrade) ─────────────────
+function ProfileTab({ areaData, projectsData, setPage }) {
+  const lang = localStorage.getItem('lang') || 'en';
+  const { user, profile, isPro, isLite } = useAuth();
+  const [view, setView] = useState('portfolio');
+
+  const tabs = [
+    ['portfolio','Portfolio'],
+    ['watchlist','Watchlist'],
+    ['alerts','Alerts'],
+    ['upgrade','Upgrade'],
+  ];
+
+  return (
+    <div style={{flex:1,display:'flex',flexDirection:'column',overflow:'hidden'}}>
+      <div style={{padding:'12px 20px 0',borderBottom:'1px solid rgba(59,130,246,0.08)'}}>
+        <div style={{display:'flex',gap:4,background:'rgba(255,255,255,0.04)',borderRadius:10,padding:3,marginBottom:12,width:'fit-content'}}>
+          {tabs.map(([id,lbl])=>(
+            <button key={id} onClick={()=>setView(id)} style={{padding:'7px 18px',borderRadius:8,border:'none',cursor:'pointer',fontSize:13,fontFamily:'system-ui',fontWeight:view===id?600:400,background:view===id?'var(--surface)':'transparent',color:view===id?'var(--text-primary)':'var(--text-muted)',boxShadow:view===id?'0 1px 4px rgba(0,0,0,0.3)':'none'}}>
+              {lbl}
+            </button>
+          ))}
+        </div>
+      </div>
+      <div style={{flex:1,overflowY:'auto'}}>
+        {view==='portfolio' && <PortfolioTracker areaData={areaData} />}
+        {view==='watchlist' && <Watchlist areaData={areaData} projectsData={projectsData} setPage={setPage} />}
+        {view==='alerts'    && <PriceAlerts areaData={areaData} />}
+        {view==='upgrade'   && <InvestorUpgrade isPro={isPro} isLite={isLite} user={user} />}
+      </div>
+    </div>
+  );
+}
+
+// ── Investor Upgrade Panel ─────────────────────────────────────────────────
+function InvestorUpgrade({ isPro, isLite, user }) {
+  const PLANS = [
+    {
+      id:'free', name:'Free', price:'Free', sub:'forever',
+      color:'#64748B', border:'rgba(100,116,139,0.2)', bg:'rgba(100,116,139,0.04)',
+      features:['Area search & discovery','Basic market overview','Deal Check (3/day)','Recent sales feed'],
+      cta:'Current Plan', current: !isPro && !isLite,
+    },
+    {
+      id:'pro', name:'Pro', price:'AED 49', sub:'/month',
+      color:'#38BDF8', border:'rgba(56,189,248,0.35)', bg:'rgba(56,189,248,0.04)',
+      popular:true,
+      features:['Everything in Free','Unlimited Deal Check','PropSight Score','Investment Tools suite','Portfolio Tracker','Watchlist & Price Alerts','Score Card PDF export','Area Comparison','Capital Gains Calculator','Off-Plan Payment Tracker'],
+      cta: isPro ? 'Current Plan' : 'Upgrade to Pro',
+      current: isPro,
+    },
+  ];
+
+  return (
+    <div style={{flex:1,overflowY:'auto',background:'var(--bg)',fontFamily:'system-ui',padding:'24px 20px'}}>
+      <div style={{maxWidth:680,margin:'0 auto'}}>
+        <div style={{textAlign:'center',marginBottom:32}}>
+          <h1 style={{margin:0,fontSize:26,fontWeight:800,color:'var(--text-primary)',marginBottom:8}}>
+            Simple, transparent pricing
+          </h1>
+          <div style={{fontSize:14,color:'var(--text-muted)'}}>All prices in AED · Cancel anytime · No hidden fees</div>
+        </div>
+        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16}}>
+          {PLANS.map(plan=>(
+            <div key={plan.id} style={{background:'var(--surface)',border:`2px solid ${plan.current?plan.color:plan.border}`,borderRadius:20,padding:24,position:'relative',transform:plan.popular?'scale(1.02)':'none'}}>
+              {plan.popular && (
+                <div style={{position:'absolute',top:-12,left:'50%',transform:'translateX(-50%)',background:`linear-gradient(135deg,#1D4ED8,#38BDF8)`,borderRadius:20,padding:'4px 16px',fontSize:11,fontWeight:700,color:'#fff',whiteSpace:'nowrap'}}>
+                  MOST POPULAR
+                </div>
+              )}
+              <div style={{marginBottom:16}}>
+                <div style={{fontSize:13,fontWeight:700,color:plan.color,marginBottom:4}}>{plan.name}</div>
+                <div style={{fontSize:32,fontWeight:800,color:'var(--text-primary)',lineHeight:1}}>
+                  {plan.price}<span style={{fontSize:14,color:'var(--text-muted)',fontWeight:400}}> {plan.sub}</span>
+                </div>
+              </div>
+              <div style={{marginBottom:20}}>
+                {plan.features.map((f,i)=>(
+                  <div key={i} style={{display:'flex',alignItems:'center',gap:8,padding:'5px 0',fontSize:12,color:'var(--text-secondary)'}}>
+                    <span style={{color:plan.color,fontSize:14}}>✓</span>{f}
+                  </div>
+                ))}
+              </div>
+              <button
+                onClick={async()=>{
+                  if(plan.current || plan.id==='free') return;
+                  try {
+                    const res = await fetch('/api/create-checkout',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({userId:user?.id,email:user?.email,plan:'investor_pro',successUrl:window.location.origin+'?upgraded=true',cancelUrl:window.location.origin})});
+                    const data = await res.json();
+                    if(data.url) window.location.href=data.url;
+                  } catch(e) { console.error(e); }
+                }}
+                style={{width:'100%',padding:'12px',borderRadius:12,border:'none',cursor:plan.current?'default':'pointer',background:plan.current?'rgba(100,116,139,0.1)':`linear-gradient(135deg,#1D4ED8,${plan.color})`,color:plan.current?'var(--text-muted)':'#fff',fontSize:13,fontWeight:600,fontFamily:'system-ui'}}>
+                {plan.cta}
+              </button>
+            </div>
+          ))}
+        </div>
+        <div style={{textAlign:'center',marginTop:20,fontSize:11,color:'var(--text-muted)'}}>
+          Secure payment via Stripe · Access on any device · Data from Dubai Land Department
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function InvestorApp({ areaData, recentRaw, core, onSwitchToBroker, projectsData, buildingsData }) {
   const { user, profile, signOut, lang, toggleLang } = useAuth();
   const [themeMode, setThemeMode] = useState(() => localStorage.getItem('theme') || 'dark');
@@ -251,7 +381,7 @@ Respond ONLY with valid JSON (no markdown):
         </div>
 
         <div style={{display:'flex',gap:2,background:'rgba(255,255,255,0.04)',borderRadius:10,padding:3}}>
-          {[['discover',t('Discover',lang)],['score','🏆 Score'],['deal',t('Deal Check',lang)],['feed',t('Recent Sales',lang)],['portfolio','💼 Portfolio'],['watchlist','⭐ Watchlist'],['alerts','🔔 Alerts'],['tools','🛠️ Tools'],['scorecard','📄 Score Card'],['map',t('Map',lang)]].map(([id,lbl])=>(
+          {[['discover',t('Discover',lang)],['map',t('Map',lang)],['deal',t('Deal Check',lang)],['insights','Insights'],['feed',t('Recent Sales',lang)],['tools','Tools'],['profile','My Profile']].map(([id,lbl])=>(
             <button key={id} onClick={()=>setActiveTab(id)} className="inv-tab-btn" style={{padding:'6px 14px',borderRadius:8,fontSize:13,fontWeight:activeTab===id?600:400,background:activeTab===id?'var(--surface)':'transparent',color:activeTab===id?'var(--text-primary)':'var(--text-muted)',boxShadow:activeTab===id?'0 1px 4px rgba(0,0,0,0.3)':'none'}}>
               {lbl}
             </button>
@@ -775,12 +905,9 @@ Respond ONLY with valid JSON (no markdown):
         )}
 
         {/* RECENT SALES */}
-        {activeTab==='score' && <PropSightScorePage areaData={areaData} core={core} />}
         {activeTab==='tools' && <InvestorTools areaData={areaData} core={core} />}
-        {activeTab==='portfolio' && <PortfolioTracker areaData={areaData} />}
-        {activeTab==='watchlist' && <Watchlist areaData={areaData} projectsData={projectsData} setPage={setActiveTab} />}
-        {activeTab==='alerts' && <PriceAlerts areaData={areaData} />}
-        {activeTab==='scorecard' && <InvestmentScoreCard areaData={areaData} core={core} />}
+        {activeTab==='insights' && <InsightsTab areaData={areaData} core={core} />}
+        {activeTab==='profile' && <ProfileTab areaData={areaData} projectsData={projectsData} setPage={setActiveTab} />}
         {activeTab==='feed' && (
           <div>
             <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:18}}>
