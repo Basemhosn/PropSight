@@ -164,6 +164,7 @@ function SearchTab({ recentRaw }) {
 
 export default function RecentTransactions({ recentRaw }) {
   const lang = localStorage.getItem('lang') || 'en';
+  // lang declared at top — used in useMemo below
   const [tab, setTab] = useState('live');
   return (
     <div style={{flex:1,display:'flex',flexDirection:'column',background:'var(--bg)',fontFamily:'system-ui',overflow:'hidden'}}>
