@@ -1,3 +1,4 @@
+import { t } from '../i18n';
 import { useState, useRef, useEffect } from 'react';
 
 const SUGGESTED = [
@@ -42,9 +43,10 @@ function Message({ msg }) {
 }
 
 export default function AIConcierge() {
+  const lang = localStorage.getItem('lang') || 'en';
   const [messages, setMessages] = useState([{
     role: 'assistant',
-    content: "Hello! I'm your PropSight AI Concierge. How can I assist you with your Dubai property investments today?",
+    content: lang === 'ar' ? 'مرحباً! أنا مساعدك الذكي في PropSight. كيف يمكنني مساعدتك في استثماراتك العقارية في دبي اليوم؟' : "Hello! I'm your PropSight AI Concierge. How can I assist you with your Dubai property investments today?",
     time: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
   }]);
   const [input, setInput] = useState('');
@@ -153,7 +155,7 @@ top areas: JVC, Business Bay, Dubai Marina, Downtown, Dubai Hills, Palm Jumeirah
               }}/>
             </div>
             <div>
-              <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-primary)' }}>PropSight AI Concierge</div>
+              <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-primary)' }}>{t('AI Concierge title',lang)}</div>
               <div style={{ fontSize: 12, color: '#22C55E' }}>
                 Online • <span style={{ color: 'var(--text-muted)' }}>Ready to assist</span>
               </div>

@@ -1,3 +1,4 @@
+import { t } from '../i18n';
 import { useState, useMemo } from 'react';
 import { fmtAED, fmtNum } from '../utils/format';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, AreaChart, Area } from 'recharts';
@@ -28,6 +29,7 @@ function inferDeveloper(name) {
 
 export default function DeveloperTracker({ projectsData, areaData }) {
   const [selected, setSelected] = useState(null);
+  const lang = localStorage.getItem('lang') || 'en';
   const [search, setSearch] = useState('');
 
   const developers = useMemo(() => {
@@ -54,13 +56,13 @@ export default function DeveloperTracker({ projectsData, areaData }) {
       {/* Main list */}
       <div style={{flex:1,overflowY:'auto',padding:'24px 28px',transition:'all 0.3s'}}>
         <div style={{marginBottom:24}}>
-          <h1 style={{margin:0,fontSize:22,fontWeight:700,color:'var(--text-primary)',marginBottom:4}}>Developers</h1>
-          <div style={{fontSize:13,color:'var(--text-secondary)'}}>Dubai's top real estate developers — click any to see full profile</div>
+          <h1 style={{margin:0,fontSize:22,fontWeight:700,color:'var(--text-primary)',marginBottom:4}}>{t('Developers title',lang)}</h1>
+          <div style={{fontSize:13,color:'var(--text-secondary)'}}>{t('Developers subtitle',lang)}</div>
         </div>
 
         <div style={{display:'flex',alignItems:'center',gap:8,background:'var(--surface)',border:'1px solid rgba(59,130,246,0.15)',borderRadius:10,padding:'10px 16px',marginBottom:20}}>
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#475569" strokeWidth="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-          <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search developers..."
+          <input value={search} onChange={e=>setSearch(e.target.value)} placeholder={t("Search developers",lang)}
             style={{background:'none',border:'none',outline:'none',color:'var(--text-secondary)',fontSize:13,flex:1,fontFamily:'system-ui'}}/>
         </div>
 
@@ -76,7 +78,7 @@ export default function DeveloperTracker({ projectsData, areaData }) {
                   <div style={{width:48,height:48,borderRadius:12,background:`${meta.color}15`,border:`1px solid ${meta.color}30`,display:'flex',alignItems:'center',justifyContent:'center',fontSize:24,flexShrink:0}}>{meta.logo}</div>
                   <div>
                     <div style={{fontSize:14,fontWeight:700,color:'var(--text-primary)'}}>{dev.name}</div>
-                    <div style={{fontSize:11,color:'var(--text-secondary)'}}>{dev.projects.length} projects tracked</div>
+                    <div style={{fontSize:11,color:'var(--text-secondary)'}}>{dev.projects.length} {t('projects tracked',lang)}</div>
                   </div>
                 </div>
                 <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10,marginBottom:12}}>

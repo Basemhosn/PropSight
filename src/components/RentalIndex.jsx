@@ -1,3 +1,4 @@
+import { t } from '../i18n';
 import { useState, useMemo } from 'react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 import { fmtAED, fmtNum } from '../utils/format';
@@ -61,6 +62,7 @@ export default function RentalIndex({ areaData }) {
   const gYield = cValue&&cAnnual ? (cAnnual/cValue*100).toFixed(2) : cd.yield;
   const nYield = gYield ? (parseFloat(gYield)*0.78).toFixed(2) : 0;
 
+  const lang = localStorage.getItem('lang') || 'en';
   const inp = {background:'var(--bg-alt)',border:'1px solid rgba(59,130,246,0.15)',borderRadius:8,color:'var(--text-primary)',fontSize:13,padding:'9px 12px',outline:'none',fontFamily:'system-ui',width:'100%',boxSizing:'border-box'};
   const tt = {contentStyle:{background:'var(--surface)',border:'1px solid rgba(59,130,246,0.2)',borderRadius:8,color:'var(--text-primary)',fontSize:11}};
 
@@ -68,11 +70,11 @@ export default function RentalIndex({ areaData }) {
     <div style={{flex:1,overflowY:'auto',background:'var(--bg)',fontFamily:'system-ui',padding:'24px 28px'}}>
       <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:24}}>
         <div>
-          <h1 style={{margin:0,fontSize:22,fontWeight:700,color:'var(--text-primary)',marginBottom:4}}>Rental Index</h1>
-          <div style={{fontSize:13,color:'var(--text-secondary)'}}>Dubai rental market — rates, yields and trends by area</div>
+          <h1 style={{margin:0,fontSize:22,fontWeight:700,color:'var(--text-primary)',marginBottom:4}}>{t('Rental Index',lang)}</h1>
+          <div style={{fontSize:13,color:'var(--text-secondary)'}}>{t('Rental subtitle',lang)}</div>
         </div>
         <div style={{display:'flex',gap:6,background:'var(--surface)',border:'1px solid rgba(59,130,246,0.15)',borderRadius:10,padding:4}}>
-          {[['overview','Overview'],['calculator','Yield Calculator']].map(([m,l])=>(
+          {[['overview',t('Overview',lang)],['calculator',t('Yield Calculator',lang)]].map(([m,l])=>(
             <button key={m} onClick={()=>setViewMode(m)} style={{padding:'8px 18px',borderRadius:8,border:'none',cursor:'pointer',fontSize:13,fontFamily:'system-ui',fontWeight:viewMode===m?600:400,background:viewMode===m?'linear-gradient(135deg,#1D4ED8,#38BDF8)':'transparent',color:viewMode===m?'#fff':'var(--text-muted)'}}>{l}</button>
           ))}
         </div>
@@ -96,15 +98,15 @@ export default function RentalIndex({ areaData }) {
           </div>
         </div>
         <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(140px,1fr))',gap:12,marginBottom:24}}>
-          <Card label="Annual Rent" value={annualRent?fmtAED(annualRent,true):'N/A'} sub="Avg asking"/>
-          <Card label="Monthly Rent" value={monthlyRent?fmtAED(monthlyRent,true):'N/A'} sub="Per month"/>
-          <Card label="Gross Yield" value={d.yield?d.yield+'%':'N/A'} sub="Annual return" subColor="#22C55E" accent="rgba(34,197,94,0.15)"/>
-          <Card label="YoY Growth" value={d.trend?'+'+d.trend+'%':'N/A'} sub="Rental growth" subColor="#38BDF8" accent="rgba(59,130,246,0.15)"/>
-          <Card label="Quarterly" value={annualRent?fmtAED(Math.round(annualRent/4),true):'N/A'} sub="Per cheque"/>
+          <Card label={t("Annual Rent",lang)} value={annualRent?fmtAED(annualRent,true):'N/A'} sub={t("Avg asking",lang)}/>
+          <Card label={t("Monthly Rent",lang)} value={monthlyRent?fmtAED(monthlyRent,true):'N/A'} sub={t("Per month",lang)}/>
+          <Card label={t("Gross Yield",lang)} value={d.yield?d.yield+'%':'N/A'} sub={t("Annual return",lang)} subColor="#22C55E" accent="rgba(34,197,94,0.15)"/>
+          <Card label={t("YoY Growth",lang)} value={d.trend?'+'+d.trend+'%':'N/A'} sub={t("Rental growth",lang)} subColor="#38BDF8" accent="rgba(59,130,246,0.15)"/>
+          <Card label={t("Quarterly",lang)} value={annualRent?fmtAED(Math.round(annualRent/4),true):'N/A'} sub={t("Per cheque",lang)}/>
         </div>
         <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16,marginBottom:24}}>
           <div style={{background:'var(--surface)',border:'1px solid rgba(255,255,255,0.06)',borderRadius:14,padding:20}}>
-            <div style={{fontSize:13,fontWeight:600,color:'var(--text-primary)',marginBottom:14}}>Annual Rent by Area — {selectedBR}</div>
+            <div style={{fontSize:13,fontWeight:600,color:'var(--text-primary)',marginBottom:14}}>{t('Annual Rent by Area',lang)} — {selectedBR}</div>
             <ResponsiveContainer width="100%" height={200}>
               <BarChart data={compData.slice(0,10)} margin={{top:4,right:4,left:0,bottom:0}}>
                 <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)"/>
@@ -116,7 +118,7 @@ export default function RentalIndex({ areaData }) {
             </ResponsiveContainer>
           </div>
           <div style={{background:'var(--surface)',border:'1px solid rgba(255,255,255,0.06)',borderRadius:14,padding:20}}>
-            <div style={{fontSize:13,fontWeight:600,color:'var(--text-primary)',marginBottom:14}}>Gross Rental Yield by Area</div>
+            <div style={{fontSize:13,fontWeight:600,color:'var(--text-primary)',marginBottom:14}}>{t('Gross Rental Yield by Area',lang)}</div>
             <ResponsiveContainer width="100%" height={200}>
               <BarChart data={yieldData.slice(0,10)} margin={{top:4,right:4,left:0,bottom:0}}>
                 <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)"/>

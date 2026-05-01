@@ -2,11 +2,13 @@ import { useState, useEffect } from 'react';
 import { supabase } from '../context/AuthContext';
 import { useAuth } from '../context/AuthContext';
 import { fmtAED, fmtNum } from '../utils/format';
+import { t } from '../i18n';
 
 const AREA_NICE = {'Al Barsha South Fourth':'JVC','Burj Khalifa':'Downtown Dubai','Marsa Dubai':'Dubai Marina','Hadaeq Sheikh Mohammed Bin Rashid':'Dubai Hills','Al Thanyah Fifth':'JLT','Business Bay':'Business Bay','Palm Jumeirah':'Palm Jumeirah','Al Merkadh':'MBR City','Al Khairan First':'Creek Harbour'};
 const niceArea = a => AREA_NICE[a] || a;
 
 export default function Watchlist({ areaData, projectsData, setPage }) {
+  const lang = localStorage.getItem('lang') || 'en';
   const { user, isPro, isLite } = useAuth();
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -51,7 +53,7 @@ export default function Watchlist({ areaData, projectsData, setPage }) {
     <div style={{flex:1,display:'flex',alignItems:'center',justifyContent:'center',background:'var(--bg)',fontFamily:'system-ui',padding:24}}>
       <div style={{textAlign:'center',maxWidth:380}}>
         <div style={{fontSize:48,marginBottom:16}}>🔖</div>
-        <div style={{fontSize:22,fontWeight:700,color:'var(--text-primary)',marginBottom:8}}>Watchlist</div>
+        <div style={{fontSize:22,fontWeight:700,color:'var(--text-primary)',marginBottom:8}}>{t('Watchlist',lang)}</div>
         <div style={{fontSize:14,color:'var(--text-muted)',marginBottom:24,lineHeight:1.6}}>Save areas and projects you are tracking. Get notified when prices move.</div>
         <button onClick={()=>setPage('upgrade')} style={{width:'100%',padding:'13px',borderRadius:10,border:'none',cursor:'pointer',background:'linear-gradient(135deg,#1D4ED8,#38BDF8)',color:'#fff',fontSize:14,fontWeight:600,fontFamily:'system-ui'}}>Upgrade to Lite</button>
       </div>
@@ -63,7 +65,7 @@ export default function Watchlist({ areaData, projectsData, setPage }) {
       <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:24}}>
         <div>
           <h1 style={{margin:0,fontSize:22,fontWeight:700,color:'var(--text-primary)',marginBottom:4}}>Watchlist</h1>
-          <div style={{fontSize:13,color:'var(--text-secondary)'}}>Track areas and projects you are interested in</div>
+          <div style={{fontSize:13,color:'var(--text-secondary)'}}>{t('Track areas and projects',lang)}</div>
         </div>
         <button onClick={()=>setShowAdd(true)} style={{padding:'10px 18px',borderRadius:10,border:'none',cursor:'pointer',background:'linear-gradient(135deg,#1D4ED8,#38BDF8)',color:'#fff',fontSize:13,fontWeight:600,fontFamily:'system-ui'}}>+ Add to Watchlist</button>
       </div>
@@ -72,8 +74,8 @@ export default function Watchlist({ areaData, projectsData, setPage }) {
       : items.length === 0 ? (
         <div style={{textAlign:'center',padding:60}}>
           <div style={{fontSize:48,marginBottom:16}}>🔖</div>
-          <div style={{fontSize:18,fontWeight:600,color:'var(--text-primary)',marginBottom:8}}>Nothing saved yet</div>
-          <div style={{fontSize:13,color:'var(--text-secondary)',marginBottom:24}}>Add areas or projects you want to track</div>
+          <div style={{fontSize:18,fontWeight:600,color:'var(--text-primary)',marginBottom:8}}>{t('Nothing saved yet',lang)}</div>
+          <div style={{fontSize:13,color:'var(--text-secondary)',marginBottom:24}}>{t('Add areas or projects',lang)}</div>
           <button onClick={()=>setShowAdd(true)} style={{padding:'11px 24px',borderRadius:10,border:'none',cursor:'pointer',background:'linear-gradient(135deg,#1D4ED8,#38BDF8)',color:'#fff',fontSize:13,fontWeight:600,fontFamily:'system-ui'}}>+ Add First Item</button>
         </div>
       ) : (

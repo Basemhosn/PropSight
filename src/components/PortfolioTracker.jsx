@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { supabase } from '../context/AuthContext';
 import { useAuth } from '../context/AuthContext';
 import { fmtAED, fmtNum } from '../utils/format';
+import { t } from '../i18n';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
 
 const AREA_NAMES = {'Al Barsha South Fourth':'JVC','Burj Khalifa':'Downtown Dubai','Marsa Dubai':'Dubai Marina','Hadaeq Sheikh Mohammed Bin Rashid':'Dubai Hills','Al Thanyah Fifth':'JLT','Business Bay':'Business Bay','Palm Jumeirah':'Palm Jumeirah'};
@@ -19,6 +20,7 @@ function StatCard({ label, value, sub, subColor='var(--text-muted)', accent }) {
 }
 
 export default function PortfolioTracker({ areaData }) {
+  const lang = localStorage.getItem('lang') || 'en';
   const { user, isPro, isLite } = useAuth();
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -110,7 +112,7 @@ export default function PortfolioTracker({ areaData }) {
     <div style={{flex:1,overflowY:'auto',background:'var(--bg)',fontFamily:'system-ui',padding:'24px 28px'}}>
       <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:24}}>
         <div>
-          <h1 style={{margin:0,fontSize:22,fontWeight:700,color:'var(--text-primary)',marginBottom:4}}>My Portfolio</h1>
+          <h1 style={{margin:0,fontSize:22,fontWeight:700,color:'var(--text-primary)',marginBottom:4}}>{t('My Portfolio title',lang)}</h1>
           <div style={{fontSize:13,color:'var(--text-secondary)'}}>{properties.length} {properties.length===1?'property':'properties'} tracked</div>
         </div>
         <button onClick={()=>setShowAdd(true)} style={{display:'flex',alignItems:'center',gap:8,padding:'10px 18px',borderRadius:10,border:'none',cursor:'pointer',background:'linear-gradient(135deg,#1D4ED8,#38BDF8)',color:'#fff',fontSize:13,fontWeight:600,fontFamily:'system-ui'}}>+ Add Property</button>
@@ -119,8 +121,8 @@ export default function PortfolioTracker({ areaData }) {
       {loading ? <div style={{textAlign:'center',padding:60,color:'var(--text-secondary)'}}>Loading...</div> : properties.length === 0 ? (
         <div style={{textAlign:'center',padding:60}}>
           <div style={{fontSize:48,marginBottom:16}}>🏢</div>
-          <div style={{fontSize:18,fontWeight:600,color:'var(--text-primary)',marginBottom:8}}>No properties yet</div>
-          <div style={{fontSize:13,color:'var(--text-secondary)',marginBottom:24}}>Add your first property to start tracking</div>
+          <div style={{fontSize:18,fontWeight:600,color:'var(--text-primary)',marginBottom:8}}>{t('No properties yet',lang)}</div>
+          <div style={{fontSize:13,color:'var(--text-secondary)',marginBottom:24}}>{t('Add first property',lang)}</div>
           <button onClick={()=>setShowAdd(true)} style={{padding:'11px 24px',borderRadius:10,border:'none',cursor:'pointer',background:'linear-gradient(135deg,#1D4ED8,#38BDF8)',color:'#fff',fontSize:13,fontWeight:600,fontFamily:'system-ui'}}>+ Add Your First Property</button>
         </div>
       ) : (
