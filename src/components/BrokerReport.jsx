@@ -1,3 +1,4 @@
+import html2pdf from 'html2pdf.js';
 import { useState, useMemo, useRef } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { calcPropSightScore } from '../utils/propSightScore';
@@ -53,6 +54,26 @@ export default function BrokerReport({ areaData, core, recentRaw }) {
   });
   const [generated, setGenerated] = useState(false);
   const set = (k,v) => setForm(f=>({...f,[k]:v}));
+  const [exporting, setExporting] = useState(false);
+
+  const exportPDF = async () => {
+    setExporting(true);
+    const el = document.getElementById('rpt');
+    const opt = {
+      margin: [8,8,8,8],
+      filename: `PropSight-Report-${form.clientName||'Client'}-${na(form.selectedArea)}-${new Date().toISOString().slice(0,10)}.pdf`,
+      image: { type:'jpeg', quality:0.98 },
+      html2canvas: { scale:2, useCORS:true, backgroundColor:'#0A1628', logging:false },
+      jsPDF: { unit:'mm', format:'a4', orientation:'portrait' },
+      pagebreak: { mode:['avoid-all','css','legacy'] },
+    };
+    try {
+      await html2pdf().set(opt).from(el).save();
+    } catch(e) {
+      console.error('PDF error:', e);
+    }
+    setExporting(false);
+  };
 
   const areas = areaData ? Object.keys(areaData).sort() : [];
   const areaInfo = areaData?.[form.selectedArea];
@@ -168,13 +189,7 @@ export default function BrokerReport({ areaData, core, recentRaw }) {
 
   return (
     <div style={{ flex:1, overflowY:'auto', background:'var(--bg)', fontFamily:'system-ui', padding:'24px 28px' }}>
-      <style>{`@media print {
-    * { -webkit-print-color-adjust:exact!important; print-color-adjust:exact!important; box-sizing:border-box }
-    body > * { display:none!important }
-    #rpt-wrapper { display:block!important; position:fixed; inset:0; overflow:auto; z-index:99999; background:#0A1628; padding:24px }
-    #rpt-wrapper * { visibility:visible!important }
-    .no-print { display:none!important }
-  }`}</style>
+
       <div style={{ maxWidth:1000, margin:'0 auto' }}>
 
         {/* Header */}
@@ -186,7 +201,9 @@ export default function BrokerReport({ areaData, core, recentRaw }) {
           {generated && (
             <div className="no-print" style={{ display:'flex', gap:10 }}>
               <button onClick={()=>setGenerated(false)} style={{ padding:'10px 18px', borderRadius:10, border:'1px solid rgba(255,255,255,0.1)', background:'var(--surface)', color:'var(--text-secondary)', cursor:'pointer', fontSize:13, fontFamily:'system-ui' }}>← Edit</button>
-              <button onClick={()=>window.print()} style={{ padding:'10px 24px', borderRadius:10, border:'none', background:'linear-gradient(135deg,#1D4ED8,#38BDF8)', color:'#fff', cursor:'pointer', fontSize:13, fontWeight:600, fontFamily:'system-ui' }}>Print / PDF</button>
+              <button onClick={exportPDF} disabled={exporting} style={{ padding:'10px 24px', borderRadius:10, border:'none', background:'linear-gradient(135deg,#1D4ED8,#38BDF8)', color:'#fff', cursor:exporting?'default':'pointer', fontSize:13, fontWeight:600, fontFamily:'system-ui', opacity:exporting?0.7:1 }}>
+                {exporting ? '⏳ Generating PDF...' : '📄 Download PDF'}
+              </button>
             </div>
           )}
         </div>
@@ -236,7 +253,6 @@ export default function BrokerReport({ areaData, core, recentRaw }) {
 
         {/* REPORT */}
         {generated && (
-          <div id="rpt-wrapper" style={{ display:'block' }}>
           <div id="rpt">
 
             {/* COVER */}
@@ -606,7 +622,6 @@ export default function BrokerReport({ areaData, core, recentRaw }) {
               </div>
             </div>
 
-          </div>
           </div>
         )}
       </div>
