@@ -43,6 +43,7 @@ import NewLaunches from "./components/NewLaunches";
 import ShareableReport from "./components/ShareableReport";
 import PriceAlerts from "./components/PriceAlerts";
 import TransactionSearch from "./components/TransactionSearch";
+import PrivacyPolicy from './components/PrivacyPolicy';
 import PortfolioTracker from "./components/PortfolioTracker";
 import useLiveTransactions from './hooks/useLiveTransactions';
 import BrokerProfile from './components/BrokerProfile';
