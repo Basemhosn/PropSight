@@ -26,7 +26,7 @@ const W = {
   text:     '#0F172A',
   textSec:  '#475569',
   textMut:  '#94A3B8',
-  blue:     '#1D4ED8',
+  blue: '#3B82F6',
   blueLt:   '#3B82F6',
   green:    '#16A34A',
   red:      '#DC2626',
@@ -68,16 +68,18 @@ function ScoreGauge({ score, color, size=110 }) {
   const circ = 2*Math.PI*r;
   const filled = (score/100)*circ;
   return (
-    <svg width={size} height={size} style={{ transform:'rotate(-90deg)' }}>
-      <circle cx={size/2} cy={size/2} r={r} fill="none" stroke="#E2E8F0" strokeWidth={8}/>
-      <circle cx={size/2} cy={size/2} r={r} fill="none" stroke={color} strokeWidth={8}
-        strokeDasharray={`${filled} ${circ}`} strokeLinecap="round"/>
-      <text x={size/2} y={size/2} textAnchor="middle" dominantBaseline="middle"
-        style={{ transform:`rotate(90deg)`, transformOrigin:`${size/2}px ${size/2}px`,
-          fill:color, fontSize:size*0.21, fontWeight:800, fontFamily:'system-ui' }}>
+    <div style={{ position:'relative', width:size, height:size }}>
+      <svg width={size} height={size} style={{ transform:'rotate(-90deg)', position:'absolute', top:0, left:0 }}>
+        <circle cx={size/2} cy={size/2} r={r} fill="none" stroke="#E2E8F0" strokeWidth={8}/>
+        <circle cx={size/2} cy={size/2} r={r} fill="none" stroke={color} strokeWidth={8}
+          strokeDasharray={`${filled} ${circ}`} strokeLinecap="round"/>
+      </svg>
+      <div style={{ position:'absolute', top:0, left:0, width:size, height:size,
+        display:'flex', alignItems:'center', justifyContent:'center',
+        fontSize:size*0.21, fontWeight:800, color, fontFamily:'system-ui' }}>
         {score}
-      </text>
-    </svg>
+      </div>
+    </div>
   );
 }
 
@@ -298,7 +300,7 @@ export default function BrokerReport({ areaData, core, recentRaw }) {
           <div id="rpt" style={{ background:W.bg, color:W.text, fontFamily:"system-ui,sans-serif", fontSize:13, lineHeight:1.5 }}>
 
             {/* ── COVER ─────────────────────────────────────────────────── */}
-            <div style={{ background:W.blue, borderRadius:14, overflow:'hidden', marginBottom:16 }}>
+            <div style={{ background:'#2563EB', borderRadius:14, overflow:'hidden', marginBottom:16 }}>
               {/* Agency bar */}
               <div style={{ background:'rgba(255,255,255,0.08)', borderBottom:'1px solid rgba(255,255,255,0.12)', padding:'16px 28px', display:'flex', justifyContent:'space-between', alignItems:'center' }}>
                 <div style={{ display:'flex', alignItems:'center', gap:16 }}>
