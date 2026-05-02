@@ -17,7 +17,7 @@ const AREA_NICE = {
 const na = a => AREA_NICE[a] || a;
 
 // ── Broker Portfolio ───────────────────────────────────────────────────────
-function BrokerPortfolio({ areaData, core, recentRaw }) {
+function BrokerPortfolio({ areaData, core, recentRaw, onNavigate }) {
   const [section, setSection] = useState('market');
 
   const sections = [
@@ -150,15 +150,17 @@ function BrokerPortfolio({ areaData, core, recentRaw }) {
             <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:16, marginBottom:24 }}>
               {[
                 { title:'Portfolio Valuation', desc:'Real-time tracking of your portfolio value and performance across all tracked properties.', icon:'📊', action:'Go to My Portfolio', page:'portfolio' },
-                { title:'Transaction History', desc:'Complete records of all DLD transactions in your tracked areas and projects.', icon:'📋', action:'View Transactions', page:'recent' },
-                { title:'Account Statements', desc:'Regular updates on your tracked properties, watchlist performance, and alert history.', icon:'📄', action:'View Watchlist', page:'watchlist' },
-                { title:'Performance Reports', desc:'Monthly performance summaries and area-level analytics for your tracked investments.', icon:'📈', action:'View Reports', page:'reports' },
+                { title:'Transaction History', desc:'Complete DLD transaction records for your tracked areas and projects.', icon:'📋', action:'View Transactions', page:'recent' },
+                { title:'Watchlist & Alerts', desc:'Monitor saved areas and projects with real-time price alerts.', icon:'📄', action:'View Watchlist', page:'watchlist' },
+                { title:'Market Intelligence', desc:'Area-level analytics, price trends and market performance reports.', icon:'📈', action:'Open Market Intelligence', page:'markets' },
               ].map((item,i)=>(
-                <div key={i} style={{ background:'var(--surface)', border:'1px solid rgba(255,255,255,0.06)', borderRadius:14, padding:20 }}>
+                <div key={i} onClick={()=>onNavigate&&onNavigate(item.page)} style={{ background:'var(--surface)', border:'1px solid rgba(255,255,255,0.06)', borderRadius:14, padding:20, cursor:'pointer', transition:'all 0.15s' }}
+                  onMouseEnter={e=>e.currentTarget.style.border='1px solid rgba(59,130,246,0.3)'}
+                  onMouseLeave={e=>e.currentTarget.style.border='1px solid rgba(255,255,255,0.06)'}>
                   <div style={{ fontSize:24, marginBottom:10 }}>{item.icon}</div>
                   <div style={{ fontSize:14, fontWeight:600, color:'var(--text-primary)', marginBottom:6 }}>{item.title}</div>
                   <div style={{ fontSize:12, color:'var(--text-secondary)', lineHeight:1.6, marginBottom:14 }}>{item.desc}</div>
-                  <div style={{ fontSize:12, color:'#38BDF8', fontWeight:600, cursor:'pointer' }}>{item.action} →</div>
+                  <div onClick={()=>onNavigate&&onNavigate(item.page)} style={{ fontSize:12, color:'#38BDF8', fontWeight:600, cursor:'pointer', marginTop:'auto' }}>{item.action} →</div>
                 </div>
               ))}
             </div>
@@ -227,14 +229,21 @@ function BrokerPortfolio({ areaData, core, recentRaw }) {
                 { icon:'📋', title:'Due Diligence Checklist', desc:'NOC requirements, title deed verification, service charge validation, and developer track record checks.', tags:['Due Diligence','Checklist'] },
                 { icon:'💼', title:'Broker Best Practices', desc:'RERA licensing, client disclosure requirements, commission structures, and professional standards.', tags:['RERA','Licensing','Ethics'] },
               ].map((item,i)=>(
-                <div key={i} style={{ background:'var(--surface)', border:'1px solid rgba(255,255,255,0.06)', borderRadius:14, padding:18 }}>
+                <div key={i}
+                  onClick={()=>item.page?onNavigate&&onNavigate(item.page):item.link&&window.open(item.link,'_blank')}
+                  style={{ background:'var(--surface)', border:'1px solid rgba(255,255,255,0.06)', borderRadius:14, padding:18, cursor:'pointer', transition:'all 0.15s', display:'flex', flexDirection:'column' }}
+                  onMouseEnter={e=>e.currentTarget.style.border='1px solid rgba(59,130,246,0.3)'}
+                  onMouseLeave={e=>e.currentTarget.style.border='1px solid rgba(255,255,255,0.06)'}>
                   <div style={{ fontSize:24, marginBottom:8 }}>{item.icon}</div>
                   <div style={{ fontSize:13, fontWeight:600, color:'var(--text-primary)', marginBottom:6 }}>{item.title}</div>
-                  <div style={{ fontSize:12, color:'var(--text-secondary)', lineHeight:1.6, marginBottom:10 }}>{item.desc}</div>
-                  <div style={{ display:'flex', gap:6, flexWrap:'wrap' }}>
-                    {item.tags.map(tag=>(
-                      <span key={tag} style={{ fontSize:10, fontWeight:600, padding:'2px 8px', borderRadius:20, background:'rgba(59,130,246,0.08)', color:'#38BDF8', border:'1px solid rgba(59,130,246,0.15)' }}>{tag}</span>
-                    ))}
+                  <div style={{ fontSize:12, color:'var(--text-secondary)', lineHeight:1.6, marginBottom:10, flex:1 }}>{item.desc}</div>
+                  <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center' }}>
+                    <div style={{ display:'flex', gap:6, flexWrap:'wrap' }}>
+                      {item.tags.map(tag=>(
+                        <span key={tag} style={{ fontSize:10, fontWeight:600, padding:'2px 8px', borderRadius:20, background:'rgba(59,130,246,0.08)', color:'#38BDF8', border:'1px solid rgba(59,130,246,0.15)' }}>{tag}</span>
+                      ))}
+                    </div>
+                    <span style={{ fontSize:11, color:'#38BDF8', fontWeight:600, flexShrink:0 }}>{item.page?'Open →':'Visit →'}</span>
                   </div>
                 </div>
               ))}
@@ -245,7 +254,7 @@ function BrokerPortfolio({ areaData, core, recentRaw }) {
               <div style={{ fontSize:12, color:'var(--text-secondary)', lineHeight:1.6, marginBottom:14 }}>
                 Get instant answers to any Dubai real estate question — market analysis, RERA regulations, investment strategy, area comparisons, and deal structuring advice.
               </div>
-              <div style={{ fontSize:12, color:'#38BDF8', fontWeight:600, cursor:'pointer' }}>Open AI Concierge →</div>
+              <div onClick={()=>onNavigate&&onNavigate('ai')} style={{ fontSize:12, color:'#38BDF8', fontWeight:600, cursor:'pointer' }}>Open AI Concierge →</div>
             </div>
           </div>
         )}
@@ -373,7 +382,7 @@ export default function BrokerProfile({ areaData, core, recentRaw, projectsData,
       </div>
       <div style={{ flex:1, display:'flex', flexDirection:'column', overflow:'hidden' }}>
         {tab==='profile'    && <BrokerProfileEditor/>}
-        {tab==='portfolio' && <BrokerPortfolio areaData={areaData} core={core} recentRaw={recentRaw}/>}
+        {tab==='portfolio' && <BrokerPortfolio areaData={areaData} core={core} recentRaw={recentRaw} onNavigate={onNavigate}/>}
         {tab==='watchlist' && <WatchlistAlerts areaData={areaData} projectsData={projectsData}/>}
         {tab==='report'    && <BrokerReport areaData={areaData} core={core} recentRaw={recentRaw}/>}
         {tab==='upgrade'   && <UpgradePage/>}
