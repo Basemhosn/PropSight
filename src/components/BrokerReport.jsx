@@ -168,7 +168,13 @@ export default function BrokerReport({ areaData, core, recentRaw }) {
 
   return (
     <div style={{ flex:1, overflowY:'auto', background:'var(--bg)', fontFamily:'system-ui', padding:'24px 28px' }}>
-      <style>{`@media print { .no-print{display:none!important} #rpt,#rpt *{visibility:visible} #rpt{position:fixed;left:0;top:0;width:100%} }`}</style>
+      <style>{`@media print {
+    .no-print { display:none!important }
+    body { background:#fff!important }
+    #rpt { color:#000 }
+    #rpt * { visibility:visible }
+    * { -webkit-print-color-adjust:exact!important; print-color-adjust:exact!important }
+  }`}</style>
       <div style={{ maxWidth:1000, margin:'0 auto' }}>
 
         {/* Header */}
