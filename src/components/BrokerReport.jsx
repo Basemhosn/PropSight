@@ -169,11 +169,11 @@ export default function BrokerReport({ areaData, core, recentRaw }) {
   return (
     <div style={{ flex:1, overflowY:'auto', background:'var(--bg)', fontFamily:'system-ui', padding:'24px 28px' }}>
       <style>{`@media print {
+    * { -webkit-print-color-adjust:exact!important; print-color-adjust:exact!important; box-sizing:border-box }
+    body > * { display:none!important }
+    #rpt-wrapper { display:block!important; position:fixed; inset:0; overflow:auto; z-index:99999; background:#0A1628; padding:24px }
+    #rpt-wrapper * { visibility:visible!important }
     .no-print { display:none!important }
-    body { background:#fff!important }
-    #rpt { color:#000 }
-    #rpt * { visibility:visible }
-    * { -webkit-print-color-adjust:exact!important; print-color-adjust:exact!important }
   }`}</style>
       <div style={{ maxWidth:1000, margin:'0 auto' }}>
 
@@ -236,6 +236,7 @@ export default function BrokerReport({ areaData, core, recentRaw }) {
 
         {/* REPORT */}
         {generated && (
+          <div id="rpt-wrapper" style={{ display:'block' }}>
           <div id="rpt">
 
             {/* COVER */}
@@ -605,6 +606,7 @@ export default function BrokerReport({ areaData, core, recentRaw }) {
               </div>
             </div>
 
+          </div>
           </div>
         )}
       </div>
