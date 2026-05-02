@@ -300,25 +300,25 @@ export default function BrokerReport({ areaData, core, recentRaw }) {
           <div id="rpt" style={{ background:W.bg, color:W.text, fontFamily:"system-ui,sans-serif", fontSize:13, lineHeight:1.5 }}>
 
             {/* ── COVER ─────────────────────────────────────────────────── */}
-            <div style={{ background:'#2563EB', borderRadius:14, overflow:'hidden', marginBottom:16 }}>
+            <div style={{ background:'#F0F7FF', border:'1px solid #BFDBFE', borderRadius:14, overflow:'hidden', marginBottom:16 }}>
               {/* Agency bar */}
-              <div style={{ background:'rgba(255,255,255,0.08)', borderBottom:'1px solid rgba(255,255,255,0.12)', padding:'16px 28px', display:'flex', justifyContent:'space-between', alignItems:'center' }}>
+              <div style={{ background:'#EFF6FF', borderBottom:'1px solid #BFDBFE', padding:'16px 28px', display:'flex', justifyContent:'space-between', alignItems:'center' }}>
                 <div style={{ display:'flex', alignItems:'center', gap:16 }}>
                   {profile?.agency_logo_url
                     ? <img src={profile.agency_logo_url} alt="Logo" style={{ height:36, objectFit:'contain', borderRadius:6, background:'#fff', padding:4 }}/>
                     : <div style={{ fontSize:16, fontWeight:800, color:'#fff', letterSpacing:'-0.5px' }}>Prop<span style={{ color:'#93C5FD' }}>Sight</span></div>
                   }
                   <div>
-                    <div style={{ fontSize:11, color:'rgba(255,255,255,0.9)', fontWeight:700, textTransform:'uppercase', letterSpacing:'0.1em' }}>{profile?.agency_name||'PropSight'} · Property Valuation Report</div>
-                    <div style={{ fontSize:10, color:'rgba(255,255,255,0.5)' }}>Dubai Land Department Data · {new Date().toLocaleDateString('en-AE',{day:'numeric',month:'long',year:'numeric'})}</div>
+                    <div style={{ fontSize:11, color:'#1E3A8A', fontWeight:700, textTransform:'uppercase', letterSpacing:'0.1em' }}>{profile?.agency_name||'PropSight'} · Property Valuation Report</div>
+                    <div style={{ fontSize:10, color:'#64748B' }}>Dubai Land Department Data · {new Date().toLocaleDateString('en-AE',{day:'numeric',month:'long',year:'numeric'})}</div>
                   </div>
                 </div>
                 <div style={{ display:'flex', alignItems:'center', gap:12 }}>
                   {profile?.broker_photo_url && <img src={profile.broker_photo_url} alt="Broker" style={{ width:42, height:42, borderRadius:'50%', objectFit:'cover', border:'2px solid rgba(255,255,255,0.4)' }}/>}
                   <div style={{ textAlign:'right' }}>
-                    <div style={{ fontSize:13, fontWeight:700, color:'#fff' }}>{profile?.broker_name||profile?.full_name||'Broker'}</div>
-                    <div style={{ fontSize:11, color:'rgba(255,255,255,0.6)' }}>{profile?.broker_title||'Real Estate Broker'}</div>
-                    {profile?.rera_number && <div style={{ fontSize:10, color:'#93C5FD' }}>RERA: {profile.rera_number}</div>}
+                    <div style={{ fontSize:13, fontWeight:700, color:'#0F172A' }}>{profile?.broker_name||profile?.full_name||'Broker'}</div>
+                    <div style={{ fontSize:11, color:'#475569' }}>{profile?.broker_title||'Real Estate Broker'}</div>
+                    {profile?.rera_number && <div style={{ fontSize:10, color:'#2563EB' }}>RERA: {profile.rera_number}</div>}
                   </div>
                 </div>
               </div>
@@ -327,30 +327,30 @@ export default function BrokerReport({ areaData, core, recentRaw }) {
               <div style={{ padding:'28px', display:'grid', gridTemplateColumns:'1fr auto', gap:24, alignItems:'center' }}>
                 <div>
                   <div style={{ fontSize:11, color:'rgba(255,255,255,0.5)', marginBottom:6, textTransform:'uppercase', letterSpacing:'0.1em' }}>Prepared for: {form.clientName||'Client'}</div>
-                  <div style={{ fontSize:26, fontWeight:800, color:'#fff', lineHeight:1.2, marginBottom:8 }}>{form.propertyRef||`${form.propType} in ${na(form.selectedArea)}`}</div>
-                  <div style={{ fontSize:13, color:'rgba(255,255,255,0.6)', marginBottom:16 }}>
+                  <div style={{ fontSize:26, fontWeight:800, color:'#0F172A', lineHeight:1.2, marginBottom:8 }}>{form.propertyRef||`${form.propType} in ${na(form.selectedArea)}`}</div>
+                  <div style={{ fontSize:13, color:'#64748B', marginBottom:16 }}>
                     📍 {na(form.selectedArea)}, Dubai, UAE{form.bedrooms?` · ${form.bedrooms}`:''}{form.floor?` · Floor ${form.floor}`:''}{form.sizeSqft?` · ${form.sizeSqft} sqft`:''}
                   </div>
                   <div style={{ display:'flex', gap:10 }}>
                     {[['Type',form.propType],['Condition',form.condition],['Parking',`${form.parkingSpaces} Space`]].map(([k,v])=>(
-                      <div key={k} style={{ background:'rgba(255,255,255,0.12)', borderRadius:8, padding:'7px 14px' }}>
-                        <div style={{ fontSize:9, color:'rgba(255,255,255,0.5)', textTransform:'uppercase', letterSpacing:'0.08em', marginBottom:2 }}>{k}</div>
-                        <div style={{ fontSize:12, fontWeight:600, color:'#fff' }}>{v}</div>
+                      <div key={k} style={{ background:'#DBEAFE', borderRadius:8, padding:'7px 14px', border:'1px solid #BFDBFE' }}>
+                        <div style={{ fontSize:9, color:'#3B82F6', textTransform:'uppercase', letterSpacing:'0.08em', marginBottom:2 }}>{k}</div>
+                        <div style={{ fontSize:12, fontWeight:600, color:'#1E3A8A' }}>{v}</div>
                       </div>
                     ))}
                   </div>
                 </div>
                 {score && (
-                  <div style={{ textAlign:'center', background:'rgba(255,255,255,0.1)', borderRadius:12, padding:'16px 20px' }}>
+                  <div style={{ textAlign:'center', background:'#DBEAFE', borderRadius:12, padding:'16px 20px', border:'1px solid #BFDBFE' }}>
                     <ScoreGauge score={score.total} color={score.total>=80?'#4ADE80':score.total>=65?'#60A5FA':score.total>=50?'#FBBF24':'#F87171'} size={110}/>
-                    <div style={{ fontSize:16, fontWeight:800, color:'#fff', marginTop:6 }}>{score.verdict}</div>
-                    <div style={{ fontSize:10, color:'rgba(255,255,255,0.5)', marginTop:2 }}>PropSight Score</div>
+                    <div style={{ fontSize:16, fontWeight:800, color:'#0F172A', marginTop:6 }}>{score.verdict}</div>
+                    <div style={{ fontSize:10, color:'#64748B', marginTop:2 }}>PropSight Score</div>
                   </div>
                 )}
               </div>
 
               {/* Summary bar */}
-              <div style={{ background:'rgba(0,0,0,0.2)', borderTop:'1px solid rgba(255,255,255,0.1)', padding:'18px 28px', display:'grid', gridTemplateColumns:'1fr 1fr 1fr 1fr', gap:20 }}>
+              <div style={{ background:'#EFF6FF', borderTop:'1px solid #BFDBFE', padding:'18px 28px', display:'grid', gridTemplateColumns:'1fr 1fr 1fr 1fr', gap:20 }}>
                 {[
                   ['Estimated Valuation', estimatedValue>0?fmtAED(estimatedValue):price>0?fmtAED(price):'N/A', '#93C5FD', valueRange[0]>0?`Range: ${fmtAED(valueRange[0])} – ${fmtAED(valueRange[1])}`:''],
                   ['Confidence Level', confidenceLevel, confidenceLevel==='High'?'#4ADE80':confidenceLevel==='Medium'?'#FBBF24':'#F87171', `${comparables.length} comparables`],
@@ -358,9 +358,9 @@ export default function BrokerReport({ areaData, core, recentRaw }) {
                   ['YoY Growth', `${yoy>0?'+':''}${yoy}%`, yoy>=0?'#4ADE80':'#F87171', `${na(form.selectedArea)}`],
                 ].map(([label,value,color,sub])=>(
                   <div key={label}>
-                    <div style={{ fontSize:9, color:'rgba(255,255,255,0.4)', marginBottom:3, textTransform:'uppercase', letterSpacing:'0.08em' }}>{label}</div>
+                    <div style={{ fontSize:9, color:'#64748B', marginBottom:3, textTransform:'uppercase', letterSpacing:'0.08em' }}>{label}</div>
                     <div style={{ fontSize:20, fontWeight:800, color }}>{value}</div>
-                    {sub && <div style={{ fontSize:10, color:'rgba(255,255,255,0.4)', marginTop:2 }}>{sub}</div>}
+                    {sub && <div style={{ fontSize:10, color:'#64748B', marginTop:2 }}>{sub}</div>}
                   </div>
                 ))}
               </div>
