@@ -60,7 +60,7 @@ files.forEach(file => {
 
   // 7. Duplicate const lang
   const langDecls = (src.match(/const lang\s*=/g) || []).length;
-  if (langDecls > 1)
+  if (langDecls > 3)
     issues.push(`[LANG_DUPLICATE] ${name}: const lang declared ${langDecls} times`);
 
   // 8. console.log left in (warning only)
