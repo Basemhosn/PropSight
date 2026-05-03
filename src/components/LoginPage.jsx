@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { t } from '../i18n';
 import { useAuth } from '../context/AuthContext';
 import PropSightLogo from './PropSightLogo';
 
