@@ -25,7 +25,7 @@ function inferDeveloper(name) {
   return 'Dubai Developer';
 }
 
-function inferStatus(regSplit) {
+function inferStatus(regSplit, lang) {
   const op = regSplit?.['Off-Plan']||0;
   const rd = regSplit?.['Ready']||0;
   if (op > rd) return t('Under Construction',lang);
@@ -51,7 +51,7 @@ export default function NewLaunches({ projectsData }) {
   const projects = useMemo(() => {
     if (!projectsData) return [];
     return Object.entries(projectsData).map(([key, d], i) => {
-      const status = inferStatus(d.regSplit);
+      const status = inferStatus(d.regSplit, lang);
       return {
         key, name: d.name||key,
         area: d.area, areaDisplay: niceArea(d.area),

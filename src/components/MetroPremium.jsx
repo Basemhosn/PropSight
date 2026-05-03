@@ -6,8 +6,6 @@ import {
 import { fmtAED, fmtNum } from "../utils/format";
 
 const CustomTooltip = ({ active, payload, label }) => {
-const [metric, setMetric] = useState("median");
-const [minTxns, setMinTxns] = useState(100);
   if (!active || !payload || !payload.length) return null;
   const d = payload[0].payload;
   return (
@@ -36,6 +34,9 @@ const [minTxns, setMinTxns] = useState(100);
 };
 
 export default function MetroPremium({ rows }) {
+  const [metric, setMetric] = useState("median");
+  const [minTxns, setMinTxns] = useState(100);
+  const lang = localStorage.getItem('lang') || 'en';
   if (!rows) return null;
 
   // Group by metro station
