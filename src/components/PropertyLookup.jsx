@@ -31,9 +31,9 @@ export default function PropertyLookup({ recentRaw }) {
   const selectProject = (proj) => {
     const data = projectIndex[proj.name]; if (!data) return;
     const txns = data.transactions;
-    const values = txns.map(t=>t.v||0).filter(v=>v>0);
-    const sizes = txns.map(t=>t.s||0).filter(s=>s>0);
-    const dates = txns.map(t=>t.d||'').filter(Boolean).sort();
+    const values = txns.map(tx => tx.v||0).filter(v=>v>0);
+    const sizes = txns.map(tx => tx.s||0).filter(s=>s>0);
+    const dates = txns.map(tx => tx.d||'').filter(Boolean).sort();
     const monthly = {};
     txns.forEach(t => { const m=(t.d||'').slice(0,7); if(!m)return; if(!monthly[m])monthly[m]={month:m,count:0,total:0}; monthly[m].count++; monthly[m].total+=t.v||0; });
     const rooms = {}; txns.forEach(t=>{const b=t.b||'?'; rooms[b]=(rooms[b]||0)+1;});

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState } from 'react'; // v2
 import { t } from '../i18n';
 import { supabase } from '../context/AuthContext';
 
