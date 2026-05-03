@@ -140,7 +140,7 @@ export default function ComparableSales({ recentRaw }) {
           <div style={{display:'grid',gridTemplateColumns:'90px 90px 65px 65px 1fr 80px 80px',padding:'10px 20px',borderBottom:'1px solid rgba(255,255,255,0.06)',background:'rgba(59,130,246,0.04)'}}>
             {['Date','Value','Reg','BR','Project','Size','Price/sqft'].map((h,i)=><div key={i} style={{fontSize:10,color:'var(--text-secondary)',fontWeight:600,textTransform:'uppercase',letterSpacing:'0.05em'}}>{h}</div>)}
           </div>
-          {comps.map((t,i)=>{
+          {comps.map((tx, i) =>{
             const ppsqft=tx.s&&tx.v?Math.round(tx.v/tx.s/10.764):0;
             const isAbove=ppsqft&&stats.avgPsqft&&ppsqft>stats.avgPsqft;
             return (

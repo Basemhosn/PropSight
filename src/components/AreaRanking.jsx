@@ -10,9 +10,9 @@ const METRICS = [
 ];
 
 export default function AreaRanking({ rows, areas }) {
+const [metric, setMetric] = useState("total");
+const [propType, setPropType] = useState("all");
   if (!rows || !areas) return null;
-  const [metric, setMetric] = useState("total");
-  const [propType, setPropType] = useState("all");
 
   const propTypes = ["all", ...new Set(rows.map(r => r.prop_type).filter(Boolean))].slice(0,6);
 

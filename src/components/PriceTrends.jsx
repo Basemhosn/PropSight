@@ -8,6 +8,7 @@ import { fmtAED } from "../utils/format";
 const COLORS = ["#38BDF8","#22C55E","#D85A30","#BA7517","#993556","#534AB7","#3b6d11","#d4537e"];
 
 const CustomTooltip = ({ active, payload, label }) => {
+  if (!active || !payload || !payload.length) return null;
   return (
     <div style={{ background:"var(--text-primary)", color:"var(--surface)", borderRadius:8, padding:"10px 14px", fontSize:12, minWidth:200 }}>
       <div style={{ fontWeight:600, marginBottom:6 }}>{label}</div>
@@ -21,14 +22,12 @@ const CustomTooltip = ({ active, payload, label }) => {
 };
 
 export default function PriceTrends({ rows, priceTrend }) {
-  if (!rows || !priceTrend) return null;
-  const [mode, setMode] = useState("market"); // market | area
+  const [mode, setMode] = useState("market");
   const [selectedAreas, setSelectedAreas] = useState([]);
 
-  // Get top areas by transaction count
   const topAreas = useMemo(() => {
     const map = {};
-    rows.forEach(r => {
+    (rows||[]).forEach(r => {
       if (r.txn_size > 0 && r.amount > 0) {
         map[r.area] = (map[r.area] || 0) + 1;
       }
@@ -36,11 +35,10 @@ export default function PriceTrends({ rows, priceTrend }) {
     return Object.entries(map).sort((a,b) => b[1]-a[1]).slice(0,8).map(([a]) => a);
   }, [rows]);
 
-  // Market-wide price/sqm by year — use precomputed if available
   const marketData = useMemo(() => {
     if (priceTrend && priceTrend.length) return priceTrend;
     const map = {};
-    rows.forEach(r => {
+    (rows||[]).forEach(r => {
       if (!r.dateObj || r.txn_size <= 0 || r.amount <= 0) return;
       const y = r.dateObj.getFullYear();
       if (y < 2008) return;
@@ -53,30 +51,31 @@ export default function PriceTrends({ rows, priceTrend }) {
       .sort((a,b) => a.year.localeCompare(b.year));
   }, [rows, priceTrend]);
 
-  // Per-area price/sqm by year
   const areaData = useMemo(() => {
     const areas = selectedAreas.length ? selectedAreas : topAreas.slice(0,4);
     const map = {};
-    rows.forEach(r => {
+    (rows||[]).forEach(r => {
       if (!r.dateObj || r.txn_size <= 0 || r.amount <= 0) return;
       if (!areas.includes(r.area)) return;
       const y = r.dateObj.getFullYear();
       if (y < 2010) return;
       const key = String(y);
       if (!map[key]) map[key] = { year: key };
-      if (!map[key][`_${r.area}`]) map[key][`_${r.area}`] = [];
-      map[key][`_${r.area}`].push(r.amount / r.txn_size);
+      if (!map[key]["_"+r.area]) map[key]["_"+r.area] = [];
+      map[key]["_"+r.area].push(r.amount / r.txn_size);
     });
     const result = Object.values(map).map(d => {
       const out = { year: d.year };
       areas.forEach(a => {
-        const vals = d[`_${a}`] || [];
+        const vals = d["_"+a] || [];
         if (vals.length) out[a] = Math.round(vals.reduce((s,v)=>s+v,0)/vals.length);
       });
       return out;
     }).sort((a,b) => a.year.localeCompare(b.year));
     return { data: result, areas };
   }, [rows, selectedAreas, topAreas]);
+
+  if (!rows || !priceTrend) return null;
 
   const toggleArea = (area) => {
     setSelectedAreas(prev =>
@@ -97,50 +96,44 @@ export default function PriceTrends({ rows, priceTrend }) {
               fontSize:11, padding:"4px 10px", borderRadius:6, cursor:"pointer", fontWeight:500,
               border: mode===tabOpt.k ? "1px solid #185FA5" : "1px solid #E8ECF2",
               background: mode===tabOpt.k ? "rgba(59,130,246,0.1)" : "var(--surface)",
-              color: mode===tabOpt.k ? "#38BDF8" : "#7A8499",
+              color: mode===tabOpt.k ? "#185FA5" : "#7A8499", fontFamily:"system-ui",
             }}>{tabOpt.l}</button>
           ))}
         </div>
       </div>
 
       {mode === "area" && (
-        <div style={{ display:"flex", gap:6, flexWrap:"wrap", marginBottom:"1rem" }}>
-          {topAreas.map((a,i) => {
-            const sel = selectedAreas.includes(a) || (!selectedAreas.length && i < 4);
-            return (
-              <button key={a} onClick={() => toggleArea(a)} style={{
-                fontSize:11, padding:"3px 10px", borderRadius:20, cursor:"pointer",
-                border: sel ? `1px solid ${COLORS[i%COLORS.length]}` : "1px solid #E8ECF2",
-                background: sel ? COLORS[i%COLORS.length]+"18" : "var(--surface)",
-                color: sel ? COLORS[i%COLORS.length] : "#9AA0AE", fontWeight: sel ? 600 : 400,
-              }}>{a}</button>
-            );
-          })}
+        <div style={{ display:"flex", flexWrap:"wrap", gap:6, marginBottom:12 }}>
+          {topAreas.map(area => (
+            <button key={area} onClick={() => toggleArea(area)} style={{
+              fontSize:10, padding:"3px 10px", borderRadius:20, cursor:"pointer",
+              fontFamily:"system-ui", fontWeight:500,
+              background: selectedAreas.includes(area) ? "rgba(59,130,246,0.12)" : "var(--surface)",
+              border: selectedAreas.includes(area) ? "1px solid #38BDF8" : "1px solid #E8ECF2",
+              color: selectedAreas.includes(area) ? "#38BDF8" : "#7A8499",
+            }}>{area}</button>
+          ))}
         </div>
       )}
 
-      <ResponsiveContainer width="100%" height={280}>
+      <ResponsiveContainer width="100%" height={220}>
         {mode === "market" ? (
-          <LineChart data={marketData} margin={{ top:4, right:16, left:0, bottom:0 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="rgba(59,130,246,0.08)" />
-            <XAxis dataKey="year" tick={{ fontSize:11, fill:"#9AA0AE" }} axisLine={false} tickLine={false} />
-            <YAxis tick={{ fontSize:10, fill:"#9AA0AE" }} axisLine={false} tickLine={false}
-              tickFormatter={v => fmtAED(v,true)} width={72} />
+          <LineChart data={marketData} margin={{ top:4, right:8, left:0, bottom:0 }}>
+            <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.06)" />
+            <XAxis dataKey="year" tick={{ fontSize:10, fill:"#9AA0AE" }} />
+            <YAxis tickFormatter={v => "AED "+Math.round(v/1000)+"k"} tick={{ fontSize:10, fill:"#9AA0AE" }} width={64} />
             <Tooltip content={<CustomTooltip />} />
-            <Line type="monotone" dataKey="ppsqm" stroke="#38BDF8" strokeWidth={2.5}
-              dot={{ r:3, fill:"#38BDF8" }} activeDot={{ r:5 }} name="Market avg" />
+            <Line type="monotone" dataKey="ppsqm" name="Dubai Avg" stroke="#38BDF8" strokeWidth={2} dot={{ r:3 }} activeDot={{ r:5 }} />
           </LineChart>
         ) : (
-          <LineChart data={areaData.data} margin={{ top:4, right:16, left:0, bottom:0 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="rgba(59,130,246,0.08)" />
-            <XAxis dataKey="year" tick={{ fontSize:11, fill:"#9AA0AE" }} axisLine={false} tickLine={false} />
-            <YAxis tick={{ fontSize:10, fill:"#9AA0AE" }} axisLine={false} tickLine={false}
-              tickFormatter={v => fmtAED(v,true)} width={72} />
+          <LineChart data={areaData.data || []} margin={{ top:4, right:8, left:0, bottom:0 }}>
+            <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.06)" />
+            <XAxis dataKey="year" tick={{ fontSize:10, fill:"#9AA0AE" }} />
+            <YAxis tickFormatter={v => "AED "+Math.round(v/1000)+"k"} tick={{ fontSize:10, fill:"#9AA0AE" }} width={64} />
             <Tooltip content={<CustomTooltip />} />
-            <Legend wrapperStyle={{ fontSize:11 }} />
-            {areaData.areas.map((a,i) => (
-              <Line key={a} type="monotone" dataKey={a} stroke={COLORS[i%COLORS.length]}
-                strokeWidth={2} dot={false} activeDot={{ r:4 }} />
+            <Legend wrapperStyle={{ fontSize:10 }} />
+            {(areaData.areas || []).map((area, i) => (
+              <Line key={area} type="monotone" dataKey={area} stroke={COLORS[i % COLORS.length]} strokeWidth={2} dot={{ r:2 }} activeDot={{ r:4 }} />
             ))}
           </LineChart>
         )}

@@ -117,9 +117,9 @@ function PropertyLookupTab({ recentRaw }) {
     const sizes=txns.map(tx => tx.s||0).filter(s=>s>0);
     const dates=txns.map(tx => tx.d||'').filter(Boolean).sort();
     const monthly={};
-    txns.forEach(t=>{const m=(tx.d||'').slice(0,7);if(!m)return;if(!monthly[m])monthly[m]={month:m,count:0};monthly[m].count++;});
-    const rooms={}; txns.forEach(t=>{const b=tx.b||'?';rooms[b]=(rooms[b]||0)+1;});
-    const regs={}; txns.forEach(t=>{const r=tx.r==='Off'?'Off-Plan':'Ready';regs[r]=(regs[r]||0)+1;});
+    txns.forEach(tx =>{const m=(tx.d||'').slice(0,7);if(!m)return;if(!monthly[m])monthly[m]={month:m,count:0};monthly[m].count++;});
+    const rooms={}; txns.forEach(tx =>{const b=tx.b||'?';rooms[b]=(rooms[b]||0)+1;});
+    const regs={}; txns.forEach(tx =>{const r=tx.r==='Off'?'Off-Plan':'Ready';regs[r]=(regs[r]||0)+1;});
     setSelected({
       name:proj.name,area:na([...data.areas][0]||''),count:txns.length,
       avgValue:values.length?Math.round(values.reduce((s,v)=>s+v,0)/values.length):0,
@@ -227,7 +227,7 @@ function PropertyLookupTab({ recentRaw }) {
             <div style={{display:'grid',gridTemplateColumns:'90px 90px 60px 60px 80px 70px',padding:'8px 16px',borderBottom:'1px solid rgba(59,130,246,0.06)',background:'rgba(59,130,246,0.02)'}}>
               {['Date','Value','Reg','BR','Size','AED/sqft'].map((h,i)=><div key={i} style={{fontSize:9,color:'var(--text-secondary)',fontWeight:600,textTransform:'uppercase',letterSpacing:'0.04em'}}>{h}</div>)}
             </div>
-            {selected.recentTxns.map((t,i)=>{
+            {selected.recentTxns.map((tx, i) =>{
               const ppsqft=tx.s&&tx.v?Math.round(tx.v/tx.s/10.764):0;
               return(
                 <div key={i} style={{display:'grid',gridTemplateColumns:'90px 90px 60px 60px 80px 70px',padding:'10px 16px',borderBottom:i<selected.recentTxns.length-1?'1px solid rgba(255,255,255,0.03)':'none'}}

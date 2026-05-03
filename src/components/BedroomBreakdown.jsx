@@ -40,9 +40,9 @@ const CustomTooltip = ({ active, payload, label, metric }) => {
 };
 
 export default function BedroomBreakdown({ rows, areas }) {
-  if (!rows || !areas) return null;
   const [metric, setMetric] = useState("count");
   const [selectedArea, setSelectedArea] = useState("ALL");
+  if (!rows || !areas) return null;
 
   // Get top areas for filter
   const topAreas = ["ALL", ...areas.slice(0, 12).map(a => a.area)];

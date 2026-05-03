@@ -24,9 +24,11 @@ const CustomTooltip = ({ active, payload, label }) => {
 };
 
 export default function OffPlanReady({ rows, areas }) {
+const [view, setView] = useState("area");
+const [metric, setMetric] = useState("count");
   if (!rows || !areas) return null;
-  const [view, setView] = useState("area"); // area | trend
-  const [metric, setMetric] = useState("count"); // count | value
+ // area | trend
+ // count | value
 
   // Overall split
   const overall = { off: 0, ready: 0, offVal: 0, rdyVal: 0 };

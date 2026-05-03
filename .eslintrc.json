@@ -1,0 +1,38 @@
+{
+  "extends": [
+    "react-app",
+    "react-app/jest"
+  ],
+  "rules": {
+    "no-unused-vars": [
+      "warn",
+      {
+        "varsIgnorePattern": "^_",
+        "argsIgnorePattern": "^_"
+      }
+    ],
+    "no-undef": "error",
+    "no-duplicate-imports": "error",
+    "no-restricted-syntax": [
+      "error",
+      {
+        "selector": "ArrowFunctionExpression > Identifier[name='t']",
+        "message": "Don't use 't' as an arrow function parameter \u2014 shadows i18n import. Use tx, tabOpt, opt."
+      },
+      {
+        "selector": "FunctionExpression > Identifier[name='t']",
+        "message": "Don't use 't' as a function parameter \u2014 shadows i18n import."
+      }
+    ]
+  },
+  "overrides": [
+    {
+      "files": [
+        "src/i18n.js"
+      ],
+      "rules": {
+        "no-restricted-syntax": "off"
+      }
+    }
+  ]
+}
