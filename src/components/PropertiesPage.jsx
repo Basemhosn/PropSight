@@ -88,7 +88,7 @@ function OffPlanReadyTab({ recentRaw }) {
 }
 
 function PropertyLookupTab({ recentRaw }) {
-  const lang = localStorage.getItem('lang') || 'en';
+  // lang already declared above
   const [query, setQuery] = useState('');
   const [selected, setSelected] = useState(null);
   const [showSugg, setShowSugg] = useState(false);
@@ -250,7 +250,7 @@ function PropertyLookupTab({ recentRaw }) {
 }
 
 export default function PropertiesPage({ recentRaw, projectsData, onProjectClick }) {
-  const lang = localStorage.getItem('lang') || 'en';
+  // lang already declared above
   const [tab, setTab] = useState('properties');
   return (
     <div style={{flex:1,display:'flex',flexDirection:'column',background:'var(--bg)',fontFamily:'system-ui',overflow:'hidden'}}>
