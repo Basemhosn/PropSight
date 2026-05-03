@@ -141,18 +141,18 @@ export default function ComparableSales({ recentRaw }) {
             {['Date','Value','Reg','BR','Project','Size','Price/sqft'].map((h,i)=><div key={i} style={{fontSize:10,color:'var(--text-secondary)',fontWeight:600,textTransform:'uppercase',letterSpacing:'0.05em'}}>{h}</div>)}
           </div>
           {comps.map((t,i)=>{
-            const ppsqft=t.s&&t.v?Math.round(t.v/t.s/10.764):0;
+            const ppsqft=tx.s&&tx.v?Math.round(tx.v/tx.s/10.764):0;
             const isAbove=ppsqft&&stats.avgPsqft&&ppsqft>stats.avgPsqft;
             return (
               <div key={i} style={{display:'grid',gridTemplateColumns:'90px 90px 65px 65px 1fr 80px 80px',padding:'11px 20px',borderBottom:i<comps.length-1?'1px solid rgba(255,255,255,0.03)':'none'}}
                 onMouseEnter={e=>e.currentTarget.style.background='rgba(59,130,246,0.04)'}
                 onMouseLeave={e=>e.currentTarget.style.background='transparent'}>
-                <div style={{fontSize:11,color:'var(--text-muted)'}}>{t.d||'—'}</div>
-                <div style={{fontSize:12,fontWeight:600,color:'var(--text-primary)'}}>{t.v?fmtAED(t.v,true):'—'}</div>
-                <div><span style={{fontSize:9,fontWeight:600,padding:'2px 5px',borderRadius:20,background:t.r==='Off'?'rgba(59,130,246,0.1)':'rgba(34,197,94,0.1)',color:t.r==='Off'?'#38BDF8':'#22C55E'}}>{t.r==='Off'?'Off-Plan':'Ready'}</span></div>
-                <div style={{fontSize:11,color:'var(--text-secondary)'}}>{t.b||'—'}</div>
-                <div style={{fontSize:11,color:'var(--text-muted)',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{t.j||'—'}</div>
-                <div style={{fontSize:11,color:'var(--text-muted)'}}>{t.s?fmtNum(Math.round(t.s*10.764))+' sqft':'—'}</div>
+                <div style={{fontSize:11,color:'var(--text-muted)'}}>{tx.d||'—'}</div>
+                <div style={{fontSize:12,fontWeight:600,color:'var(--text-primary)'}}>{tx.v?fmtAED(tx.v,true):'—'}</div>
+                <div><span style={{fontSize:9,fontWeight:600,padding:'2px 5px',borderRadius:20,background:tx.r==='Off'?'rgba(59,130,246,0.1)':'rgba(34,197,94,0.1)',color:tx.r==='Off'?'#38BDF8':'#22C55E'}}>{tx.r==='Off'?'Off-Plan':'Ready'}</span></div>
+                <div style={{fontSize:11,color:'var(--text-secondary)'}}>{tx.b||'—'}</div>
+                <div style={{fontSize:11,color:'var(--text-muted)',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{tx.j||'—'}</div>
+                <div style={{fontSize:11,color:'var(--text-muted)'}}>{tx.s?fmtNum(Math.round(tx.s*10.764))+' sqft':'—'}</div>
                 <div style={{fontSize:11,fontWeight:600,color:isAbove?'#F87171':'#22C55E'}}>{ppsqft?'AED '+fmtNum(ppsqft):'—'}</div>
               </div>
             );

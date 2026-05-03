@@ -89,7 +89,7 @@ export default function BedroomBreakdown({ rows, areas }) {
           </div>
         </div>
         <div style={{ display: "flex", gap: 4, flexWrap: "wrap" }}>
-          {[{ k: "count", l: "Count" }, { k: "median", l: "Median price" }, { k: "avg", l: "Avg price" }, { k: "total", l: "Total value" }].map(tabId => (
+          {[{ k: "count", l: "Count" }, { k: "median", l: "Median price" }, { k: "avg", l: "Avg price" }, { k: "total", l: "Total value" }].map(tabOpt => (
             <button key={tabOpt.k} onClick={() => setMetric(tabOpt.k)} style={{
               fontSize: 11, padding: "4px 10px", borderRadius: 6, cursor: "pointer", fontWeight: 500,
               border: metric === tabOpt.k ? "1px solid #185FA5" : "1px solid #E8ECF2",

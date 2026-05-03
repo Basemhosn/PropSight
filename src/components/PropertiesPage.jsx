@@ -117,9 +117,9 @@ function PropertyLookupTab({ recentRaw }) {
     const sizes=txns.map(tx => tx.s||0).filter(s=>s>0);
     const dates=txns.map(tx => tx.d||'').filter(Boolean).sort();
     const monthly={};
-    txns.forEach(t=>{const m=(t.d||'').slice(0,7);if(!m)return;if(!monthly[m])monthly[m]={month:m,count:0};monthly[m].count++;});
-    const rooms={}; txns.forEach(t=>{const b=t.b||'?';rooms[b]=(rooms[b]||0)+1;});
-    const regs={}; txns.forEach(t=>{const r=t.r==='Off'?'Off-Plan':'Ready';regs[r]=(regs[r]||0)+1;});
+    txns.forEach(t=>{const m=(tx.d||'').slice(0,7);if(!m)return;if(!monthly[m])monthly[m]={month:m,count:0};monthly[m].count++;});
+    const rooms={}; txns.forEach(t=>{const b=tx.b||'?';rooms[b]=(rooms[b]||0)+1;});
+    const regs={}; txns.forEach(t=>{const r=tx.r==='Off'?'Off-Plan':'Ready';regs[r]=(regs[r]||0)+1;});
     setSelected({
       name:proj.name,area:na([...data.areas][0]||''),count:txns.length,
       avgValue:values.length?Math.round(values.reduce((s,v)=>s+v,0)/values.length):0,
@@ -228,16 +228,16 @@ function PropertyLookupTab({ recentRaw }) {
               {['Date','Value','Reg','BR','Size','AED/sqft'].map((h,i)=><div key={i} style={{fontSize:9,color:'var(--text-secondary)',fontWeight:600,textTransform:'uppercase',letterSpacing:'0.04em'}}>{h}</div>)}
             </div>
             {selected.recentTxns.map((t,i)=>{
-              const ppsqft=t.s&&t.v?Math.round(t.v/t.s/10.764):0;
+              const ppsqft=tx.s&&tx.v?Math.round(tx.v/tx.s/10.764):0;
               return(
                 <div key={i} style={{display:'grid',gridTemplateColumns:'90px 90px 60px 60px 80px 70px',padding:'10px 16px',borderBottom:i<selected.recentTxns.length-1?'1px solid rgba(255,255,255,0.03)':'none'}}
                   onMouseEnter={e=>e.currentTarget.style.background='rgba(59,130,246,0.04)'}
                   onMouseLeave={e=>e.currentTarget.style.background='transparent'}>
-                  <div style={{fontSize:11,color:'var(--text-muted)'}}>{t.d||'—'}</div>
-                  <div style={{fontSize:12,fontWeight:600,color:'var(--text-primary)'}}>{t.v?fmtAED(t.v,true):'—'}</div>
-                  <div><span style={{fontSize:9,fontWeight:600,padding:'2px 4px',borderRadius:20,background:t.r==='Off'?'rgba(59,130,246,0.1)':'rgba(34,197,94,0.1)',color:t.r==='Off'?'#38BDF8':'#22C55E'}}>{t.r==='Off'?'Off':'Ready'}</span></div>
-                  <div style={{fontSize:11,color:'var(--text-secondary)'}}>{t.b||'—'}</div>
-                  <div style={{fontSize:11,color:'var(--text-muted)'}}>{t.s?fmtNum(Math.round(t.s*10.764))+' sqft':'—'}</div>
+                  <div style={{fontSize:11,color:'var(--text-muted)'}}>{tx.d||'—'}</div>
+                  <div style={{fontSize:12,fontWeight:600,color:'var(--text-primary)'}}>{tx.v?fmtAED(tx.v,true):'—'}</div>
+                  <div><span style={{fontSize:9,fontWeight:600,padding:'2px 4px',borderRadius:20,background:tx.r==='Off'?'rgba(59,130,246,0.1)':'rgba(34,197,94,0.1)',color:tx.r==='Off'?'#38BDF8':'#22C55E'}}>{tx.r==='Off'?'Off':'Ready'}</span></div>
+                  <div style={{fontSize:11,color:'var(--text-secondary)'}}>{tx.b||'—'}</div>
+                  <div style={{fontSize:11,color:'var(--text-muted)'}}>{tx.s?fmtNum(Math.round(tx.s*10.764))+' sqft':'—'}</div>
                   <div style={{fontSize:11,color:'#38BDF8'}}>{ppsqft?'AED '+fmtNum(ppsqft):'—'}</div>
                 </div>
               );

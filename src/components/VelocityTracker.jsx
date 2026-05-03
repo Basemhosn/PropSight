@@ -127,7 +127,7 @@ export default function VelocityTracker({ rows, areas }) {
           </div>
         </div>
         <div style={{ display: "flex", gap: 4, flexWrap: "wrap" }}>
-          {[{ k: "overall", l: "Overall" }, { k: "byarea", l: "By area" }].map(tabId => (
+          {[{ k: "overall", l: "Overall" }, { k: "byarea", l: "By area" }].map(tabOpt => (
             <button key={tabOpt.k} onClick={() => setView(tabOpt.k)} style={{
               fontSize: 11, padding: "4px 10px", borderRadius: 6, cursor: "pointer", fontWeight: 500,
               border: view === tabOpt.k ? "1px solid #0A1628" : "1px solid #E8ECF2",
