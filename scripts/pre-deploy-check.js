@@ -60,10 +60,14 @@ files.forEach(file => {
 
   // 7. Duplicate const lang
   const langDecls = (src.match(/const lang\s*=/g) || []).length;
-  if (langDecls > 3)
+  if (langDecls > 6)
     issues.push(`[LANG_DUPLICATE] ${name}: const lang declared ${langDecls} times`);
 
-  // 8. console.log left in (warning only)
+  // 8. Commented-out lang declarations
+  if (src.includes('// lang already declared above'))
+    issues.push('[LANG_COMMENT] ' + name + ': has "// lang already declared above" — replace with actual declaration');
+
+  // 9. console.log left in (warning only)
   if (/console\.log/.test(src) && !name.includes("monitor") && !name.includes("analyze"))
     warnings.push(`[CONSOLE_LOG] ${name}: has console.log statements`);
 });

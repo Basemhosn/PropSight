@@ -115,7 +115,7 @@ function DLDCalculator({ areaData }) {
 
 // ── Mortgage Calculator ────────────────────────────────────────────────────
 function MortgageCalculator() {
-  // lang already declared above
+  const lang = localStorage.getItem('lang') || 'en';
   const [price, setPrice]         = useState(2000000);
   const [down, setDown]           = useState(20);
   const [rate, setRate]           = useState(4.5);
@@ -336,7 +336,7 @@ function MortgageCalculator() {
 
 // ── Area Comparison ────────────────────────────────────────────────────────
 function AreaComparison({ areaData, core }) {
-  // lang already declared above
+  const lang = localStorage.getItem('lang') || 'en';
   const areas = areaData ? Object.keys(areaData).sort() : [];
   const [areaA, setAreaA] = useState(areas[0] || '');
   const [areaB, setAreaB] = useState(areas[1] || '');
@@ -484,7 +484,7 @@ function AreaComparison({ areaData, core }) {
 
 // ── Main Tools Page ────────────────────────────────────────────────────────
 export default function InvestorTools({ areaData, core }) {
-  // lang already declared above
+  const lang = localStorage.getItem('lang') || 'en';
   const [tool, setTool] = useState('mortgage');
 
   return (

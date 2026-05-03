@@ -89,7 +89,7 @@ function LiveFeedTab({ recentRaw }) {
 }
 
 function SearchTab({ recentRaw }) {
-  // lang already declared above
+  const lang = localStorage.getItem('lang') || 'en';
   const [search, setSearch] = useState('');
   const [typeF, setTypeF] = useState('');
   const [regF, setRegF] = useState('');
@@ -165,7 +165,7 @@ function SearchTab({ recentRaw }) {
 }
 
 export default function RecentTransactions({ recentRaw }) {
-  // lang already declared above
+  const lang = localStorage.getItem('lang') || 'en';
   const [tab, setTab] = useState('live');
   return (
     <div style={{flex:1,display:'flex',flexDirection:'column',background:'var(--bg)',fontFamily:'system-ui',overflow:'hidden'}}>

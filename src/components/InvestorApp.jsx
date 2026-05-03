@@ -61,7 +61,7 @@ function InsightsTab({ areaData, core }) {
 
 // ── Profile Tab (Portfolio + Watchlist + Alerts + Upgrade) ─────────────────
 function ProfileTab({ areaData, projectsData, setPage }) {
-  // lang already declared above
+  const lang = localStorage.getItem('lang') || 'en';
   const { user, profile, isPro, isLite } = useAuth();
   const [view, setView] = useState('portfolio');
 
