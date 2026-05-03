@@ -404,8 +404,14 @@ Respond ONLY with valid JSON (no markdown):
         </div>
 
         <div style={{display:'flex',alignItems:'center',gap:10}}>
+          <div onClick={refresh} title={liveError ? liveError : lastUpdate ? 'Updated '+lastUpdate.toLocaleTimeString() : 'Loading...'}
+            style={{display:'flex',alignItems:'center',gap:6,background:isLive?'rgba(34,197,94,0.08)':'rgba(245,158,11,0.08)',border:'1px solid '+(isLive?'rgba(34,197,94,0.2)':'rgba(245,158,11,0.2)'),borderRadius:20,padding:'4px 12px',cursor:'pointer'}}>
+            <div style={{width:6,height:6,borderRadius:'50%',background:isLive?'#22C55E':'#F59E0B',boxShadow:'0 0 6px '+(isLive?'#22C55E':'#F59E0B')}}/>
+            <span style={{fontSize:11,fontWeight:600,color:isLive?'#22C55E':'#F59E0B'}}>
+              {isLive ? 'DDA LIVE' : liveError ? 'STATIC DATA' : 'CONNECTING...'}
+            </span>
+          </div>
           <div style={{display:'flex',alignItems:'center',gap:6,background:'rgba(56,189,248,0.08)',border:'1px solid rgba(56,189,248,0.15)',borderRadius:20,padding:'4px 12px'}}>
-            
             <span style={{fontSize:11,fontWeight:600,color:'#38BDF8'}}>Investor Portal</span>
           </div>
           {profile?.subscription_status === 'pro' || profile?.subscription_status === 'agent' ? (
