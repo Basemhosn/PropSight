@@ -415,7 +415,7 @@ export default function HomePage({core, areaData, recentRaw, onNavigate, isPro})
                 badge: 'Free', badgeColor: '#38BDF8',
                 page: 'portfolio',
               },
-            ].map((t, i) => (
+            ].map((card, i) => (
               <div key={i}
                 onClick={() => onNavigate && onNavigate(t.page)}
                 style={{
@@ -429,17 +429,17 @@ export default function HomePage({core, areaData, recentRaw, onNavigate, isPro})
                 onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}
               >
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <div style={{ fontSize: 26 }}>{t.icon}</div>
+                  <div style={{ fontSize: 26 }}>{card.icon}</div>
                   <span style={{
                     fontSize: 10, fontWeight: 700, padding: '3px 8px', borderRadius: 20,
-                    background: `${t.badgeColor}20`, color: t.badgeColor,
-                    border: `1px solid ${t.badgeColor}40`,
-                  }}>{t.badge}</span>
+                    background: `${card.badgeColor}20`, color: card.badgeColor,
+                    border: `1px solid ${card.badgeColor}40`,
+                  }}>{card.badge}</span>
                 </div>
-                <div style={{ fontSize: 22, fontWeight: 800, color: 'var(--text-primary)', lineHeight: 1.1 }}>{t.big}</div>
-                <div style={{ fontSize: 11, color: t.badgeColor, fontWeight: 600 }}>{t.bigSub}</div>
-                <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)' }}>{tabOpt}</div>
-                <div style={{ fontSize: 11, color: '#475569', lineHeight: 1.6, marginTop: 2 }}>{t.desc}</div>
+                <div style={{ fontSize: 22, fontWeight: 800, color: 'var(--text-primary)', lineHeight: 1.1 }}>{card.big}</div>
+                <div style={{ fontSize: 11, color: card.badgeColor, fontWeight: 600 }}>{card.bigSub}</div>
+                <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)' }}>{card.label}</div>
+                <div style={{ fontSize: 11, color: '#475569', lineHeight: 1.6, marginTop: 2 }}>{card.desc}</div>
               </div>
             ))}
           </div>
