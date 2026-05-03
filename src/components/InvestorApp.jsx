@@ -10,6 +10,7 @@ import PortfolioTracker from './PortfolioTracker';
 import Watchlist from './Watchlist';
 import PriceAlerts from './PriceAlerts';
 import { calcPropSightScore } from '../utils/propSightScore';
+import useLiveTransactions from '../hooks/useLiveTransactions';
 
 const AREA_NICE = {
   'Al Barsha South Fourth':'JVC','Burj Khalifa':'Downtown Dubai','Marsa Dubai':'Dubai Marina',
@@ -165,7 +166,22 @@ function InvestorUpgrade({ isPro, isLite, user }) {
   );
 }
 
-export default function InvestorApp({ areaData, recentRaw, core, onSwitchToBroker, projectsData, buildingsData }) {
+export default function InvestorApp({ areaData: areaDataProp, recentRaw: recentRawProp, core: coreProp, onSwitchToBroker, projectsData: projectsDataProp, buildingsData }) {
+  // Self-contained data loading — works whether props are passed or not
+  const [coreData,     setCoreData]     = useState(coreProp     || null);
+  const [areaDataLocal, setAreaData]    = useState(areaDataProp || null);
+  const [projectsLocal, setProjects]    = useState(projectsDataProp || null);
+  const [staticRecent,  setStaticRecent]= useState([]);
+  const { liveData, isLive, lastUpdate, error: liveError, refresh } = useLiveTransactions({ days: 30 });
+  const recentRaw   = (liveData && liveData.length > 0) ? liveData : (recentRawProp || staticRecent);
+  const core        = coreData;
+  const areaData    = areaDataLocal;
+  const projectsData = projectsLocal;
+
+  useEffect(() => { if (!coreData)      fetch('/data/core.json').then(r=>r.json()).then(setCoreData).catch(()=>{}); }, []);
+  useEffect(() => { if (!areaDataLocal) fetch('/data/areas.json').then(r=>r.json()).then(setAreaData).catch(()=>{}); }, []);
+  useEffect(() => { if (!projectsLocal) fetch('/data/projects.json').then(r=>r.json()).then(setProjects).catch(()=>{}); }, []);
+  useEffect(() => { fetch('/data/recent.json').then(r=>r.json()).then(d=>setStaticRecent(d.recentRaw||[])).catch(()=>{}); }, []);
   const { user, profile, signOut, lang, toggleLang } = useAuth();
   const [themeMode, setThemeMode] = useState(() => localStorage.getItem('theme') || 'dark');
   const [showMenu, setShowMenu] = useState(false);
