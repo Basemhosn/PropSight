@@ -118,22 +118,22 @@ export default function YearOnYear({ rows }) {
           </div>
         </div>
         <div style={{ display: "flex", gap: 4, flexWrap: "wrap" }}>
-          {[{ key: "monthly", label: "By month" }, { key: "area", label: "By area" }].map(t => (
-            <button key={t.key} onClick={() => setView(t.key)} style={{
+          {[{ key: "monthly", label: "By month" }, { key: "area", label: "By area" }].map(tabOpt => (
+            <button key={tabOpt.key} onClick={() => setView(tabOpt.key)} style={{
               fontSize: 11, padding: "4px 10px", borderRadius: 6, cursor: "pointer", fontWeight: 500,
-              border: view === t.key ? "1px solid #185FA5" : "1px solid #E8ECF2",
-              background: view === t.key ? "rgba(59,130,246,0.1)" : "var(--surface)",
-              color: view === t.key ? "#38BDF8" : "#7A8499",
-            }}>{t.label}</button>
+              border: view === tabOpt.key ? "1px solid #185FA5" : "1px solid #E8ECF2",
+              background: view === tabOpt.key ? "rgba(59,130,246,0.1)" : "var(--surface)",
+              color: view === tabOpt.key ? "#38BDF8" : "#7A8499",
+            }}>{tabOpt.label}</button>
           ))}
           <div style={{ width: 1, background: "rgba(59,130,246,0.12)", margin: "0 2px" }} />
-          {[{ key: "count", label: "Count" }, { key: "value", label: "Value" }].map(t => (
-            <button key={t.key} onClick={() => setMetric(t.key)} style={{
+          {[{ key: "count", label: "Count" }, { key: "value", label: "Value" }].map(tabOpt => (
+            <button key={tabOpt.key} onClick={() => setMetric(tabOpt.key)} style={{
               fontSize: 11, padding: "4px 10px", borderRadius: 6, cursor: "pointer", fontWeight: 500,
-              border: metric === t.key ? "1px solid #1D9E75" : "1px solid #E8ECF2",
-              background: metric === t.key ? "rgba(34,197,94,0.1)" : "var(--surface)",
-              color: metric === t.key ? "#22C55E" : "#7A8499",
-            }}>{t.label}</button>
+              border: metric === tabOpt.key ? "1px solid #1D9E75" : "1px solid #E8ECF2",
+              background: metric === tabOpt.key ? "rgba(34,197,94,0.1)" : "var(--surface)",
+              color: metric === tabOpt.key ? "#22C55E" : "#7A8499",
+            }}>{tabOpt.label}</button>
           ))}
         </div>
       </div>

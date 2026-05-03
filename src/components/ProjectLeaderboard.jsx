@@ -81,25 +81,25 @@ export default function ProjectLeaderboard({ rows, allAreas }) {
           {/* Row 1: View toggle */}
           <div style={{ display: "flex", gap: 4, alignItems: "center" }}>
             <span style={{ fontSize: 10, color: "#9AA0AE", marginRight: 2 }}>Show:</span>
-            {[{ k: "project", l: "Projects" }, { k: "area", l: "Areas" }].map(t => (
-              <button key={t.k} onClick={() => { setView(t.k); setAreaSearch(""); }} style={{
+            {[{ k: "project", l: "Projects" }, { k: "area", l: "Areas" }].map(tabOpt => (
+              <button key={tabOpt.k} onClick={() => { setView(tabOpt.k); setAreaSearch(""); }} style={{
                 fontSize: 11, padding: "4px 10px", borderRadius: 6, cursor: "pointer", fontWeight: 500,
-                border: view === t.k ? "1px solid #0A1628" : "1px solid #E8ECF2",
-                background: view === t.k ? "var(--text-primary)" : "var(--surface)",
-                color: view === t.k ? "var(--surface)" : "#7A8499",
-              }}>{t.l}</button>
+                border: view === tabOpt.k ? "1px solid #0A1628" : "1px solid #E8ECF2",
+                background: view === tabOpt.k ? "var(--text-primary)" : "var(--surface)",
+                color: view === tabOpt.k ? "var(--surface)" : "#7A8499",
+              }}>{tabOpt.l}</button>
             ))}
           </div>
           {/* Row 2: Metric toggle */}
           <div style={{ display: "flex", gap: 4, alignItems: "center" }}>
             <span style={{ fontSize: 10, color: "#9AA0AE", marginRight: 2 }}>Rank by:</span>
-            {[{ k: "count", l: "Count" }, { k: "total", l: "Value" }, { k: "avg", l: "Avg" }].map(t => (
-              <button key={t.k} onClick={() => setMetric(t.k)} style={{
+            {[{ k: "count", l: "Count" }, { k: "total", l: "Value" }, { k: "avg", l: "Avg" }].map(tabOpt => (
+              <button key={tabOpt.k} onClick={() => setMetric(tabOpt.k)} style={{
                 fontSize: 11, padding: "4px 10px", borderRadius: 6, cursor: "pointer", fontWeight: 500,
-                border: metric === t.k ? `1px solid ${TAB_COLOR[t.k]}` : "1px solid #E8ECF2",
-                background: metric === t.k ? TAB_COLOR[t.k] + "18" : "var(--surface)",
-                color: metric === t.k ? TAB_COLOR[t.k] : "#7A8499",
-              }}>{t.l}</button>
+                border: metric === tabOpt.k ? `1px solid ${TAB_COLOR[tabOpt.k]}` : "1px solid #E8ECF2",
+                background: metric === tabOpt.k ? TAB_COLOR[tabOpt.k] + "18" : "var(--surface)",
+                color: metric === tabOpt.k ? TAB_COLOR[tabOpt.k] : "#7A8499",
+              }}>{tabOpt.l}</button>
             ))}
           </div>
         </div>

@@ -92,13 +92,13 @@ export default function PriceTrends({ rows, priceTrend }) {
           <div style={{ fontSize:11, color:"#9AA0AE", marginTop:2 }}>Historical price/sqm over time</div>
         </div>
         <div style={{ display:"flex", gap:4 }}>
-          {[{k:"market",l:"Market"},{k:"area",l:"By area"}].map(t => (
-            <button key={t.k} onClick={() => setMode(t.k)} style={{
+          {[{k:"market",l:"Market"},{k:"area",l:"By area"}].map(tabOpt => (
+            <button key={tabOpt.k} onClick={() => setMode(tabOpt.k)} style={{
               fontSize:11, padding:"4px 10px", borderRadius:6, cursor:"pointer", fontWeight:500,
-              border: mode===t.k ? "1px solid #185FA5" : "1px solid #E8ECF2",
-              background: mode===t.k ? "rgba(59,130,246,0.1)" : "var(--surface)",
-              color: mode===t.k ? "#38BDF8" : "#7A8499",
-            }}>{t.l}</button>
+              border: mode===tabOpt.k ? "1px solid #185FA5" : "1px solid #E8ECF2",
+              background: mode===tabOpt.k ? "rgba(59,130,246,0.1)" : "var(--surface)",
+              color: mode===tabOpt.k ? "#38BDF8" : "#7A8499",
+            }}>{tabOpt.l}</button>
           ))}
         </div>
       </div>

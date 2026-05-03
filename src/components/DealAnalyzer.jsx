@@ -157,7 +157,7 @@ ${mode==='buy'?
             <div>
               <label style={lbl}>{t('Type',lang)}</label>
               <select value={form.type} onChange={e=>setForm(f=>({...f,type:e.target.value}))} style={{...inp,cursor:'pointer'}}>
-                {['Apartment','Villa','Townhouse','Penthouse','Studio','Office'].map(t=><option key={t}>{t}</option>)}
+                {['Apartment','Villa','Townhouse','Penthouse','Studio','Office'].map(opt=><option key={opt}>{opt}</option>)}
               </select>
             </div>
             <div>

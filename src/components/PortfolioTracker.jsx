@@ -208,7 +208,7 @@ export default function PortfolioTracker({ areaData }) {
                   </div>
                 )}
               </div>
-              <div><label style={lbl}>Type</label><select value={form.type} onChange={e=>inp('type',e.target.value)} style={{...inputStyle,cursor:'pointer'}}>{['Apartment','Villa','Townhouse','Penthouse','Studio','Office'].map(t=><option key={t}>{t}</option>)}</select></div>
+              <div><label style={lbl}>Type</label><select value={form.type} onChange={e=>inp('type',e.target.value)} style={{...inputStyle,cursor:'pointer'}}>{['Apartment','Villa','Townhouse','Penthouse','Studio','Office'].map(opt=><option key={opt}>{opt}</option>)}</select></div>
             </div>
             <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12,marginBottom:14}}>
               <div><label style={lbl}>Purchase Price (AED) *</label><input value={form.purchasePrice} onChange={e=>inp('purchasePrice',e.target.value)} placeholder="2,100,000" style={inputStyle}/></div>

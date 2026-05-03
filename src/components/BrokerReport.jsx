@@ -267,7 +267,7 @@ export default function BrokerReport({ areaData, core, recentRaw }) {
               </div>
               <div><label style={lbl}>Property Type</label>
                 <select value={form.propType} onChange={e=>set('propType',e.target.value)} style={{...inp,cursor:'pointer'}}>
-                  {['Apartment','Villa','Townhouse','Penthouse','Studio','Office'].map(t=><option key={t}>{t}</option>)}
+                  {['Apartment','Villa','Townhouse','Penthouse','Studio','Office'].map(opt=><option key={opt}>{opt}</option>)}
                 </select>
               </div>
               <div><label style={lbl}>Bedrooms</label>

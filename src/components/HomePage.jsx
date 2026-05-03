@@ -135,7 +135,7 @@ export default function HomePage({core, areaData, recentRaw, onNavigate, isPro})
               color: 'var(--text-secondary)', fontSize: 14, flex: 1, fontFamily: 'system-ui',
             }}/>
           <div style={{ display: 'flex', gap: 6 }}>
-            {['Sales', 'Rental'].map(t => (
+            {['Sales', 'Rental'].map(tabOpt => (
               <button key={t} onClick={()=>{setSearchType(t);if(showResults)setShowResults(true);}} style={{
                 padding: '5px 14px', borderRadius: 20, border: 'none', cursor: 'pointer',
                 fontSize: 11, fontWeight: 600, fontFamily: 'system-ui',
@@ -230,7 +230,7 @@ export default function HomePage({core, areaData, recentRaw, onNavigate, isPro})
 
         {/* Timeframe */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginBottom: 20 }}>
-          {TIMEFRAMES.map(t => (
+          {TIMEFRAMES.map(tabOpt => (
             <button key={t} onClick={() => setTimeframe(t)} style={{
               padding: '5px 12px', borderRadius: 8, border: 'none', cursor: 'pointer',
               fontSize: 11, fontWeight: 600, fontFamily: 'system-ui',
@@ -438,7 +438,7 @@ export default function HomePage({core, areaData, recentRaw, onNavigate, isPro})
                 </div>
                 <div style={{ fontSize: 22, fontWeight: 800, color: 'var(--text-primary)', lineHeight: 1.1 }}>{t.big}</div>
                 <div style={{ fontSize: 11, color: t.badgeColor, fontWeight: 600 }}>{t.bigSub}</div>
-                <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)' }}>{t.label}</div>
+                <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)' }}>{tabOpt.label}</div>
                 <div style={{ fontSize: 11, color: '#475569', lineHeight: 1.6, marginTop: 2 }}>{t.desc}</div>
               </div>
             ))}

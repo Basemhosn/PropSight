@@ -164,7 +164,7 @@ export default function App() {
 
   const options = useMemo(() => {
     if (!core) return { types:[], usages:[], regs:[], propTypes:[] };
-    return { types:[...new Set(core.types.map(t=>t.name))].sort(), usages:["Residential","Commercial"], regs:Object.keys(core.regSplit).filter(r=>r!=="Other").sort(), propTypes:[] };
+    return { types:[...new Set(core.types.map(tx=>tabOpt.name))].sort(), usages:["Residential","Commercial"], regs:Object.keys(core.regSplit).filter(r=>r!=="Other").sort(), propTypes:[] };
   }, [core]);
 
   const dateRange = { min:"2020-01-01", max:"2026-04-09" };

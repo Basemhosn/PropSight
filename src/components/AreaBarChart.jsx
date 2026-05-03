@@ -78,13 +78,13 @@ export default function AreaBarChart({ areas, onAreaClick }) {
           </select>
         </div>
         <div style={{ display: "flex", gap: 4 }}>
-          {tabs.map(t => (
-            <button key={t.key} onClick={() => setTab(t.key)} style={{
+          {tabs.map(tabOpt => (
+            <button key={tabOpt.key} onClick={() => setTab(tabOpt.key)} style={{
               fontSize: 11, padding: "4px 10px", borderRadius: 6, cursor: "pointer", fontWeight: 500,
-              border: tab === t.key ? "1px solid #185FA5" : "1px solid #E8ECF2",
-              background: tab === t.key ? "rgba(59,130,246,0.1)" : "var(--surface)",
-              color: tab === t.key ? "#38BDF8" : "#7A8499",
-            }}>{t.label}</button>
+              border: tab === tabOpt.key ? "1px solid #185FA5" : "1px solid #E8ECF2",
+              background: tab === tabOpt.key ? "rgba(59,130,246,0.1)" : "var(--surface)",
+              color: tab === tabOpt.key ? "#38BDF8" : "#7A8499",
+            }}>{tabOpt.label}</button>
           ))}
         </div>
       </div>

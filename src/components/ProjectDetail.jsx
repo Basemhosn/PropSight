@@ -111,12 +111,12 @@ export default function ProjectDetail({ project, data, onClose }) {
 
         {/* Tabs */}
         <div style={{ display:"flex",borderBottom:"1px solid #E8ECF2",flexShrink:0 }}>
-          {TABS.map(t => (
+          {TABS.map(tabOpt => (
             <button key={t.id} onClick={()=>setTab(t.id)} style={{
               flex:1,padding:"10px 0",fontSize:12,fontWeight:tab===t.id?600:400,
               color:tab===t.id?"#38BDF8":"#7A8499",background:"none",border:"none",cursor:"pointer",
               borderBottom:tab===t.id?"2px solid #185FA5":"2px solid transparent",
-            }}>{t.label}</button>
+            }}>{tabOpt.label}</button>
           ))}
         </div>
 

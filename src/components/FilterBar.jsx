@@ -62,18 +62,18 @@ export default function FilterBar({ filters, setFilters, options, dateRange }) {
 
       <select style={sel} value={filters.type} onChange={set("type")}>
         <option value="">All types</option>
-        {options.types.map(t => <option key={t}>{t}</option>)}
+        {options.types.map(opt => <option key={opt}>{opt}</option>)}
       </select>
 
       <select style={sel} value={filters.usage} onChange={set("usage")}>
         <option value="">All usage</option>
-        {options.usages.filter(u => ['Residential','Commercial'].includes(u)).map(t => <option key={t}>{t}</option>)}
+        {options.usages.filter(u => ['Residential','Commercial'].includes(u)).map(opt => <option key={opt}>{opt}</option>)}
       </select>
 
       {options.regs && options.regs.length > 0 && (
         <select style={sel} value={filters.reg} onChange={set("reg")}>
           <option value="">All registration</option>
-          {options.regs.map(t => <option key={t}>{t}</option>)}
+          {options.regs.map(opt => <option key={opt}>{opt}</option>)}
         </select>
       )}
 
