@@ -83,21 +83,21 @@ export default function OffPlanReady({ rows, areas }) {
         </div>
         <div style={{ display: "flex", gap: 4, flexWrap: "wrap" }}>
           {[{ k: "area", l: "By area" }, { k: "trend", l: "Trend" }].map(tabId => (
-            <button key={t.k} onClick={() => setView(t.k)} style={{
+            <button key={tabOpt.k} onClick={() => setView(tabOpt.k)} style={{
               fontSize: 11, padding: "4px 10px", borderRadius: 6, cursor: "pointer", fontWeight: 500,
-              border: view === t.k ? "1px solid #0A1628" : "1px solid #E8ECF2",
-              background: view === t.k ? "var(--text-primary)" : "var(--surface)",
-              color: view === t.k ? "var(--surface)" : "#7A8499",
-            }}>{t.l}</button>
+              border: view === tabOpt.k ? "1px solid #0A1628" : "1px solid #E8ECF2",
+              background: view === tabOpt.k ? "var(--text-primary)" : "var(--surface)",
+              color: view === tabOpt.k ? "var(--surface)" : "#7A8499",
+            }}>{tabOpt.l}</button>
           ))}
           <div style={{ width: 1, background: "rgba(59,130,246,0.12)", margin: "0 2px" }} />
           {[{ k: "count", l: "Count" }, { k: "value", l: "Value" }].map(tabId => (
-            <button key={t.k} onClick={() => setMetric(t.k)} style={{
+            <button key={tabOpt.k} onClick={() => setMetric(tabOpt.k)} style={{
               fontSize: 11, padding: "4px 10px", borderRadius: 6, cursor: "pointer", fontWeight: 500,
-              border: metric === t.k ? "1px solid #185FA5" : "1px solid #E8ECF2",
-              background: metric === t.k ? "rgba(59,130,246,0.1)" : "var(--surface)",
-              color: metric === t.k ? "#38BDF8" : "#7A8499",
-            }}>{t.l}</button>
+              border: metric === tabOpt.k ? "1px solid #185FA5" : "1px solid #E8ECF2",
+              background: metric === tabOpt.k ? "rgba(59,130,246,0.1)" : "var(--surface)",
+              color: metric === tabOpt.k ? "#38BDF8" : "#7A8499",
+            }}>{tabOpt.l}</button>
           ))}
         </div>
       </div>
